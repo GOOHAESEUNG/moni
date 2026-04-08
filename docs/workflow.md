@@ -21,18 +21,36 @@
    → AI 로그 기록
    │
    ▼
-[3] reviewer 에이전트 (Codex)
-   → diff 검토
-   → APPROVED → [4]로
+[3] design-reviewer 에이전트 ← UI 화면 변경 시 필수, 비UI 작업은 스킵
+   → /critique: UX/계층/무니 원칙 검토
+   → /audit: 접근성/반응형 검토
+   → 필요 시 /animate, /bolder, /typeset 등
+   → 수정 사항 커밋
+   → AI 로그 기록
+   │
+   ▼
+[4] reviewer 에이전트 (Codex)
+   → diff 코드 품질 검토
+   → APPROVED → [5]로
    → CHANGES_REQUESTED → [2]로 돌아감
    → AI 로그 기록
    │
    ▼
-[4] PR 생성 → main 머지
+[5] PR 생성 → main 머지
    → gh pr create
-   → gh pr merge --squash
+   → gh pr merge --squash --delete-branch
    → AI 로그 기록
 ```
+
+## UI 작업 여부 판단 기준
+
+| 작업 유형 | design-reviewer 실행 |
+|---------|-------------------|
+| 새 페이지/화면 | ✅ 필수 |
+| 신규 컴포넌트 | ✅ 필수 |
+| API/DB 로직만 | ❌ 스킵 |
+| 버그 수정 (UI 없음) | ❌ 스킵 |
+| 스타일/레이아웃 변경 | ✅ 필수 |
 
 ---
 
