@@ -56,7 +56,24 @@ export default function SessionEndClient({
       className="min-h-screen font-sans pb-12"
       style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 60%, #1E1A35 100%)' }}
     >
-      <div className="max-w-lg mx-auto px-5 pt-12 flex flex-col items-center gap-6">
+      {/* confetti 이펙트 (80점 이상) */}
+      {understandingScore >= 80 && (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-2xl"
+              style={{ left: `${8 + i * 8}%`, top: -20 }}
+              animate={{ y: '110vh', rotate: [0, 360], opacity: [1, 1, 0] }}
+              transition={{ duration: 2 + (i % 3) * 0.4, delay: i * 0.1, ease: 'easeIn' }}
+            >
+              {(['⭐', '✨', '🌙', '💫'] as const)[i % 4]}
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      <div className="max-w-lg md:max-w-2xl mx-auto px-5 pt-12 flex flex-col items-center gap-6">
         {/* 무니 impressed 표정 */}
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -95,9 +112,8 @@ export default function SessionEndClient({
         <motion.div
           className="w-full rounded-3xl p-6"
           style={{
-            background: 'rgba(232,197,71,0.10)',
+            background: 'rgba(232,197,71,0.18)',
             border: '1px solid rgba(232,197,71,0.25)',
-            backdropFilter: 'blur(12px)',
           }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -137,7 +153,7 @@ export default function SessionEndClient({
           <motion.div
             className="w-full rounded-3xl p-5"
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: 'rgba(255,255,255,0.08)',
               border: '1px solid rgba(255,255,255,0.10)',
             }}
             initial={{ opacity: 0, y: 12 }}
@@ -162,7 +178,7 @@ export default function SessionEndClient({
         <motion.div
           className="w-full rounded-3xl p-5"
           style={{
-            background: 'rgba(255,255,255,0.05)',
+            background: 'rgba(255,255,255,0.08)',
             border: '1px solid rgba(255,255,255,0.10)',
           }}
           initial={{ opacity: 0, y: 12 }}

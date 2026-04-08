@@ -69,6 +69,7 @@ export default function TeachPage() {
   const [textInput, setTextInput] = useState('')
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([])
   const [isEnding, setIsEnding] = useState(false)
+  const [showEndConfirm, setShowEndConfirm] = useState(false)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
@@ -266,11 +267,17 @@ export default function TeachPage() {
     )
   }
 
+  // 대화 히스토리 패널용 ref (자동 스크롤)
+  const historyEndRef = useRef<HTMLDivElement>(null)
+
   return (
     <div
-      className="flex flex-col h-screen overflow-hidden font-sans relative"
+      className="h-screen overflow-hidden font-sans relative"
       style={{
         background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 50%, #1E1A35 100%)',
+        display: 'grid',
+        gridTemplateRows: '56px 1fr',
+        gridTemplateColumns: '1fr',
       }}
     >
       {/* 별빛 파티클 */}
@@ -292,7 +299,7 @@ export default function TeachPage() {
       {/* 헤더 */}
       <header
         className="relative z-10 flex items-center justify-between px-4"
-        style={{ height: 56 }}
+        style={{ gridRow: 1, height: 56 }}
       >
         <button
           onClick={() => router.back()}
@@ -311,7 +318,7 @@ export default function TeachPage() {
         </div>
 
         <button
-          onClick={endSession}
+          onClick={() => setShowEndConfirm(true)}
           disabled={isEnding || !sessionId}
           className="px-4 py-2 rounded-full text-sm font-semibold transition-opacity disabled:opacity-40"
           style={{ color: 'rgba(255,255,255,0.7)' }}
@@ -320,194 +327,276 @@ export default function TeachPage() {
         </button>
       </header>
 
-      {/* 무니 말풍선 */}
-      <div className="relative z-10 px-5 mt-2">
-        <motion.div
-          key={mooniMessage}
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="relative mx-auto rounded-3xl p-4"
-          style={{
-            maxWidth: 320,
-            background: 'rgba(232,197,71,0.10)',
-            border: '1px solid rgba(232,197,71,0.28)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-          }}
-        >
-          <p className="text-sm leading-relaxed text-white">{mooniMessage}</p>
-          <button
-            onClick={playTTS}
-            className="flex items-center gap-1.5 mt-2 text-xs font-medium rounded-full px-3 py-1 transition-opacity hover:opacity-80"
-            style={{ color: '#E8C547', background: 'rgba(232,197,71,0.12)' }}
-          >
-            <SpeakerHigh size={14} weight="fill" />
-            듣기
-          </button>
+      {/* 바디 (대화 히스토리 + 무니 영역) */}
+      <div
+        className="relative z-10 overflow-hidden"
+        style={{ gridRow: 2, display: 'grid', gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }}
+      >
+        {/* md+: 2컬럼 래퍼 */}
+        <div className="h-full overflow-hidden md:grid md:grid-cols-[340px_1fr] md:grid-rows-[1fr] flex flex-col">
 
-          {/* 말풍선 꼬리 */}
+          {/* 대화 히스토리 패널 (md+ 전용) */}
           <div
-            className="absolute left-1/2 -bottom-2.5 w-4 h-4 rotate-45"
-            style={{
-              background: 'rgba(232,197,71,0.10)',
-              border: '1px solid rgba(232,197,71,0.28)',
-              transform: 'translateX(-50%) rotate(45deg)',
-              borderTop: 'none',
-              borderLeft: 'none',
-            }}
-          />
-        </motion.div>
-      </div>
-
-      {/* 무니 캐릭터 */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
-        {/* glow circle */}
-        <div
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: 256,
-            height: 256,
-            background: 'radial-gradient(circle, rgba(232,197,71,0.18) 0%, transparent 70%)',
-          }}
-        />
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={expression}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.25 }}
+            className="hidden md:flex flex-col h-full"
+            style={{ background: 'rgba(255,255,255,0.05)', borderRight: '1px solid rgba(255,255,255,0.10)' }}
           >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <Image
-                src={`/mooni/${expression}.png`}
-                alt={`무니 - ${expressionLabels[expression]}`}
-                width={208}
-                height={208}
-                priority
-                className="drop-shadow-2xl"
+            <div className="px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}>
+              <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.50)' }}>
+                대화 기록
+              </p>
+            </div>
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+              {conversationHistory.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className="max-w-[80%] rounded-2xl px-3 py-2 text-sm"
+                    style={{
+                      background: msg.role === 'user' ? 'rgba(232,197,71,0.20)' : 'rgba(255,255,255,0.08)',
+                      color: 'white',
+                    }}
+                  >
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {conversationHistory.length === 0 && (
+                <p className="text-xs text-center mt-8" style={{ color: 'rgba(255,255,255,0.30)' }}>
+                  무니에게 설명하면 여기에 기록돼요
+                </p>
+              )}
+              <div ref={historyEndRef} />
+            </div>
+          </div>
+
+          {/* 무니 영역 (오른쪽 or 모바일 전체) */}
+          <div className="flex flex-col flex-1 overflow-hidden">
+            {/* 무니 말풍선 */}
+            <div className="relative z-10 px-5 mt-2">
+              <motion.div
+                key={mooniMessage}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative mx-auto rounded-3xl p-4"
+                style={{
+                  maxWidth: 320,
+                  background: 'rgba(232,197,71,0.10)',
+                  border: '1px solid rgba(232,197,71,0.28)',
+                }}
+              >
+                <p className="text-sm leading-relaxed text-white">{mooniMessage}</p>
+                <button
+                  onClick={playTTS}
+                  className="flex items-center gap-1.5 mt-2 text-xs font-medium rounded-full px-3 py-1 transition-opacity hover:opacity-80"
+                  style={{ color: '#E8C547', background: 'rgba(232,197,71,0.12)' }}
+                >
+                  <SpeakerHigh size={14} weight="fill" />
+                  듣기
+                </button>
+
+                {/* 말풍선 꼬리 */}
+                <div
+                  className="absolute left-1/2 -bottom-2.5 w-4 h-4"
+                  style={{
+                    background: 'rgba(232,197,71,0.10)',
+                    border: '1px solid rgba(232,197,71,0.28)',
+                    transform: 'translateX(-50%) rotate(45deg)',
+                    borderTop: 'none',
+                    borderLeft: 'none',
+                  }}
+                />
+              </motion.div>
+            </div>
+
+            {/* 무니 캐릭터 */}
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
+              {/* glow circle */}
+              <div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: 256,
+                  height: 256,
+                  background: 'radial-gradient(circle, rgba(232,197,71,0.18) 0%, transparent 70%)',
+                }}
               />
-            </motion.div>
-          </motion.div>
-        </AnimatePresence>
 
-        <p className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.40)' }}>
-          {expressionLabels[expression]}
-        </p>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={expression}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <motion.div
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <Image
+                      src={`/mooni/${expression}.png`}
+                      alt={`무니 - ${expressionLabels[expression]}`}
+                      width={208}
+                      height={208}
+                      priority
+                      className="drop-shadow-2xl"
+                    />
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
 
-        {/* 이해도 바 */}
-        <div className="mt-4 w-48 flex flex-col items-center gap-1">
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.40)' }}>
-            무니 이해도 {understanding}%
-          </p>
-          <div className="w-full h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)' }}>
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: '#E8C547' }}
-              animate={{ width: `${understanding}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            />
+              <p className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.40)' }}>
+                {expressionLabels[expression]}
+              </p>
+
+              {/* 이해도 바 */}
+              <div className="mt-4 w-56 flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-bold" style={{ color: '#E8C547' }}>{understanding}%</p>
+                  <p className="text-xs" style={{ color: 'rgba(255,255,255,0.40)' }}>무니 이해도</p>
+                </div>
+                <div className="w-full h-3 rounded-full" style={{ background: 'rgba(255,255,255,0.10)' }}>
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: '#E8C547', transformOrigin: 'left' }}
+                    animate={{ width: `${understanding}%` }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 하단 입력 영역 */}
+            <div className="relative z-10 px-5 pb-8 flex flex-col items-center gap-4">
+              {/* 텍스트 입력 토글 */}
+              {showTextInput && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="w-full max-w-sm"
+                >
+                  <div
+                    className="flex items-end gap-2 rounded-2xl p-3"
+                    style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
+                  >
+                    <textarea
+                      value={textInput}
+                      onChange={(e) => setTextInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault()
+                          handleTextSubmit()
+                        }
+                      }}
+                      placeholder="무니에게 설명해봐요..."
+                      rows={2}
+                      className="flex-1 bg-transparent text-white text-sm resize-none outline-none placeholder:text-white/30"
+                    />
+                    <button
+                      onClick={handleTextSubmit}
+                      disabled={!textInput.trim() || isLoading}
+                      className="shrink-0 px-4 py-2 rounded-xl text-sm font-bold disabled:opacity-40 transition-opacity"
+                      style={{ background: '#E8C547', color: '#1A1830' }}
+                    >
+                      전송
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* 녹음 상태 pill */}
+              <div
+                className="px-4 py-2 rounded-full text-sm font-medium"
+                style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.60)' }}
+              >
+                {isLoading
+                  ? '🤔 무니가 생각하고 있어요...'
+                  : isRecording
+                  ? '🔴 듣고 있어요...'
+                  : '지금 말해보세요...'}
+              </div>
+
+              {/* 마이크 버튼 */}
+              <motion.button
+                onClick={toggleRecording}
+                disabled={isLoading}
+                whileTap={{ scale: 0.92 }}
+                className="relative w-20 h-20 rounded-full flex items-center justify-center disabled:opacity-40 transition-opacity"
+                style={{
+                  background: isRecording ? 'rgba(239,68,68,0.85)' : '#E8C547',
+                  boxShadow: isRecording
+                    ? '0 0 0 8px rgba(239,68,68,0.20), 0 8px 32px rgba(239,68,68,0.40)'
+                    : '0 0 0 8px rgba(232,197,71,0.20), 0 8px 32px rgba(232,197,71,0.40)',
+                }}
+                aria-label={isRecording ? '녹음 중지' : '녹음 시작'}
+              >
+                {isRecording ? (
+                  <X size={32} weight="bold" color="#1A1830" />
+                ) : (
+                  <Microphone size={32} weight="fill" color="#1A1830" />
+                )}
+
+                {/* 녹음 중 펄스 */}
+                {isRecording && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    style={{ background: 'rgba(239,68,68,0.35)' }}
+                  />
+                )}
+              </motion.button>
+
+              {/* 텍스트 입력 토글 버튼 */}
+              <button
+                onClick={() => setShowTextInput((v) => !v)}
+                className="text-xs underline underline-offset-2 transition-opacity hover:opacity-80"
+                style={{ color: 'rgba(255,255,255,0.40)' }}
+              >
+                {showTextInput ? '텍스트 입력 숨기기' : '텍스트로 입력하기'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 하단 입력 영역 */}
-      <div className="relative z-10 px-5 pb-8 flex flex-col items-center gap-4">
-        {/* 텍스트 입력 토글 */}
-        {showTextInput && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-sm"
-          >
-            <div
-              className="flex items-end gap-2 rounded-2xl p-3"
-              style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
-            >
-              <textarea
-                value={textInput}
-                onChange={(e) => setTextInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    handleTextSubmit()
-                  }
-                }}
-                placeholder="무니에게 설명해봐요..."
-                rows={2}
-                className="flex-1 bg-transparent text-white text-sm resize-none outline-none placeholder:text-white/30"
-              />
-              <button
-                onClick={handleTextSubmit}
-                disabled={!textInput.trim() || isLoading}
-                className="shrink-0 px-4 py-2 rounded-xl text-sm font-bold disabled:opacity-40 transition-opacity"
-                style={{ background: '#E8C547', color: '#1A1830' }}
-              >
-                전송
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* 녹음 상태 pill */}
+      {/* 종료 확인 오버레이 */}
+      {showEndConfirm && (
         <div
-          className="px-4 py-2 rounded-full text-sm font-medium"
-          style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.60)' }}
+          className="absolute inset-0 z-50 flex items-end justify-center"
+          style={{ background: 'rgba(0,0,0,0.6)' }}
+          onClick={() => setShowEndConfirm(false)}
         >
-          {isLoading
-            ? '🤔 무니가 생각하고 있어요...'
-            : isRecording
-            ? '🔴 듣고 있어요...'
-            : '지금 말해보세요...'}
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="w-full max-w-sm mb-8 rounded-3xl p-6 space-y-4"
+            style={{ background: '#1E1A35', border: '1px solid rgba(255,255,255,0.12)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center">
+              <Image src="/mooni/curious.png" alt="무니" width={80} height={80} className="mx-auto mb-3" />
+              <p className="font-extrabold text-white text-lg">학습을 끝낼까요?</p>
+              <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
+                무니가 지금까지 배운 내용을 정리해줄 거예요!
+              </p>
+            </div>
+            <button
+              onClick={() => { setShowEndConfirm(false); endSession() }}
+              className="w-full font-extrabold text-sm rounded-full py-4"
+              style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
+            >
+              네, 끝낼게요 ✓
+            </button>
+            <button
+              onClick={() => setShowEndConfirm(false)}
+              className="w-full font-semibold text-sm rounded-full py-3"
+              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.70)' }}
+            >
+              계속 가르칠게요
+            </button>
+          </motion.div>
         </div>
-
-        {/* 마이크 버튼 */}
-        <motion.button
-          onClick={toggleRecording}
-          disabled={isLoading}
-          whileTap={{ scale: 0.92 }}
-          className="relative w-20 h-20 rounded-full flex items-center justify-center disabled:opacity-40 transition-opacity"
-          style={{
-            background: isRecording
-              ? 'rgba(239,68,68,0.85)'
-              : '#E8C547',
-            boxShadow: isRecording
-              ? '0 0 0 8px rgba(239,68,68,0.20), 0 8px 32px rgba(239,68,68,0.40)'
-              : '0 0 0 8px rgba(232,197,71,0.20), 0 8px 32px rgba(232,197,71,0.40)',
-          }}
-          aria-label={isRecording ? '녹음 중지' : '녹음 시작'}
-        >
-          {isRecording ? (
-            <X size={32} weight="bold" color="#1A1830" />
-          ) : (
-            <Microphone size={32} weight="fill" color="#1A1830" />
-          )}
-
-          {/* 녹음 중 펄스 */}
-          {isRecording && (
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-              style={{ background: 'rgba(239,68,68,0.35)' }}
-            />
-          )}
-        </motion.button>
-
-        {/* 텍스트 입력 토글 버튼 */}
-        <button
-          onClick={() => setShowTextInput((v) => !v)}
-          className="text-xs underline underline-offset-2 transition-opacity hover:opacity-80"
-          style={{ color: 'rgba(255,255,255,0.40)' }}
-        >
-          {showTextInput ? '텍스트 입력 숨기기' : '텍스트로 입력하기'}
-        </button>
-      </div>
+      )}
     </div>
   )
 }
