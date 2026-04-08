@@ -15,7 +15,7 @@ interface RecentSession {
 
 interface Props {
   profile: Profile
-  activeUnit: Unit | null
+  activeUnits: Unit[]
   recentSessions: RecentSession[]
   hasEnrollment: boolean
 }
@@ -45,7 +45,7 @@ const clayCard = {
   boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
 } as const
 
-export default function StudentHome({ profile, activeUnit, recentSessions, hasEnrollment }: Props) {
+export default function StudentHome({ profile, activeUnits, recentSessions, hasEnrollment }: Props) {
   const streak = recentSessions.length
   const avgScore = recentSessions.length > 0
     ? Math.round(
@@ -102,7 +102,7 @@ export default function StudentHome({ profile, activeUnit, recentSessions, hasEn
           >
             오늘의 학습
           </h2>
-          {activeUnit ? (
+          {activeUnits.length === 1 ? (
             <div className="p-5" style={clayCard}>
               <div className="flex items-start justify-between mb-1">
                 <div>
@@ -110,11 +110,11 @@ export default function StudentHome({ profile, activeUnit, recentSessions, hasEn
                     오늘 배운 개념
                   </p>
                   <p className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>
-                    {activeUnit.title}
+                    {activeUnits[0].title}
                   </p>
-                  {activeUnit.grade_hint && (
+                  {activeUnits[0].grade_hint && (
                     <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>
-                      {activeUnit.grade_hint}
+                      {activeUnits[0].grade_hint}
                     </p>
                   )}
                 </div>
@@ -128,7 +128,7 @@ export default function StudentHome({ profile, activeUnit, recentSessions, hasEn
 
               {/* Duolingo 3D 버튼 */}
               <Link
-                href={`/student/teach/${activeUnit.id}`}
+                href={`/student/teach/${activeUnits[0].id}`}
                 className="flex items-center justify-center gap-2 w-full font-extrabold text-sm transition-all duration-150"
                 style={{
                   background: '#E8C547',
@@ -156,6 +156,52 @@ export default function StudentHome({ profile, activeUnit, recentSessions, hasEn
                 무니에게 알려줘
                 <ArrowRight size={18} weight="bold" />
               </Link>
+            </div>
+          ) : activeUnits.length >= 2 ? (
+            <div className="space-y-3">
+              {activeUnits.map((unit) => (
+                <div key={unit.id} className="p-5" style={clayCard}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="text-xs font-medium mb-1" style={{ color: '#9EA0B4' }}>오늘 배운 개념</p>
+                      <p className="text-lg font-extrabold" style={{ color: '#2D2F2F' }}>{unit.title}</p>
+                      {unit.grade_hint && (
+                        <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{unit.grade_hint}</p>
+                      )}
+                    </div>
+                    <BookOpen size={24} weight="fill" style={{ color: '#E8C547' }} />
+                  </div>
+                  <Link
+                    href={`/student/teach/${unit.id}`}
+                    className="flex items-center justify-center gap-2 w-full font-extrabold text-sm transition-all duration-150"
+                    style={{
+                      background: '#E8C547',
+                      borderRadius: '9999px',
+                      padding: '12px 20px',
+                      color: '#1A1830',
+                      boxShadow: '0 4px 0 #C8A020',
+                    }}
+                    onMouseDown={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement
+                      el.style.transform = 'translateY(2px)'
+                      el.style.boxShadow = '0 2px 0 #C8A020'
+                    }}
+                    onMouseUp={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement
+                      el.style.transform = 'translateY(0)'
+                      el.style.boxShadow = '0 4px 0 #C8A020'
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLAnchorElement
+                      el.style.transform = 'translateY(0)'
+                      el.style.boxShadow = '0 4px 0 #C8A020'
+                    }}
+                  >
+                    무니에게 알려줘
+                    <ArrowRight size={16} weight="bold" />
+                  </Link>
+                </div>
+              ))}
             </div>
           ) : hasEnrollment ? (
             // 반은 있는데 단원이 없는 경우

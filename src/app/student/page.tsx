@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import StudentHome from './StudentHome'
+import type { Unit } from '@/types/database'
 
 export default async function StudentPage() {
   const supabase = await createClient()
@@ -24,7 +25,7 @@ export default async function StudentPage() {
     .single()
 
   // 오늘의 활성 단원 조회
-  let activeUnit = null
+  let activeUnits: Unit[] = []
   if (enrollment?.class_id) {
     const { data: units } = await supabase
       .from('units')
@@ -32,9 +33,8 @@ export default async function StudentPage() {
       .eq('class_id', enrollment.class_id)
       .eq('is_active', true)
       .order('created_at', { ascending: false })
-      .limit(1)
 
-    activeUnit = units?.[0] ?? null
+    activeUnits = units ?? []
   }
 
   // 최근 세션 2개 조회
@@ -49,7 +49,7 @@ export default async function StudentPage() {
   return (
     <StudentHome
       profile={profile}
-      activeUnit={activeUnit}
+      activeUnits={activeUnits}
       recentSessions={recentSessions ?? []}
       hasEnrollment={!!enrollment?.class_id}
     />
