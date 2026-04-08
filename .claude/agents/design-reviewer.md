@@ -74,6 +74,18 @@ git commit -m "style: {화면명} 디자인 개선 - {핵심 변경 내용}
 Co-Authored-By: Claude Sonnet 4.6 (1M context) <noreply@anthropic.com>"
 ```
 
+## ui-ux-pro-max 추론 엔진 검증
+구현 후 추론 엔진으로 UX 검증:
+```bash
+# 애니메이션/접근성 UX 검증
+python3 ~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py \
+  "animation accessibility loading" --domain ux
+
+# 스택 가이드라인 (React/Next.js)
+python3 ~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py \
+  "performance rerender cache" --stack react
+```
+
 ## 무니 디자인 원칙 체크리스트
 - [ ] 무니 캐릭터가 화면에서 주인공인가?
 - [ ] Nunito 폰트 적용됐는가?
