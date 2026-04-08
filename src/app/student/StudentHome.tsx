@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Star } from '@phosphor-icons/react'
-import MooniCharacter from '@/components/mooni/MooniCharacter'
+import MooniSprite from '@/components/mooni/MooniSprite'
 import type { Profile, Unit } from '@/types/database'
 
 interface RecentSession {
@@ -51,9 +51,9 @@ export default function StudentHome({ profile, activeUnit, recentSessions }: Pro
         </p>
       </div>
 
-      {/* 무니 히어로 */}
+      {/* 무니 히어로 — 스프라이트 점프 애니메이션 */}
       <div className="flex justify-center py-4">
-        <MooniCharacter expression="happy" size={220} animate />
+        <MooniSprite size={220} />
       </div>
 
       <div className="px-5 space-y-5 max-w-lg mx-auto">
