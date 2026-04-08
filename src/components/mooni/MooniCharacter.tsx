@@ -60,7 +60,12 @@ export default function MooniCharacter({
             loop
             muted
             playsInline
-            style={{ width: size, height: size, objectFit: 'contain' }}
+            style={{
+              width: size,
+              height: size,
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 0 12px rgba(232,197,71,0.3))',
+            }}
           />
         </div>
         <p className="mt-2 text-xs text-muted-foreground font-medium">
