@@ -51,6 +51,7 @@ export default async function StudentPage() {
       profile={profile}
       activeUnit={activeUnit}
       recentSessions={recentSessions ?? []}
+      hasEnrollment={!!enrollment?.class_id}
     />
   )
 }

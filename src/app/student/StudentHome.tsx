@@ -17,6 +17,7 @@ interface Props {
   profile: Profile
   activeUnit: Unit | null
   recentSessions: RecentSession[]
+  hasEnrollment: boolean
 }
 
 function getUnitTitle(session: RecentSession): string {
@@ -44,7 +45,7 @@ const clayCard = {
   boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
 } as const
 
-export default function StudentHome({ profile, activeUnit, recentSessions }: Props) {
+export default function StudentHome({ profile, activeUnit, recentSessions, hasEnrollment }: Props) {
   const streak = recentSessions.length
   const avgScore = recentSessions.length > 0
     ? Math.round(
@@ -156,7 +157,19 @@ export default function StudentHome({ profile, activeUnit, recentSessions }: Pro
                 <ArrowRight size={18} weight="bold" />
               </Link>
             </div>
+          ) : hasEnrollment ? (
+            // 반은 있는데 단원이 없는 경우
+            <div className="p-6 text-center" style={clayCard}>
+              <div className="text-4xl mb-3">😴</div>
+              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>
+                아직 배정된 단원이 없어요
+              </p>
+              <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>
+                선생님이 단원을 만들면 여기에 나타나요
+              </p>
+            </div>
           ) : (
+            // 반 자체가 없는 경우
             <div className="p-6 text-center" style={clayCard}>
               <div className="text-4xl mb-3">🌙</div>
               <p className="font-extrabold" style={{ color: '#2D2F2F' }}>
