@@ -31,7 +31,6 @@ export default function NewUnitPage() {
 
     const supabase = createClient()
 
-    // 현재 사용자 확인
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       setError('로그인이 필요해요.')
@@ -39,7 +38,6 @@ export default function NewUnitPage() {
       return
     }
 
-    // 선생님의 첫 번째 클래스 조회
     const { data: classes } = await supabase
       .from('classes')
       .select('id')
@@ -148,7 +146,7 @@ export default function NewUnitPage() {
             </div>
           </div>
 
-          {/* 미리보기 */}
+          {/* 무니 미리보기 */}
           {previewText && (
             <div className="rounded-3xl bg-[#FDF8E1] border border-[#E8C547]/30 p-5 space-y-2">
               <div className="flex items-center gap-2">

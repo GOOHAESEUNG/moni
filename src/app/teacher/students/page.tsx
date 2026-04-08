@@ -26,7 +26,6 @@ export default async function StudentsPage() {
   const currentClass = classes?.[0]
   if (!currentClass) redirect('/teacher')
 
-  // 학생 목록
   const { data: enrollments } = await supabase
     .from('enrollments')
     .select('student_id, profiles!inner(id, name, email)')
@@ -37,7 +36,6 @@ export default async function StudentsPage() {
     return { id: e.student_id, name: p?.name ?? '학생', email: p?.email ?? '' }
   })
 
-  // 각 학생의 최근 리포트
   const { data: reports } = await supabase
     .from('reports')
     .select('id, student_id, unit_id, summary, weak_points, created_at')
