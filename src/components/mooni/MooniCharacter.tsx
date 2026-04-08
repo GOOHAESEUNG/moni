@@ -10,6 +10,7 @@ interface MooniCharacterProps {
   size?: number
   className?: string
   animate?: boolean
+  useVideo?: boolean  // stand.webm 애니메이션 영상 사용
 }
 
 const expressionLabels: Record<Expression, string> = {
@@ -26,6 +27,7 @@ export default function MooniCharacter({
   size = 200,
   className = '',
   animate = true,
+  useVideo = false,
 }: MooniCharacterProps) {
   const [currentExpression, setCurrentExpression] = useState(expression)
   const [isBlinking, setIsBlinking] = useState(false)
@@ -46,6 +48,27 @@ export default function MooniCharacter({
     }, 2000)
     return () => clearInterval(interval)
   }, [animate])
+
+  // 영상 모드: stand.webm (투명 배경 루핑)
+  if (useVideo) {
+    return (
+      <div className={`relative flex flex-col items-center ${className}`}>
+        <div style={{ width: size, height: size }} className="relative">
+          <video
+            src="/mooni/stand.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ width: size, height: size, objectFit: 'contain' }}
+          />
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground font-medium">
+          {expressionLabels[expression]}
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className={`relative flex flex-col items-center ${className}`}>
