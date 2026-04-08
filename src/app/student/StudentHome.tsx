@@ -51,9 +51,9 @@ export default function StudentHome({ profile, activeUnit, recentSessions }: Pro
         </p>
       </div>
 
-      {/* 무니 히어로 — 폴짝 뛰는 애니메이션 */}
+      {/* 무니 히어로 */}
       <div className="flex justify-center py-4">
-        <MooniCharacter useVideo size={220} />
+        <MooniCharacter expression="happy" size={220} animate />
       </div>
 
       <div className="px-5 space-y-5 max-w-lg mx-auto">

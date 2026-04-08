@@ -79,10 +79,11 @@ export default function MooniCharacter({
     <div className={`relative flex flex-col items-center ${className}`}>
       <motion.div
         animate={animate ? {
-          y: [0, -8, 0],
+          y: [0, -10, -6, -10, 0],
+          rotate: [0, -1, 0, 1, 0],
         } : {}}
         transition={{
-          duration: 3,
+          duration: 4,
           repeat: Infinity,
           ease: 'easeInOut',
         }}
