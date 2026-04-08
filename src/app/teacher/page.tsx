@@ -32,19 +32,21 @@ export default async function TeacherPage() {
     .eq('teacher_id', user.id)
     .order('created_at', { ascending: true })
 
-  // 클래스가 없으면 자동 생성
+  // 클래스가 없으면 자동 생성 (admin으로 확실하게)
   if (!classes || classes.length === 0) {
     const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-    const { data: newClass } = await admin
+    await admin.from('classes').insert({
+      teacher_id: user.id,
+      name: `${profile.name}의 반`,
+      invite_code: inviteCode,
+    })
+    // insert 후 다시 조회
+    const { data: refreshed } = await admin
       .from('classes')
-      .insert({
-        teacher_id: user.id,
-        name: `${profile.name}의 반`,
-        invite_code: inviteCode,
-      })
-      .select()
-      .single()
-    classes = newClass ? [newClass] : []
+      .select('*')
+      .eq('teacher_id', user.id)
+      .order('created_at', { ascending: true })
+    classes = refreshed ?? []
   }
 
   const currentClass = classes?.[0]

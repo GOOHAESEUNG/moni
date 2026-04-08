@@ -38,6 +38,19 @@ export default function SignupPage() {
       return
     }
 
+    // 선생님이면 기본 반 자동 생성
+    if (role === 'teacher') {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
+        await supabase.from('classes').insert({
+          teacher_id: user.id,
+          name: `${name}의 반`,
+          invite_code: inviteCode,
+        })
+      }
+    }
+
     router.push(role === 'teacher' ? '/teacher' : '/student')
   }
 
