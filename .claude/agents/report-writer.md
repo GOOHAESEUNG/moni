@@ -1,5 +1,6 @@
 ---
 name: report-writer
+model: claude-sonnet-4-6
 description: 개발 과정을 분석해 공모전 AI 빌딩 리포트 초안을 자동 생성하는 에이전트. 제출 마감 전날 실행해서 docx 작성에 활용.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: planner
+model: claude-sonnet-4-6
 description: 기능 요청을 받아 GitHub Issue를 생성하고 상세 구현 스펙을 반환하는 기획 에이전트. 새로운 기능/버그/작업이 필요할 때 항상 먼저 호출.
 ---
 

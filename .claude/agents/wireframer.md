@@ -1,5 +1,6 @@
 ---
 name: wireframer
+model: claude-sonnet-4-6
 description: 새 화면을 구현하기 전에 반드시 실행. ASCII 와이어프레임으로 레이아웃을 확정하고, Stitch에 전달할 상세 프롬프트까지 생성. docs/wireframes/ 에 저장.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: mooni-evaluator
+model: claude-opus-4-6
 description: 무니 AI 페르소나의 대화 품질을 자동으로 평가하는 에이전트. 가상 학생 역할로 대화를 시뮬레이션하고 프롬프트 개선안을 반환. 무니 프롬프트 변경 후 반드시 실행.
 ---
 

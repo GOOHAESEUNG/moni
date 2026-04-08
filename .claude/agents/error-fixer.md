@@ -1,5 +1,6 @@
 ---
 name: error-fixer
+model: claude-sonnet-4-6
 description: 프로덕션 에러 로그를 분석해 자동으로 GitHub Issue + 수정 PR을 생성하는 에이전트. CloudWatch Lambda에서 호출되거나 수동으로 에러 로그를 붙여넣어 실행.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: reviewer
+model: claude-haiku-4-5-20251001
 description: 코더 에이전트가 구현한 코드를 Codex에게 리뷰 위임하는 에이전트. PR diff를 Codex로 전달하고 승인/수정 요청 결과를 반환.
 ---
 

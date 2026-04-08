@@ -1,5 +1,6 @@
 ---
 name: design-reviewer
+model: claude-sonnet-4-6
 description: UI 화면이 포함된 작업에서 코드 구현 후 반드시 실행. impeccable 커맨드로 디자인 품질을 검토하고 수정 사항을 반환. Codex 코드 리뷰 전에 실행.
 ---
 

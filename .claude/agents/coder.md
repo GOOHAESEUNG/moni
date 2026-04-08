@@ -1,5 +1,6 @@
 ---
 name: coder
+model: claude-opus-4-6
 description: 플래너 에이전트의 스펙을 받아 실제 코드를 구현하는 에이전트. 항상 worktree 격리 환경에서 실행되며, 구현 완료 후 커밋/푸시까지 수행.
 ---
 
