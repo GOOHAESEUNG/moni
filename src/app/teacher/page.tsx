@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 import TeacherDashboard from './TeacherDashboard'
 
 export default async function TeacherPage() {
@@ -18,8 +19,14 @@ export default async function TeacherPage() {
 
   if (!profile || profile.role !== 'teacher') redirect('/student')
 
+  // 서비스 롤로 데이터 조회 (RLS 우회 — auth는 위에서 이미 검증됨)
+  const admin = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
   // 선생님 클래스 조회
-  let { data: classes } = await supabase
+  let { data: classes } = await admin
     .from('classes')
     .select('*')
     .eq('teacher_id', user.id)
@@ -28,7 +35,7 @@ export default async function TeacherPage() {
   // 클래스가 없으면 자동 생성
   if (!classes || classes.length === 0) {
     const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-    const { data: newClass } = await supabase
+    const { data: newClass } = await admin
       .from('classes')
       .insert({
         teacher_id: user.id,
@@ -68,7 +75,7 @@ export default async function TeacherPage() {
   }
 
   // 학생 목록 (enrollments + profiles)
-  const { data: enrollments } = await supabase
+  const { data: enrollments } = await admin
     .from('enrollments')
     .select('student_id, profiles!inner(id, name, email)')
     .eq('class_id', currentClass.id)
@@ -79,7 +86,7 @@ export default async function TeacherPage() {
   })
 
   // 활성 단원
-  const { data: units } = await supabase
+  const { data: units } = await admin
     .from('units')
     .select('*')
     .eq('class_id', currentClass.id)
@@ -87,7 +94,7 @@ export default async function TeacherPage() {
     .order('created_at', { ascending: false })
 
   // 완료된 세션 (ended_at이 있는 것)
-  const { data: allSessions } = await supabase
+  const { data: allSessions } = await admin
     .from('sessions')
     .select('id, student_id, unit_id, understanding_score, ended_at')
     .in('unit_id', (units ?? []).map((u: { id: string }) => u.id))

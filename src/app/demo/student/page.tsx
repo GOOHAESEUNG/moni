@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PaperPlaneTilt, ArrowLeft } from '@phosphor-icons/react'
+import { PaperPlaneTilt, ArrowLeft, Microphone } from '@phosphor-icons/react'
 import type { Expression } from '@/types/database'
 
 interface Message {
@@ -27,8 +27,25 @@ export default function DemoStudentPage() {
   const [loading, setLoading] = useState(false)
   const [understanding, setUnderstanding] = useState(0)
   const [mooniExpression, setMooniExpression] = useState<Expression>('curious')
+  const [isRecording, setIsRecording] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  function startVoice() {
+    const SpeechAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechAPI) { alert('이 브라우저는 음성 인식을 지원하지 않아요. 텍스트로 입력해주세요.'); return }
+    const recognition = new SpeechAPI() as any
+    recognition.lang = 'ko-KR'
+    recognition.interimResults = false
+    setIsRecording(true)
+    recognition.onresult = (e: any) => {
+      setInput(e.results[0][0].transcript)
+      setIsRecording(false)
+    }
+    recognition.onerror = () => setIsRecording(false)
+    recognition.onend = () => setIsRecording(false)
+    recognition.start()
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -193,12 +210,25 @@ export default function DemoStudentPage() {
           className="flex items-end gap-2 rounded-3xl border px-4 py-3"
           style={{ borderColor: 'rgba(232,197,71,0.25)', background: 'rgba(255,255,255,0.06)' }}
         >
+          {/* 마이크 버튼 */}
+          <button
+            onClick={startVoice}
+            disabled={loading}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all"
+            style={{
+              background: isRecording ? '#FF5555' : 'rgba(232,197,71,0.15)',
+              border: `1.5px solid ${isRecording ? '#FF5555' : 'rgba(232,197,71,0.4)'}`,
+              boxShadow: isRecording ? '0 0 12px rgba(255,85,85,0.5)' : 'none',
+            }}
+          >
+            <Microphone size={16} weight="fill" style={{ color: isRecording ? '#fff' : '#E8C547' }} />
+          </button>
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="무니에게 설명해보세요..."
+            placeholder={isRecording ? '듣고 있어요...' : '무니에게 설명해보세요...'}
             rows={1}
             className="flex-1 resize-none bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
             style={{ maxHeight: 120 }}
@@ -206,8 +236,8 @@ export default function DemoStudentPage() {
           <button
             onClick={sendMessage}
             disabled={!input.trim() || loading}
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
-            style={{ background: '#E8C547' }}
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
+            style={{ background: '#E8C547', boxShadow: '0 3px 0 #C8A020' }}
           >
             <PaperPlaneTilt size={16} weight="fill" style={{ color: '#1A1830' }} />
           </button>
