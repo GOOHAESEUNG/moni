@@ -38,11 +38,32 @@ interface Props {
   avgScore: number | null
 }
 
-function ScoreDot({ score }: { score: number | null }) {
-  if (score === null) return <span className="w-2.5 h-2.5 rounded-full bg-gray-200 inline-block" />
-  if (score >= 90) return <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block" />
-  if (score >= 70) return <span className="w-2.5 h-2.5 rounded-full bg-[#E8C547] inline-block" />
-  return <span className="w-2.5 h-2.5 rounded-full bg-orange-400 inline-block" />
+const clayCard = {
+  background: '#FFFFFF',
+  borderRadius: '20px',
+  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+} as const
+
+function ScorePill({ score }: { score: number | null }) {
+  if (score === null) {
+    return (
+      <span
+        className="text-xs font-bold px-3 py-1 rounded-full"
+        style={{ background: '#F7F7F7', color: '#9EA0B4' }}
+      >
+        미완료
+      </span>
+    )
+  }
+  const color = score >= 90 ? '#4CAF50' : score >= 70 ? '#E8C547' : '#FF9600'
+  return (
+    <span
+      className="text-xs font-bold px-3 py-1 rounded-full"
+      style={{ background: `${color}20`, color }}
+    >
+      {score}점
+    </span>
+  )
 }
 
 function getToday() {
@@ -77,15 +98,18 @@ export default function TeacherDashboard({
   const activeUnitsCount = units.length
 
   return (
-    <div className="min-h-screen bg-[#F2F2F5] font-sans pb-24">
+    <div className="min-h-screen pb-24" style={{ background: '#F7F7F7' }}>
       {/* 헤더 */}
-      <div className="bg-white border-b border-border px-4 pt-10 pb-6">
-        <p className="text-xs text-muted-foreground mb-1">{getToday()}</p>
-        <h1 className="text-2xl font-bold text-[#1A1830]">
+      <div
+        className="px-4 pt-10 pb-6"
+        style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}
+      >
+        <p className="text-xs mb-1" style={{ color: '#9EA0B4' }}>{getToday()}</p>
+        <h1 className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>
           안녕하세요, {profile.name} 선생님!
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          {currentClass.name} &middot; 학생 {totalStudents}명
+        <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>
+          {currentClass.name} · 학생 {totalStudents}명
         </p>
       </div>
 
@@ -93,25 +117,25 @@ export default function TeacherDashboard({
         {/* 통계 그리드 2x2 */}
         <div className="grid grid-cols-2 gap-3">
           <StatCard
-            icon={<Users size={22} weight="fill" className="text-[#E8C547]" />}
+            icon={<Users size={22} weight="fill" style={{ color: '#E8C547' }} />}
             label="학생 수"
             value={totalStudents}
             unit="명"
           />
           <StatCard
-            icon={<Check size={22} weight="fill" className="text-[#E8C547]" />}
+            icon={<Check size={22} weight="fill" style={{ color: '#E8C547' }} />}
             label="완료 세션"
             value={totalCompletedSessions}
             unit="회"
           />
           <StatCard
-            icon={<ChartBar size={22} weight="fill" className="text-[#E8C547]" />}
+            icon={<ChartBar size={22} weight="fill" style={{ color: '#E8C547' }} />}
             label="평균 점수"
             value={avgScore ?? '-'}
             unit={avgScore !== null ? '점' : ''}
           />
           <StatCard
-            icon={<BookOpen size={22} weight="fill" className="text-[#E8C547]" />}
+            icon={<BookOpen size={22} weight="fill" style={{ color: '#E8C547' }} />}
             label="활성 단원"
             value={activeUnitsCount}
             unit="개"
@@ -121,43 +145,41 @@ export default function TeacherDashboard({
         {/* 활성 단원 카드 */}
         {units.length > 0 ? (
           <div className="space-y-3">
-            <h2 className="font-bold text-[#1A1830] px-1">활성 단원</h2>
+            <h2 className="font-extrabold px-1" style={{ color: '#2D2F2F' }}>활성 단원</h2>
             {units.map((unit) => {
               const completed = unitCompletions[unit.id] ?? 0
               const total = totalStudents
               const pct = total > 0 ? Math.round((completed / total) * 100) : 0
               return (
-                <div
-                  key={unit.id}
-                  className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5"
-                >
+                <div key={unit.id} className="p-5" style={clayCard}>
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div>
-                      <p className="font-bold text-[#1A1830]">{unit.title}</p>
+                      <p className="font-bold" style={{ color: '#2D2F2F' }}>{unit.title}</p>
                       {unit.grade_hint && (
-                        <span className="text-xs text-muted-foreground">{unit.grade_hint}</span>
+                        <span className="text-xs" style={{ color: '#9EA0B4' }}>{unit.grade_hint}</span>
                       )}
                     </div>
-                    <span className="text-xs font-semibold text-[#E8C547] shrink-0">
+                    <span className="text-xs font-bold shrink-0" style={{ color: '#E8C547' }}>
                       {completed}/{total}명 완료
                     </span>
                   </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
+                  {/* 프로그레스 바 */}
+                  <div className="h-2.5 rounded-full overflow-hidden" style={{ background: '#F7F7F7' }}>
                     <div
-                      className="h-full bg-[#E8C547] rounded-full transition-all duration-500"
-                      style={{ width: `${pct}%` }}
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${pct}%`, background: '#E8C547' }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1.5 text-right">{pct}%</p>
+                  <p className="text-xs mt-1.5 text-right" style={{ color: '#9EA0B4' }}>{pct}%</p>
                 </div>
               )
             })}
           </div>
         ) : (
-          <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-6 text-center">
-            <BookOpen size={36} className="text-[#E8C547] mx-auto mb-2" />
-            <p className="font-semibold text-[#1A1830]">아직 단원이 없어요</p>
-            <p className="text-sm text-muted-foreground mt-1">아래 + 버튼으로 첫 단원을 만들어보세요!</p>
+          <div className="p-6 text-center" style={clayCard}>
+            <BookOpen size={36} style={{ color: '#E8C547' }} className="mx-auto mb-2" />
+            <p className="font-bold" style={{ color: '#2D2F2F' }}>아직 단원이 없어요</p>
+            <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>아래 + 버튼으로 첫 단원을 만들어보세요!</p>
           </div>
         )}
 
@@ -165,26 +187,24 @@ export default function TeacherDashboard({
         {students.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
-              <h2 className="font-bold text-[#1A1830]">학생 현황</h2>
+              <h2 className="font-extrabold" style={{ color: '#2D2F2F' }}>학생 현황</h2>
               <Link
                 href="/teacher/students"
-                className="text-xs text-muted-foreground flex items-center gap-0.5 hover:text-[#E8C547] transition-colors"
+                className="text-xs flex items-center gap-0.5 transition-opacity hover:opacity-70"
+                style={{ color: '#9EA0B4' }}
               >
                 전체보기 <ArrowRight size={12} />
               </Link>
             </div>
-            <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] divide-y divide-border overflow-hidden">
+            <div className="overflow-hidden divide-y" style={{ ...clayCard, borderColor: '#F7F7F7' }}>
               {students.map((student) => {
-                const score = studentScores[student.id]
+                const score = studentScores[student.id] ?? null
                 return (
                   <div key={student.id} className="flex items-center justify-between px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <ScoreDot score={score} />
-                      <span className="font-medium text-[#1A1830] text-sm">{student.name}</span>
-                    </div>
-                    <span className="text-sm font-semibold text-[#E8C547]">
-                      {score !== null ? `${score}점` : '미완료'}
+                    <span className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>
+                      {student.name}
                     </span>
+                    <ScorePill score={score} />
                   </div>
                 )
               })}
@@ -193,28 +213,51 @@ export default function TeacherDashboard({
         )}
 
         {/* 초대 코드 */}
-        <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5">
-          <p className="text-xs text-muted-foreground mb-1">학생 초대 코드</p>
+        <div className="p-5" style={clayCard}>
+          <p className="text-xs mb-1" style={{ color: '#9EA0B4' }}>학생 초대 코드</p>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold tracking-widest text-[#1A1830]">
+            <span className="text-2xl font-extrabold tracking-widest" style={{ color: '#2D2F2F' }}>
               {currentClass.invite_code}
             </span>
             <button
               onClick={copyInviteCode}
-              className="flex items-center gap-1.5 bg-[#F2F2F5] hover:bg-[#E8C547]/20 transition-colors rounded-full px-4 py-2 text-sm font-medium text-[#1A1830]"
+              className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold transition-all duration-150"
+              style={{ background: '#F7F7F7', color: '#2D2F2F' }}
             >
-              {copied ? <Check size={16} weight="bold" className="text-emerald-500" /> : <Copy size={16} />}
+              {copied ? <Check size={16} weight="bold" style={{ color: '#4CAF50' }} /> : <Copy size={16} />}
               {copied ? '복사됨!' : '복사'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* 하단 고정 단원 추가 버튼 */}
+      {/* 우하단 FAB — Duolingo 3D 버튼 */}
       <div className="fixed bottom-6 right-4">
         <Link
           href="/teacher/units/new"
-          className="flex items-center gap-2 bg-[#E8C547] text-[#1A1830] font-bold rounded-full px-5 py-3.5 shadow-lg shadow-[#E8C547]/30 hover:bg-[#E8C547]/90 transition-colors"
+          className="flex items-center gap-2 font-extrabold text-sm transition-all duration-150"
+          style={{
+            background: '#E8C547',
+            borderRadius: '9999px',
+            padding: '14px 20px',
+            color: '#1A1830',
+            boxShadow: '0 4px 0 #C8A020',
+          }}
+          onMouseDown={(e) => {
+            const el = e.currentTarget as HTMLAnchorElement
+            el.style.transform = 'translateY(2px)'
+            el.style.boxShadow = '0 2px 0 #C8A020'
+          }}
+          onMouseUp={(e) => {
+            const el = e.currentTarget as HTMLAnchorElement
+            el.style.transform = 'translateY(0)'
+            el.style.boxShadow = '0 4px 0 #C8A020'
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget as HTMLAnchorElement
+            el.style.transform = 'translateY(0)'
+            el.style.boxShadow = '0 4px 0 #C8A020'
+          }}
         >
           <Plus size={20} weight="bold" />
           단원 추가
@@ -236,14 +279,18 @@ function StatCard({
   unit: string
 }) {
   return (
-    <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 flex flex-col gap-2">
+    <div className="p-5 flex flex-col gap-2" style={{
+      background: '#FFFFFF',
+      borderRadius: '20px',
+      boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+    }}>
       {icon}
       <div>
-        <p className="text-2xl font-bold text-[#E8C547]">
+        <p className="text-2xl font-extrabold leading-none" style={{ color: '#E8C547' }}>
           {value}
-          <span className="text-sm font-semibold text-muted-foreground ml-0.5">{unit}</span>
+          <span className="text-sm font-bold ml-0.5" style={{ color: '#9EA0B4' }}>{unit}</span>
         </p>
-        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>{label}</p>
       </div>
     </div>
   )
