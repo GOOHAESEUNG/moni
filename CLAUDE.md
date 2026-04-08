@@ -1,85 +1,45 @@
-# KIT 바이브코딩 공모전 — 프로젝트 지침
+# 무니에게 알려줘
 
-## 프로젝트 컨텍스트
+## 프로젝트
+학생이 AI(무니)를 가르치며 배우는 교육 앱 — 프로테제 효과 기반. 소규모 학원 타겟.
+마감: 2026-04-14 (KIT 바이브코딩 공모전). **동작하는 데모 > 완벽한 코드.**
 
-- 참가자: 구혜승 (서울여대 소프트웨어융합학과 21학번, 개인 참가)
-- 공모전: 제1회 K.I.T. 바이브코딩 공모전
-- 주제: AI 활용 차세대 교육 솔루션
-- 핵심 방향: LMS가 아닌, AI 없이는 존재 자체가 불가능한 차세대 경험
+## 스택
+- Next.js 16 App Router · TypeScript · Tailwind v4 · shadcn/ui
+- Supabase (PostgreSQL + Auth + RLS)
+- OpenAI API (gpt-4o) · Web Speech API (STT) · OpenAI TTS
+- Framer Motion · @phosphor-icons/react (lucide 금지)
 
-## 서비스 컨셉
-
-**"학생이 AI를 가르친다"** — 프로테제 효과(Protégé Effect) 기반
-
-- 선생님이 오늘 배운 개념을 입력
-- 학생이 AI에게 그 개념을 설명
-- AI는 멍청한 척 / 틀린 척 / 꼬리 질문으로 학생의 구멍을 유도
-- 학생이 막히는 순간 = 진짜 모르는 지점
-- 강사 대시보드에 학생별 이해도 리포트 자동 생성
-
-**타겟:** 강사 1~3명 소규모 학원 (수학/영어)  
-**페인포인트 근거:** 학원 원장 인터뷰 — 수기+메모장으로 관리, AI 필요성은 느끼나 진입장벽 높음, 학생 피드백 1인당 10분 소요
-
-## AI 활용 전략 (멀티 에이전트)
-
-GAN 방식에서 영감 — 단일 에이전트의 컨텍스트 불안감 + 자기평가 편향을 구조로 해결
-
-```
-플래너 Claude  → 스펙 설계, 기능 우선순위, 토큰 효율 관리
-생성기 Claude  → 실제 코드 구현 (Claude Code)
-평가기 Claude  → 결과물 직접 사용하며 냉정하게 검증
-```
-
-## 심사기준 (항상 이 기준으로 냉정하게 판단)
-
-1. **기술적 완성도** — 실제로 돌아가는가, 기획서대로 구현됐는가
-2. **AI 활용 능력** — 전략적으로 썼는가, 왜 이 도구인지 논리가 있는가
-3. **기획력/실무 접합성** — 인터뷰 기반 페인포인트인가, 수치가 있는가
-4. **창의성** — AI 없이는 불가능한 접근인가
-
-💀 탈락 패턴: 기획 거창 + 데모 절반 동작 / "Claude로 코드 짰어요" 한 줄 / 페인포인트-솔루션 연결 약함 / ChatGPT 챗봇 = 창의적이라는 착각
-
-## Claude에게 요청하는 역할
-
-- 모든 판단은 위 심사기준 4개로 냉정하게
-- 결론 먼저, 간결하게
-- 약한 부분은 softening 없이 직접 짚을 것
-
-## 디자인 컨텍스트
-
-**레퍼런스**: Duolingo (캐릭터 중심, 밝고 에너제틱)  
-**라이트 모드 전용** — 다크모드 없음  
-**폰트**: Nunito (둥글고 친근, 한국어 폴백: Rounded Mplus 1c)  
-**대화 화면 배경**: 우주/달밤 — 별빛 파티클, 어두운 그라디언트 하늘
-
-### 디자인 원칙 5가지
-
-1. **무니가 주인공이다** — 모든 화면에서 무니 캐릭터가 중심. 텍스트보다 먼저 눈에 들어와야 함
-2. **학생은 항상 이긴다** — 에러/막힘도 무니가 위로하는 톤. 빨간 경고 대신 따뜻한 골드/오렌지
-3. **집중을 방해하지 않는다** — 대화 화면은 무니와 입력창만. 내비게이션 숨김
-4. **선생님은 한눈에 읽는다** — 대시보드는 스캔 가능. 숫자+색상으로 이해도 즉시 파악
-5. **애니메이션은 목적이 있다** — 무니 표정 전환, 별빛 파티클만. 장식용 금지
-
-### 아이콘
-- **Phosphor Icons** (`@phosphor-icons/react`) 사용 — lucide-react 금지
-- 임포트: `import { House, Star, Moon } from '@phosphor-icons/react'`
-- 웨이트: `weight="regular"` (기본), 강조 시 `weight="fill"`
-- 이모지를 구조적 아이콘으로 사용 금지 (네비게이션, 버튼 등)
-
-### UI 코드 작성 전 필수 단계
-UI/화면/컴포넌트 구현 전 반드시 추론 엔진 실행:
+## 핵심 명령어
 ```bash
-python3 ~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-pro-max/scripts/search.py \
-  "education kids learning mobile app playful" --design-system -p "무니에게 알려줘" -f markdown
+npm run dev        # 개발 서버 (http://localhost:3000)
+npm run build      # 빌드 검증 — 커밋 전 필수
 ```
 
-### 토큰 요약
+## 파일 구조
 ```
-font: Nunito
-primary: oklch(0.58 0.18 280)  /* 라벤더 퍼플 */
-accent:  oklch(0.82 0.12 85)   /* 골드 크레센트 */
-bg:      oklch(0.98 0.008 280) /* 크림 화이트 */
-radius:  1rem (base) — 버튼/카드 pill/rounded-3xl 수준
-shadow:  컬러 그림자 shadow-primary/10 — 흰 박스 그림자 금지
-anti:    보라 그라디언트 남발, Inter 폰트, 카드 안에 카드 금지
+src/app/(auth)/          # 로그인/회원가입
+src/app/student/         # 학생 플로우
+src/app/teacher/         # 선생님 플로우
+src/app/demo/            # 게스트 데모
+src/components/mooni/    # 무니 캐릭터 컴포넌트
+src/lib/supabase/        # client.ts / server.ts
+src/types/database.ts    # DB 타입 정의
+public/mooni/            # 캐릭터 PNG 6종 (curious/confused/happy/thinking/oops/impressed)
 ```
+
+## DB 핵심 테이블
+`profiles` · `classes` · `enrollments` · `units` · `sessions` · `messages` · `reports`
+스키마: `supabase/schema.sql` · RLS 활성화됨
+
+## 에이전트 & 워크플로우
+@docs/workflow.md
+
+## 디자인 시스템
+@.impeccable.md
+
+## 심사 기준 (판단 기준)
+1. 기술 완성도 — 실제로 돌아가는가
+2. AI 활용 능력 — 전략적으로 썼는가
+3. 기획력 — 인터뷰 기반, 수치 있는가
+4. 창의성 — AI 없이는 불가능한가
