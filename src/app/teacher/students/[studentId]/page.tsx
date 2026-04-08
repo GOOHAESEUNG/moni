@@ -19,6 +19,16 @@ export default async function StudentDetailPage({ params }: Props) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
+  // 현재 선생님의 반에 해당 학생이 있는지 확인
+  const { data: ownership } = await admin
+    .from('enrollments')
+    .select('class_id, classes!inner(teacher_id)')
+    .eq('student_id', studentId)
+    .eq('classes.teacher_id', user.id)
+    .single()
+
+  if (!ownership) redirect('/teacher')
+
   const { data: student } = await admin.from('profiles').select('name, email').eq('id', studentId).single()
   const { data: reports } = await admin
     .from('reports')
