@@ -41,7 +41,7 @@ export default async function SessionEndPage({ params, searchParams }: Props) {
       sessionId={sessionId}
       reportId={reportId ?? null}
       unitTitle={unitTitle}
-      understandingScore={session?.understanding_score ?? 50}
+      understandingScore={session?.understanding_score ?? 0}
       selfReflection={session?.self_reflection ?? ''}
       summary={report?.summary ?? null}
       weakPoints={report?.weak_points ?? []}
