@@ -1,9 +1,8 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { ArrowRight, BookOpen, Star } from '@phosphor-icons/react'
+import MooniCharacter from '@/components/mooni/MooniCharacter'
 import type { Profile, Unit } from '@/types/database'
 
 interface RecentSession {
@@ -52,21 +51,9 @@ export default function StudentHome({ profile, activeUnit, recentSessions }: Pro
         </p>
       </div>
 
-      {/* 무니 히어로 */}
-      <div className="flex justify-center py-6">
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <Image
-            src="/mooni/hero.png"
-            alt="무니"
-            width={200}
-            height={200}
-            priority
-            className="drop-shadow-lg"
-          />
-        </motion.div>
+      {/* 무니 히어로 — 폴짝 뛰는 애니메이션 */}
+      <div className="flex justify-center py-4">
+        <MooniCharacter useVideo size={220} />
       </div>
 
       <div className="px-5 space-y-5 max-w-lg mx-auto">
