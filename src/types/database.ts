@@ -14,6 +14,8 @@ export interface Class {
   id: string
   teacher_id: string
   name: string
+  grade: number | null      // 1~6학년
+  class_number: number | null  // 1~20반
   invite_code: string
   created_at: string
 }

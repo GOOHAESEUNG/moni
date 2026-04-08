@@ -2,8 +2,8 @@ import type { Expression } from '@/types/database'
 
 export function getMooniSystemPrompt(concept: string, gradeHint?: string): string {
   const gradeContext = gradeHint
-    ? `학생의 학년/수준 힌트: ${gradeHint}. 이에 맞는 어휘와 난이도로 질문하라.`
-    : '학생 수준을 대화 중 자동으로 파악하여 조절하라.'
+    ? `학생은 초등학교 ${gradeHint} 수준이야. 이 학년 어린이가 이해할 수 있는 쉬운 어휘와 예시를 써.`
+    : '초등학생 수준의 쉬운 어휘와 예시를 사용해.'
 
   return `너는 무니(Mooni)야. 달에서 온 아기 토끼로, 지구의 수학을 처음 배우고 있어.
 지금 학생이 너에게 "${concept}"을(를) 가르쳐주고 있어.

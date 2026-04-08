@@ -5,18 +5,10 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, BookOpen } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 
-const GRADE_HINTS = [
-  { value: '초등 저학년', label: '초등 저학년' },
-  { value: '초등 고학년', label: '초등 고학년' },
-  { value: '중학생', label: '중학생' },
-  { value: '고등학생', label: '고등학생' },
-]
-
 export default function NewUnitPage() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [concept, setConcept] = useState('')
-  const [gradeHint, setGradeHint] = useState('초등 고학년')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -40,7 +32,7 @@ export default function NewUnitPage() {
 
     const { data: classes } = await supabase
       .from('classes')
-      .select('id')
+      .select('id, grade')
       .eq('teacher_id', user.id)
       .order('created_at', { ascending: true })
       .limit(1)
@@ -50,6 +42,8 @@ export default function NewUnitPage() {
       setLoading(false)
       return
     }
+
+    const gradeHint = classes[0].grade ? `${classes[0].grade}학년` : '초등'
 
     const { error: insertError } = await supabase
       .from('units')
@@ -123,27 +117,6 @@ export default function NewUnitPage() {
               className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none"
               required
             />
-          </div>
-
-          {/* 학년 힌트 */}
-          <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 space-y-3">
-            <p className="text-sm font-semibold text-[#1A1830]">학년 수준</p>
-            <div className="flex flex-wrap gap-2">
-              {GRADE_HINTS.map((g) => (
-                <button
-                  key={g.value}
-                  type="button"
-                  onClick={() => setGradeHint(g.value)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                    gradeHint === g.value
-                      ? 'bg-[#E8C547] text-[#1A1830] shadow-sm'
-                      : 'bg-[#F2F2F5] text-muted-foreground hover:bg-[#E8C547]/10'
-                  }`}
-                >
-                  {g.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* 무니 미리보기 */}
