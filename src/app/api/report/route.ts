@@ -95,18 +95,23 @@ export async function POST(req: NextRequest) {
       .select()
       .single()
 
-    if (reportError) {
+    if (reportError || !report) {
       console.error('[/api/report] report insert error:', reportError)
+      return NextResponse.json({ error: '리포트 저장 실패' }, { status: 500 })
     }
 
     // sessions 테이블 업데이트
-    await supabase
+    const { error: sessionUpdateError } = await supabase
       .from('sessions')
       .update({
         ended_at: new Date().toISOString(),
         understanding_score,
       })
       .eq('id', sessionId)
+
+    if (sessionUpdateError) {
+      console.error('[/api/report] sessions update error:', sessionUpdateError)
+    }
 
     return NextResponse.json({
       ...report,
