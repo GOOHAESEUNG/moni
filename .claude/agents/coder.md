@@ -59,10 +59,19 @@ git push origin {BRANCH_NAME}
 - 테스트 파일 생성 (요청 시 제외)
 - main 브랜치에 직접 커밋
 
+## 완료 후 AI 로그 기록 (필수)
+```bash
+.claude/hooks/log-agent-activity.sh \
+  "coder (Claude Code + worktree)" \
+  "Issue #{번호}: {이슈 제목}" \
+  "구현 스펙 {N}개 파일" \
+  "브랜치 {브랜치명}, 커밋 {N}개, 빌드 통과"
+```
+
 ## 출력 형식
 ```
 BRANCH: {브랜치명}
-COMMIT: {커밋 해시}
+COMMITS: {커밋 수}
 STATUS: success | failed
 CHANGES:
 - {변경된 파일 목록}

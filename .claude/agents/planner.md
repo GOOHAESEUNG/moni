@@ -48,3 +48,12 @@ gh issue create \
   --label "{feat|fix|refactor}" \
   --repo GOOHAESEUNG/Moni
 ```
+
+## 완료 후 AI 로그 기록 (필수)
+```bash
+.claude/hooks/log-agent-activity.sh \
+  "planner" \
+  "{이슈 제목}" \
+  "{기능 요청 내용}" \
+  "Issue #{번호} 생성, 브랜치: {브랜치명}"
+```

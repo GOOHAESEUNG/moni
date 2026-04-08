@@ -66,3 +66,12 @@ REQUIRED_CHANGES:
 - 파일: {경로}
   변경: {구체적으로}
 ```
+
+## 완료 후 AI 로그 기록 (필수)
+```bash
+.claude/hooks/log-agent-activity.sh \
+  "reviewer (Codex)" \
+  "PR #{번호} 코드 리뷰" \
+  "diff {N}줄" \
+  "{APPROVED|CHANGES_REQUESTED}: {핵심 피드백 한 줄}"
+```
