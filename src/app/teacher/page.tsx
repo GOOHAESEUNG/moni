@@ -32,48 +32,13 @@ export default async function TeacherPage() {
     .eq('teacher_id', user.id)
     .order('created_at', { ascending: true })
 
-  // 클래스가 없으면 자동 생성 (admin으로 확실하게)
   if (!classes || classes.length === 0) {
-    const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase()
-    await admin.from('classes').insert({
-      teacher_id: user.id,
-      name: `${profile.name}의 반`,
-      invite_code: inviteCode,
-    })
-    // insert 후 다시 조회
-    const { data: refreshed } = await admin
-      .from('classes')
-      .select('*')
-      .eq('teacher_id', user.id)
-      .order('created_at', { ascending: true })
-    classes = refreshed ?? []
+    redirect('/teacher/classes/new')
   }
 
   const currentClass = classes?.[0]
   if (!currentClass) {
-    // 클래스 생성 재시도 (RLS 우회: service role 불가하므로 안내 UI)
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-5" style={{ background: '#F7F7F7' }}>
-        <div className="text-center max-w-sm">
-          <div className="text-5xl mb-4">🌙</div>
-          <h2 className="text-xl font-extrabold mb-2" style={{ color: '#2D2F2F' }}>반을 만들어볼까요?</h2>
-          <p className="text-sm mb-6" style={{ color: '#9EA0B4' }}>처음 오셨군요! 아래 버튼을 눌러 첫 번째 반을 만들어보세요.</p>
-          <a
-            href="/teacher/classes/new"
-            className="inline-block font-extrabold text-sm"
-            style={{
-              background: '#E8C547',
-              borderRadius: '9999px',
-              padding: '14px 32px',
-              color: '#1A1830',
-              boxShadow: '0 4px 0 #C8A020',
-            }}
-          >
-            반 만들기
-          </a>
-        </div>
-      </div>
-    )
+    redirect('/teacher/classes/new')
   }
 
   // 학생 목록 (enrollments + profiles)
