@@ -17,10 +17,10 @@ export default async function StudentPage() {
 
   if (!profile || profile.role !== 'student') redirect('/teacher')
 
-  // 학생이 속한 반 조회
+  // 학생이 속한 반 조회 (반 이름 포함)
   const { data: enrollment } = await supabase
     .from('enrollments')
-    .select('class_id')
+    .select('class_id, classes(name, grade, class_number)')
     .eq('student_id', user.id)
     .single()
 
@@ -46,12 +46,32 @@ export default async function StudentPage() {
     .order('ended_at', { ascending: false })
     .limit(2)
 
+  // 완료한 unit ID 목록
+  let completedUnitIds: string[] = []
+  if (enrollment?.class_id && activeUnits.length > 0) {
+    const { data: completedSessions } = await supabase
+      .from('sessions')
+      .select('unit_id')
+      .eq('student_id', user.id)
+      .not('ended_at', 'is', null)
+      .in('unit_id', activeUnits.map(u => u.id))
+    completedUnitIds = [...new Set((completedSessions ?? []).map(s => s.unit_id))]
+  }
+
+  // 반 이름 추출
+  type ClassInfo = { name: string; grade: number | null; class_number: number | null } | null
+  const classInfo = enrollment?.classes as ClassInfo | ClassInfo[] | undefined
+  const resolvedClass = Array.isArray(classInfo) ? classInfo[0] : classInfo
+  const className = resolvedClass?.name ?? null
+
   return (
     <StudentHome
       profile={profile}
       activeUnits={activeUnits}
       recentSessions={recentSessions ?? []}
       hasEnrollment={!!enrollment?.class_id}
+      completedUnitIds={completedUnitIds}
+      className={className}
     />
   )
 }
