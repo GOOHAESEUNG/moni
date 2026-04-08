@@ -16,12 +16,29 @@ description: UI 화면이 포함된 작업에서 코드 구현 후 반드시 실
 
 ## 실행 순서
 
-### 0. 새 화면 설계 전 (선택) — design-dna로 레퍼런스 DNA 추출
-새 화면을 만들기 전에 Duolingo 레퍼런스 DNA를 참조하면 방향이 명확해짐:
+### 0. 새 화면 설계 전 — 디자인 툴체인 활용
+
+**옵션 A: Stitch로 UI 초안 생성 (권장)**
+```
+/stitch-design {화면 설명 + 무니 디자인 컨텍스트}
+→ Stitch가 고퀄 UI 생성
+→ /react:components 로 React 컴포넌트 변환
+```
+
+**옵션 B: design-dna로 Duolingo DNA 추출 후 참조**
 ```
 /design-dna analyze https://duolingo.com
+→ DNA JSON 추출 → 구현 시 참조
 ```
-추출된 DNA JSON을 구현 시 참조.
+
+**두 가지 조합 (최고 퀄리티):**
+```
+/design-dna analyze https://duolingo.com  → DNA 추출
+/stitch-design {화면} with DNA context   → DNA 기반 UI 생성
+/react:components                         → React 변환
+```
+
+Stitch 프롬프트 작성 전 `/enhance-prompt`로 프롬프트 품질 향상 가능.
 
 ### 1. 변경된 UI 파일 파악
 ```bash

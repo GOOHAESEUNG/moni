@@ -42,6 +42,33 @@
    → AI 로그 기록
 ```
 
+## 디자인 툴체인
+
+```
+새 화면 설계
+   │
+   ├─ /enhance-prompt    → 프롬프트 품질 향상
+   ├─ /design-dna        → Duolingo DNA 추출 (레퍼런스)
+   ├─ /stitch-design     → Stitch MCP로 UI 초안 생성
+   └─ /react:components  → React 컴포넌트 변환
+   │
+구현 완료 후 (design-reviewer 에이전트)
+   ├─ /critique          → UX/계층/무니 원칙 검토
+   ├─ /audit             → 접근성/반응형 검토
+   ├─ /animate           → 애니메이션 보완 (필요 시)
+   └─ /polish            → 배포 전 최종 다듬기
+```
+
+### 설치된 디자인 도구 목록
+| 도구 | 스킬/MCP | 용도 |
+|------|---------|------|
+| impeccable | 플러그인 | /critique, /audit, /polish 등 20개 커맨드 |
+| design-dna | 스킬 | 레퍼런스 UI → Design DNA JSON 추출 |
+| Stitch MCP | MCP 서버 | 텍스트 → 고퀄 UI 화면 생성 (Gemini 2.5 Pro) |
+| react:components | 스킬 | Stitch 화면 → React 컴포넌트 변환 |
+| enhance-prompt | 스킬 | UI 프롬프트 품질 향상 |
+| .impeccable.md | 컨텍스트 | 무니 디자인 원칙 5가지 (모든 도구 자동 참조) |
+
 ## UI 작업 여부 판단 기준
 
 | 작업 유형 | design-reviewer 실행 |
