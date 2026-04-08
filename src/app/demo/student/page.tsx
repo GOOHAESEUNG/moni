@@ -68,7 +68,11 @@ export default function DemoStudentPage() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: '앗, 연결이 끊겼어요. 다시 시도해줄 수 있어요?', expression: 'oops' as Expression },
+        {
+          role: 'assistant',
+          content: '앗, 연결이 끊겼어요. 다시 시도해줄 수 있어요?',
+          expression: 'oops' as Expression,
+        },
       ])
     } finally {
       setLoading(false)
@@ -154,7 +158,11 @@ export default function DemoStudentPage() {
                 style={
                   msg.role === 'user'
                     ? { background: '#E8C547', color: '#1A1830', fontWeight: 600 }
-                    : { background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }
+                    : {
+                        background: 'rgba(255,255,255,0.10)',
+                        color: 'rgba(255,255,255,0.92)',
+                        backdropFilter: 'blur(8px)',
+                      }
                 }
               >
                 {msg.content}

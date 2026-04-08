@@ -111,7 +111,6 @@ export default function DemoTeacherPage() {
                 진행 중
               </span>
             </div>
-            {/* 진행률 바 */}
             <div className="mt-4">
               <div className="flex justify-between text-xs mb-1.5" style={{ color: '#9EA0B4' }}>
                 <span>완료 학생</span>
