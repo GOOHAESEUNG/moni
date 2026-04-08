@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, BookOpen, Star, Flame } from '@phosphor-icons/react'
+import { ArrowRight, BookOpen, Star, Flame, DoorOpen } from '@phosphor-icons/react'
 import MooniSprite from '@/components/mooni/MooniSprite'
 import type { Profile, Unit } from '@/types/database'
 
@@ -158,13 +158,27 @@ export default function StudentHome({ profile, activeUnit, recentSessions }: Pro
             </div>
           ) : (
             <div className="p-6 text-center" style={clayCard}>
-              <p className="text-4xl mb-2">😴</p>
-              <p className="font-bold" style={{ color: '#2D2F2F' }}>
-                아직 배정된 단원이 없어요
+              <div className="text-4xl mb-3">🌙</div>
+              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>
+                반에 참여해보세요!
               </p>
-              <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>
-                선생님이 단원을 배정하면 여기에 나타나요
+              <p className="text-sm mt-1 mb-4" style={{ color: '#9EA0B4' }}>
+                선생님께 받은 초대 코드로 반에 참여하면<br/>오늘의 학습이 여기에 나타나요
               </p>
+              <Link
+                href="/student/join"
+                className="inline-flex items-center gap-2 font-extrabold text-sm"
+                style={{
+                  background: '#E8C547',
+                  borderRadius: '9999px',
+                  padding: '12px 24px',
+                  color: '#1A1830',
+                  boxShadow: '0 4px 0 #C8A020',
+                }}
+              >
+                <DoorOpen size={18} weight="fill" />
+                반 참여하기
+              </Link>
             </div>
           )}
         </section>
