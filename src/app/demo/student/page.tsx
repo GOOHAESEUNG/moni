@@ -212,9 +212,6 @@ export default function DemoStudentPage() {
             <PaperPlaneTilt size={16} weight="fill" style={{ color: '#1A1830' }} />
           </button>
         </div>
-        <p className="mt-2 text-center text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
-          Enter로 전송 · Shift+Enter 줄바꿈
-        </p>
       </div>
     </div>
   )

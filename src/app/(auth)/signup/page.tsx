@@ -4,9 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import MooniCharacter from '@/components/mooni/MooniCharacter'
 
 type Role = 'teacher' | 'student'
@@ -45,58 +42,84 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[oklch(0.95_0.04_280)] to-[oklch(0.98_0.01_280)] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#F7F7F7' }}>
       <div className="w-full max-w-sm">
+        {/* 캐릭터 + 앱 이름 */}
         <div className="flex flex-col items-center mb-8">
-          <MooniCharacter expression="happy" size={120} className="mb-3" />
-          <h1 className="text-2xl font-bold text-primary">무니에게 알려줘</h1>
-          <p className="text-sm text-muted-foreground mt-1">새로운 친구가 생겼어요! 🌙</p>
+          <MooniCharacter expression="happy" size={160} className="mb-4" />
+          <h1 className="text-3xl font-extrabold" style={{ color: '#2D2F2F' }}>무니에게 알려줘</h1>
+          <p className="text-sm mt-2" style={{ color: '#9EA0B4' }}>새로운 친구가 생겼어요!</p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-lg shadow-primary/10 p-6">
-          {/* 역할 선택 */}
-          <div className="flex rounded-2xl bg-secondary p-1 mb-5">
+        {/* 폼 카드 — Claymorphism */}
+        <div
+          className="rounded-[20px] p-6"
+          style={{
+            background: '#FFFFFF',
+            boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
+          {/* 역할 선택 pill 탭 */}
+          <div
+            className="flex rounded-full p-1 mb-5"
+            style={{ background: '#F7F7F7' }}
+          >
             {(['student', 'teacher'] as Role[]).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRole(r)}
-                className={`flex-1 py-2 text-sm font-medium rounded-xl transition-all ${
+                className="flex-1 py-2.5 text-sm font-bold rounded-full transition-all duration-200"
+                style={
                   role === r
-                    ? 'bg-white text-primary shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+                    ? {
+                        background: '#E8C547',
+                        color: '#1A1830',
+                        boxShadow: '0 2px 0 #C8A020',
+                      }
+                    : { color: '#9EA0B4' }
+                }
               >
-                {r === 'student' ? '🐇 학생' : '📚 선생님'}
+                {r === 'student' ? '학생' : '선생님'}
               </button>
             ))}
           </div>
 
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="name">이름</Label>
-              <Input
+              <label htmlFor="name" className="text-sm font-semibold" style={{ color: '#2D2F2F' }}>
+                이름
+              </label>
+              <input
                 id="name"
                 placeholder={role === 'teacher' ? '홍길동 선생님' : '홍길동'}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all"
+                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none' }}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="email">이메일</Label>
-              <Input
+              <label htmlFor="email" className="text-sm font-semibold" style={{ color: '#2D2F2F' }}>
+                이메일
+              </label>
+              <input
                 id="email"
                 type="email"
                 placeholder="hello@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all"
+                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none' }}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password">비밀번호</Label>
-              <Input
+              <label htmlFor="password" className="text-sm font-semibold" style={{ color: '#2D2F2F' }}>
+                비밀번호
+              </label>
+              <input
                 id="password"
                 type="password"
                 placeholder="8자 이상"
@@ -104,21 +127,54 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 minLength={8}
                 required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all"
+                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none' }}
               />
             </div>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p className="text-sm" style={{ color: '#FF5555' }}>{error}</p>}
 
-            <Button type="submit" className="w-full rounded-2xl" disabled={loading}>
+            {/* Duolingo 3D 버튼 */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full font-extrabold text-sm transition-all duration-150 disabled:opacity-60"
+              style={{
+                background: '#E8C547',
+                borderRadius: '9999px',
+                padding: '14px 24px',
+                color: '#1A1830',
+                boxShadow: loading ? '0 2px 0 #C8A020' : '0 4px 0 #C8A020',
+                transform: loading ? 'translateY(2px)' : 'translateY(0)',
+              }}
+              onMouseDown={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(2px)'
+                btn.style.boxShadow = '0 2px 0 #C8A020'
+              }}
+              onMouseUp={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(0)'
+                btn.style.boxShadow = '0 4px 0 #C8A020'
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(0)'
+                btn.style.boxShadow = '0 4px 0 #C8A020'
+              }}
+            >
               {loading ? '가입 중...' : '시작하기'}
-            </Button>
+            </button>
           </form>
 
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            이미 계정이 있으신가요?{' '}
-            <Link href="/login" className="text-primary font-medium hover:underline">
-              로그인
-            </Link>
+          {/* 로그인 링크 */}
+          <div className="mt-4 text-center">
+            <span className="text-sm" style={{ color: '#9EA0B4' }}>
+              이미 계정이 있으신가요?{' '}
+              <Link href="/login" className="font-bold hover:opacity-70 transition-opacity" style={{ color: '#2D2F2F' }}>
+                로그인
+              </Link>
+            </span>
           </div>
         </div>
       </div>

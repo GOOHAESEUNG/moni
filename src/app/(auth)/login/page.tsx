@@ -4,9 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import MooniCharacter from '@/components/mooni/MooniCharacter'
 
 export default function LoginPage() {
@@ -43,62 +40,123 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[oklch(0.95_0.04_280)] to-[oklch(0.98_0.01_280)] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#F7F7F7' }}>
       <div className="w-full max-w-sm">
-        {/* 로고 + 캐릭터 */}
+        {/* 캐릭터 + 앱 이름 */}
         <div className="flex flex-col items-center mb-8">
-          <MooniCharacter expression="curious" size={120} className="mb-3" />
-          <h1 className="text-2xl font-bold text-primary">무니에게 알려줘</h1>
-          <p className="text-sm text-muted-foreground mt-1">무니가 기다리고 있어요! 🌙</p>
+          <MooniCharacter expression="curious" size={160} className="mb-4" />
+          <h1 className="text-3xl font-extrabold" style={{ color: '#2D2F2F' }}>무니에게 알려줘</h1>
+          <p className="text-sm mt-2" style={{ color: '#9EA0B4' }}>무니가 기다리고 있어요!</p>
         </div>
 
-        {/* 로그인 폼 */}
-        <div className="bg-white rounded-3xl shadow-lg shadow-primary/10 p-6">
+        {/* 폼 카드 — Claymorphism */}
+        <div
+          className="rounded-[20px] p-6"
+          style={{
+            background: '#FFFFFF',
+            boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+          }}
+        >
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email">이메일</Label>
-              <Input
+              <label htmlFor="email" className="text-sm font-semibold" style={{ color: '#2D2F2F' }}>
+                이메일
+              </label>
+              <input
                 id="email"
                 type="email"
                 placeholder="hello@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all"
+                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none' }}
               />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="password">비밀번호</Label>
-              <Input
+              <label htmlFor="password" className="text-sm font-semibold" style={{ color: '#2D2F2F' }}>
+                비밀번호
+              </label>
+              <input
                 id="password"
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all"
+                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none' }}
               />
             </div>
 
             {error && (
-              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm" style={{ color: '#FF5555' }}>{error}</p>
             )}
 
-            <Button type="submit" className="w-full rounded-2xl" disabled={loading}>
+            {/* Duolingo 3D 버튼 */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full font-extrabold text-sm transition-all duration-150 disabled:opacity-60"
+              style={{
+                background: '#E8C547',
+                borderRadius: '9999px',
+                padding: '14px 24px',
+                color: '#1A1830',
+                boxShadow: loading ? '0 2px 0 #C8A020' : '0 4px 0 #C8A020',
+                transform: loading ? 'translateY(2px)' : 'translateY(0)',
+              }}
+              onMouseDown={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(2px)'
+                btn.style.boxShadow = '0 2px 0 #C8A020'
+              }}
+              onMouseUp={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(0)'
+                btn.style.boxShadow = '0 4px 0 #C8A020'
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget
+                btn.style.transform = 'translateY(0)'
+                btn.style.boxShadow = '0 4px 0 #C8A020'
+              }}
+            >
               {loading ? '로그인 중...' : '로그인'}
-            </Button>
+            </button>
           </form>
 
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            아직 계정이 없으신가요?{' '}
-            <Link href="/signup" className="text-primary font-medium hover:underline">
-              회원가입
-            </Link>
+          {/* 구분선 */}
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 h-px" style={{ background: '#E8E8E8' }} />
+            <span className="text-xs" style={{ color: '#9EA0B4' }}>또는</span>
+            <div className="flex-1 h-px" style={{ background: '#E8E8E8' }} />
           </div>
+
+          {/* 회원가입 아웃라인 버튼 */}
+          <Link
+            href="/signup"
+            className="w-full flex items-center justify-center font-extrabold text-sm transition-all duration-150"
+            style={{
+              borderRadius: '9999px',
+              padding: '14px 24px',
+              color: '#2D2F2F',
+              border: '2px solid #E8C547',
+              background: 'transparent',
+            }}
+          >
+            회원가입
+          </Link>
         </div>
 
-        {/* 게스트 데모 링크 */}
+        {/* 체험해보기 링크 */}
         <div className="mt-4 text-center">
-          <Link href="/demo" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-            로그인 없이 체험해보기 →
+          <Link
+            href="/demo"
+            className="text-sm font-medium transition-colors hover:opacity-70"
+            style={{ color: '#9EA0B4' }}
+          >
+            체험해보기 →
           </Link>
         </div>
       </div>

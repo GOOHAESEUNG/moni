@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -49,37 +50,47 @@
 }
 
 :root {
-  /* 무니 디자인 시스템 — 쿨 문라이트 팔레트 (Option B) */
-  --background: oklch(0.965 0.004 270);       /* #F2F2F5 쿨 화이트 */
-  --foreground: oklch(0.18 0.02 265);         /* 딥 스페이스 네이비 */
+  /* 무니 디자인 시스템 — Duolingo DNA + Claymorphism */
+  --primary: #E8C547;          /* 달 옐로우 */
+  --primary-shadow: #C8A020;   /* 3D 버튼 하단 그림자 */
+  --bg: #F7F7F7;               /* 페이지 배경 */
+  --card: #FFFFFF;             /* 카드 배경 */
+  --text: #2D2F2F;             /* 주 텍스트 */
+  --muted: #9EA0B4;            /* 부 텍스트 */
+  --success: #4CAF50;
+  --warning: #FF9600;
+
+  /* shadcn/ui 호환 변수 */
+  --background: oklch(0.971 0 0);              /* #F7F7F7 */
+  --foreground: oklch(0.186 0.007 262);        /* #2D2F2F */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.02 265);
+  --card-foreground: oklch(0.186 0.007 262);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.02 265);
+  --popover-foreground: oklch(0.186 0.007 262);
   --primary: oklch(0.80 0.14 88);             /* #E8C547 달 옐로우 */
-  --primary-foreground: oklch(0.15 0.02 265); /* 어두운 텍스트 (노란 배경 위) */
-  --secondary: oklch(0.67 0.04 265);          /* #9EA0B4 쿨 그레이 */
+  --primary-foreground: oklch(0.12 0.02 265); /* #1A1830 어두운 텍스트 */
+  --secondary: oklch(0.67 0.04 265);          /* #9EA0B4 */
   --secondary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.94 0.006 270);
-  --muted-foreground: oklch(0.50 0.03 265);
-  --accent: oklch(0.80 0.14 88);              /* primary와 동일 — 달 옐로우 */
-  --accent-foreground: oklch(0.15 0.02 265);
+  --muted-foreground: oklch(0.62 0.02 265);   /* #9EA0B4 */
+  --accent: oklch(0.80 0.14 88);
+  --accent-foreground: oklch(0.12 0.02 265);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.88 0.008 270);
-  --input: oklch(0.91 0.005 270);
+  --border: oklch(0.90 0.006 270);
+  --input: oklch(0.971 0 0);
   --ring: oklch(0.80 0.14 88);
-  --chart-1: oklch(0.80 0.14 88);            /* 달 옐로우 */
-  --chart-2: oklch(0.67 0.04 265);           /* 쿨 그레이 */
-  --chart-3: oklch(0.60 0.10 200);           /* 틸 */
-  --chart-4: oklch(0.70 0.12 320);           /* 로즈 */
-  --chart-5: oklch(0.65 0.14 160);           /* 민트 */
+  --chart-1: oklch(0.80 0.14 88);
+  --chart-2: oklch(0.67 0.04 265);
+  --chart-3: oklch(0.60 0.10 200);
+  --chart-4: oklch(0.70 0.12 320);
+  --chart-5: oklch(0.65 0.14 160);
   --radius: 1rem;
   --sidebar: oklch(0.97 0.003 270);
-  --sidebar-foreground: oklch(0.18 0.02 265);
+  --sidebar-foreground: oklch(0.186 0.007 262);
   --sidebar-primary: oklch(0.80 0.14 88);
-  --sidebar-primary-foreground: oklch(0.15 0.02 265);
+  --sidebar-primary-foreground: oklch(0.12 0.02 265);
   --sidebar-accent: oklch(0.94 0.006 270);
-  --sidebar-accent-foreground: oklch(0.18 0.02 265);
+  --sidebar-accent-foreground: oklch(0.186 0.007 262);
   --sidebar-border: oklch(0.88 0.008 270);
   --sidebar-ring: oklch(0.80 0.14 88);
   /* 우주 배경 (대화 화면) */

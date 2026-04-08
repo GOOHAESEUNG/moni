@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "name": "Duolingo Design DNA",
+    "source": "https://duolingo.com",
+    "created_at": "2026-04-08"
+  },
+  "design_system": {
+    "color": {
+      "primary": { "hex": "#58CC02", "role": "CTA 버튼, 성공, 주요 액션" },
+      "secondary": { "hex": "#FF9600", "role": "스트릭, 보상, 경고" },
+      "accent": { "hex": "#FF4B4B", "role": "에러, 하트 손실, 부정 피드백" },
+      "neutral": {
+        "scale": ["#FFFFFF", "#F7F7F7", "#E5E5E5", "#AFAFAF", "#777777", "#3C3C3C"],
+        "usage": "배경, 구분선, 비활성 텍스트"
+      },
+      "surface": {
+        "background": "#FFFFFF",
+        "card": "#FFFFFF",
+        "elevated": "#F7F7F7"
+      },
+      "semantic": {
+        "success": "#58CC02",
+        "warning": "#FF9600",
+        "error": "#FF4B4B",
+        "info": "#1CB0F6"
+      }
+    },
+    "typography": {
+      "font_families": {
+        "heading": "Din Round Pro",
+        "body": "Nunito Sans",
+        "mono": "monospace"
+      },
+      "type_scale": {
+        "display": { "size": "48px", "weight": 900, "line_height": "1.1", "tracking": "-0.02em" },
+        "heading_1": { "size": "32px", "weight": 800, "line_height": "1.2", "tracking": "-0.01em" },
+        "heading_2": { "size": "24px", "weight": 700, "line_height": "1.3", "tracking": "0" },
+        "heading_3": { "size": "20px", "weight": 700, "line_height": "1.4", "tracking": "0" },
+        "body": { "size": "16px", "weight": 500, "line_height": "1.5", "tracking": "0" },
+        "body_small": { "size": "14px", "weight": 500, "line_height": "1.5", "tracking": "0" },
+        "caption": { "size": "12px", "weight": 600, "line_height": "1.4", "tracking": "0.02em" }
+      },
+      "font_style_notes": "rounded, friendly, bold weight preference. Din Round Pro not web-available → Nunito로 대체"
+    },
+    "spacing": {
+      "base_unit": "4px",
+      "scale": [4, 8, 12, 16, 20, 24, 32, 48, 64],
+      "content_density": "comfortable",
+      "section_rhythm": "48px between sections, 24px between elements"
+    },
+    "shape": {
+      "border_radius": {
+        "small": "8px",
+        "medium": "12px",
+        "large": "16px",
+        "pill": "9999px"
+      },
+      "border_usage": "only on inputs and outline cards",
+      "divider_style": "1px solid #E5E5E5, rarely used"
+    },
+    "elevation": {
+      "shadow_style": "3D 하단 두꺼운 그림자 (버튼 전용), 카드는 subtle",
+      "levels": {
+        "low": "0 2px 0 rgba(0,0,0,0.2)",
+        "medium": "0 4px 0 rgba(0,0,0,0.25)",
+        "high": "0 8px 16px rgba(0,0,0,0.12)"
+      },
+      "depth_cues": "두꺼운 하단 보더로 3D 입체감 (핵심 차별점)"
+    },
+    "motion": {
+      "easing": "cubic-bezier(0.34, 1.56, 0.64, 1) — bouncy",
+      "duration_scale": { "micro": "150ms", "normal": "300ms", "macro": "500ms" },
+      "entrance_pattern": "scale up from 0.9 + fade in",
+      "exit_pattern": "scale down + fade out",
+      "philosophy": "playful bouncy — 성공 시 pop 애니메이션 필수"
+    },
+    "components": {
+      "button_style": "pill 형태 (rounded-full), 두꺼운 하단 border로 3D 효과. 클릭 시 translateY(2px) + shadow 감소",
+      "input_style": "rounded-xl, 2px border, focus 시 green border",
+      "card_style": "bg-white rounded-2xl, subtle shadow, 테두리 없음",
+      "navigation_pattern": "하단 네비 (모바일), 아이콘+라벨",
+      "component_notes": "모든 인터랙티브 요소에 즉각적 피드백 필수"
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": ["playful", "energetic", "encouraging", "fun"],
+      "visual_metaphor": "게임처럼 즐거운 학습 여정",
+      "genre": "gamified education app",
+      "personality_traits": ["friendly", "enthusiastic", "supportive", "never boring"],
+      "adjectives": ["rounded", "vibrant", "bouncy", "celebratory"]
+    },
+    "visual_language": {
+      "complexity": "moderate",
+      "ornamentation": "캐릭터와 일러스트레이션으로 장식",
+      "whitespace_usage": "generous — 요소 간 충분한 여백",
+      "focal_strategy": "캐릭터(Duo 부엉이)가 항상 시선 중심",
+      "contrast_level": "high"
+    },
+    "composition": {
+      "hierarchy_method": "color weight + scale contrast",
+      "balance_type": "symmetric on mobile, asymmetric on desktop",
+      "flow_direction": "top to bottom, single column on mobile",
+      "grouping_strategy": "카드로 그룹화",
+      "negative_space_role": "breathing room — 절대 빽빽하지 않음"
+    },
+    "interaction_feel": {
+      "feedback_style": "즉각적, 과장된 (celebratory)",
+      "hover_behavior": "subtle lift + color darken",
+      "transition_personality": "bouncy elastic",
+      "loading_style": "shimmer skeleton",
+      "microinteraction_density": "high — 모든 액션에 반응"
+    },
+    "brand_voice_in_ui": {
+      "tone": "encouraging, never critical",
+      "formality": "casual friendly",
+      "cta_style": "direct imperative — 'Start', 'Continue', 'Let's go!'",
+      "empty_state_approach": "캐릭터 + 격려 메시지",
+      "error_tone": "부드럽고 격려적 — 절대 빨간 경고 텍스트만 쓰지 않음"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "moderate",
+      "performance_tier": "medium",
+      "primary_technology": "CSS animations + Lottie"
+    },
+    "particle_systems": {
+      "enabled": true,
+      "type": "confetti",
+      "description": "레슨 완료, 스트릭 달성 시 색종이 터짐",
+      "params": {
+        "colors": ["#58CC02", "#FF9600", "#FF4B4B", "#1CB0F6"],
+        "count": 50,
+        "spawn_area": "top of screen"
+      }
+    },
+    "glassmorphism_neumorphism": {
+      "enabled": false,
+      "style": "none — 사용 안 함"
+    },
+    "composite_notes": "핵심은 버튼의 3D 하단 그림자. hover 시 lift, click 시 press down. 성공 시 scale pop + 색상 플래시. 캐릭터 Lottie 애니메이션이 전체 경험의 핵심."
+  },
+  "mooni_adaptation": {
+    "keep_from_duolingo": [
+      "3D 하단 두꺼운 버튼 그림자",
+      "pill 버튼",
+      "캐릭터 중심 레이아웃",
+      "bouncy 애니메이션",
+      "카드 기반 UI",
+      "성공 시 celebratory 피드백",
+      "generous whitespace"
+    ],
+    "replace_with_mooni": [
+      "#58CC02 → #E8C547 (달 옐로우)",
+      "Duo 부엉이 → 무니 아기 토끼",
+      "초록 성공 → 골드 성공",
+      "빨간 에러 → 오렌지/골드 에러"
+    ]
+  }
+}
