@@ -59,6 +59,7 @@ export default function TeachPage() {
 
   const [unit, setUnit] = useState<UnitInfo | null>(null)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [initError, setInitError] = useState(false)
   const [expression, setExpression] = useState<Expression>('curious')
   const [mooniMessage, setMooniMessage] = useState('안녕! 나는 무니야. 달에서 왔는데... 선생님이 오늘 뭘 배웠는지 알려준대서 기다리고 있었어! 🌙')
   const [understanding, setUnderstanding] = useState(0)
@@ -71,6 +72,7 @@ export default function TeachPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
+  const sessionIdRef = useRef<string | null>(null)
 
   // 단원 정보 + 세션 시작
   useEffect(() => {
@@ -94,10 +96,28 @@ export default function TeachPage() {
         .select('id')
         .single()
 
-      if (session) setSessionId(session.id)
+      if (session) {
+        setSessionId(session.id)
+        sessionIdRef.current = session.id
+      } else {
+        setInitError(true)
+      }
     }
     init()
   }, [unitId, router])
+
+  // 언마운트 시 cleanup
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.abort()
+      }
+      if (sessionIdRef.current) {
+        const supabase = createClient()
+        supabase.from('sessions').update({ ended_at: new Date().toISOString() }).eq('id', sessionIdRef.current).then(() => {})
+      }
+    }
+  }, [])
 
   // 메시지 전송 (공통)
   const sendMessage = useCallback(async (userText: string) => {
@@ -173,6 +193,7 @@ export default function TeachPage() {
     recognition.onerror = () => {
       setIsRecording(false)
       setExpression('oops')
+      setShowTextInput(true)
     }
 
     recognition.onend = () => {
@@ -213,8 +234,14 @@ export default function TeachPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sessionId }),
       })
+      if (!res.ok) {
+        throw new Error(`Report API ${res.status}`)
+      }
       const data = await res.json()
-      router.push(`/student/session-end/${sessionId}?reportId=${data.reportId ?? ''}`)
+      if (data.error) {
+        throw new Error(data.error)
+      }
+      router.push(`/student/session-end/${sessionId}?reportId=${data.id ?? ''}`)
     } catch {
       router.push(`/student/session-end/${sessionId}`)
     }
@@ -227,6 +254,17 @@ export default function TeachPage() {
     setTextInput('')
     await sendMessage(text)
   }, [textInput, sendMessage])
+
+  if (initError) {
+    return (
+      <div
+        className="flex flex-col h-screen items-center justify-center font-sans"
+        style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 50%, #1E1A35 100%)' }}
+      >
+        <p className="text-white text-sm">연결에 문제가 생겼어요. 새로고침해 주세요.</p>
+      </div>
+    )
+  }
 
   return (
     <div
