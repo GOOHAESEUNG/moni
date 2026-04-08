@@ -1,248 +1,307 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { PaperPlaneTilt, ArrowLeft, Microphone } from '@phosphor-icons/react'
-import type { Expression } from '@/types/database'
+import Image from 'next/image'
+import {
+  House, Trophy, User, Star, Lock, CheckCircle,
+  Users, Lightning, Flame, ArrowRight, BookOpen,
+} from '@phosphor-icons/react'
 
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-  expression?: Expression
+// ─── Mock 데이터 ───────────────────────────────
+const DEMO_PROFILE = { name: '김무니' }
+const DEMO_CLASS = '3학년 2반'
+
+const DEMO_UNITS = [
+  { id: 'demo-1', title: '분수의 덧셈' },
+  { id: 'demo-2', title: '도형의 넓이' },
+  { id: 'demo-3', title: '소수의 개념' },
+]
+
+const DEMO_COMPLETED = ['demo-1']
+
+const DEMO_SESSIONS = [
+  {
+    id: 'demo-s1',
+    understanding_score: 82,
+    ended_at: '2026-04-08T10:00:00Z',
+    unitTitle: '분수의 덧셈',
+  },
+]
+
+// ─── 유틸 ──────────────────────────────────────
+const clayCard = {
+  background: '#FFFFFF',
+  borderRadius: '20px',
+  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+} as const
+
+type NodeStatus = 'completed' | 'current' | 'locked'
+
+function ScorePill({ score }: { score: number }) {
+  const color = score >= 80 ? '#4CAF50' : score >= 60 ? '#E8C547' : '#FF9600'
+  return (
+    <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ background: `${color}20`, color }}>
+      {score}점
+    </span>
+  )
 }
 
-const DEMO_CONCEPT = '분모가 같은 분수끼리 더할 때는 분자끼리 더하고 분모는 그대로 유지한다. 분모가 다를 때는 통분 후 더한다.'
+// ─── Left Nav ──────────────────────────────────
+function LeftNav() {
+  return (
+    <nav
+      className="hidden md:flex flex-col h-full"
+      style={{ width: 220, flexShrink: 0, background: '#FFFFFF', borderRight: '1px solid #F0F0F0' }}
+    >
+      <div className="px-5 pt-6 pb-4">
+        <p className="font-extrabold text-base" style={{ color: '#2D2F2F' }}>🌙 무니에게 알려줘</p>
+        <span
+          className="inline-block mt-1 text-xs font-bold px-2 py-0.5 rounded-full"
+          style={{ background: 'rgba(232,197,71,0.18)', color: '#C8A020' }}
+        >
+          체험 모드
+        </span>
+      </div>
+      <div style={{ height: 1, background: '#F0F0F0' }} />
 
-const INITIAL_MESSAGE: Message = {
-  role: 'assistant',
-  content: '안녕하세요! 저는 무니예요 🌙 달에서 왔는데, 지구에서는 "분수의 덧셈"을 배운다고 들었어요. 저는 분수가 뭔지 전혀 몰라요. 가르쳐 줄 수 있어요?',
-  expression: 'curious',
+      <div className="flex-1 flex flex-col gap-1 px-3 py-4">
+        <div
+          className="flex items-center gap-3 px-3 py-3 rounded-xl"
+          style={{ background: 'rgba(232,197,71,0.12)', color: '#1A1830', borderLeft: '3px solid #E8C547' }}
+        >
+          <House size={20} weight="fill" />
+          <span className="font-bold text-sm">학습</span>
+        </div>
+        <div className="flex items-center gap-3 px-3 py-3 rounded-xl cursor-not-allowed" style={{ color: '#9EA0B4' }}>
+          <Trophy size={20} weight="regular" />
+          <span className="font-semibold text-sm">리더보드</span>
+          <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#F0F0F0', color: '#9EA0B4' }}>
+            준비중
+          </span>
+        </div>
+        <div className="flex items-center gap-3 px-3 py-3 rounded-xl" style={{ color: '#9EA0B4' }}>
+          <User size={20} weight="regular" />
+          <span className="font-semibold text-sm">프로필</span>
+        </div>
+      </div>
+
+      <div style={{ borderTop: '1px solid #F0F0F0' }} className="px-5 py-4">
+        <p className="font-bold text-sm" style={{ color: '#2D2F2F' }}>{DEMO_PROFILE.name}</p>
+        <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_CLASS}</p>
+      </div>
+    </nav>
+  )
 }
 
-export default function DemoStudentPage() {
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE])
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [understanding, setUnderstanding] = useState(0)
-  const [mooniExpression, setMooniExpression] = useState<Expression>('curious')
-  const [isRecording, setIsRecording] = useState(false)
-  const bottomRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLTextAreaElement>(null)
-
-  function startVoice() {
-    const SpeechAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-    if (!SpeechAPI) { alert('이 브라우저는 음성 인식을 지원하지 않아요. 텍스트로 입력해주세요.'); return }
-    const recognition = new SpeechAPI() as any
-    recognition.lang = 'ko-KR'
-    recognition.interimResults = false
-    setIsRecording(true)
-    recognition.onresult = (e: any) => {
-      setInput(e.results[0][0].transcript)
-      setIsRecording(false)
-    }
-    recognition.onerror = () => setIsRecording(false)
-    recognition.onend = () => setIsRecording(false)
-    recognition.start()
+// ─── Unit Node ─────────────────────────────────
+function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeStatus }) {
+  if (status === 'completed') {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8C547', boxShadow: '0 4px 0 #C8A020', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CheckCircle size={36} weight="fill" color="#1A1830" />
+        </div>
+        <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>{unit.title}</p>
+      </div>
+    )
   }
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  async function sendMessage() {
-    const text = input.trim()
-    if (!text || loading) return
-
-    const userMsg: Message = { role: 'user', content: text }
-    const history = messages.map((m) => ({ role: m.role, content: m.content }))
-
-    setMessages((prev) => [...prev, userMsg])
-    setInput('')
-    setLoading(true)
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'demo',
-          message: text,
-          conversationHistory: history,
-          unitConcept: DEMO_CONCEPT,
-        }),
-      })
-      const data = await res.json()
-      const assistantMsg: Message = {
-        role: 'assistant',
-        content: data.message ?? '잘 모르겠어요... 다시 설명해줄 수 있어요?',
-        expression: data.expression ?? 'curious',
-      }
-      setMooniExpression(data.expression ?? 'curious')
-      setUnderstanding(data.understanding ?? 0)
-      setMessages((prev) => [...prev, assistantMsg])
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: 'assistant',
-          content: '앗, 연결이 끊겼어요. 다시 시도해줄 수 있어요?',
-          expression: 'oops' as Expression,
-        },
-      ])
-    } finally {
-      setLoading(false)
-      inputRef.current?.focus()
-    }
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
-    }
+  if (status === 'current') {
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <div className="px-3 py-1 rounded-full text-xs font-extrabold mb-1" style={{ background: '#E8C547', color: '#1A1830' }}>
+          시작!
+        </div>
+        <div className="relative">
+          <Link href="/demo/student/teach">
+            <div
+              style={{ width: 80, height: 80, borderRadius: '50%', background: '#E8C547', boxShadow: '0 6px 0 #C8A020', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+            >
+              <Star size={40} weight="fill" color="#1A1830" />
+            </div>
+          </Link>
+          <div className="absolute" style={{ right: -88, top: '50%', transform: 'translateY(-50%)' }}>
+            <Image src="/mooni/curious.png" alt="무니" width={80} height={80} />
+          </div>
+        </div>
+        <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>{unit.title}</p>
+      </div>
+    )
   }
 
   return (
-    <div
-      className="flex min-h-screen flex-col"
-      style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 60%, #1E1A35 100%)' }}
-    >
-      {/* 헤더 */}
-      <header
-        className="sticky top-0 z-20 flex items-center justify-between px-4 py-3"
-        style={{ background: 'rgba(13,11,30,0.85)', backdropFilter: 'blur(12px)' }}
-      >
-        <Link href="/demo" className="flex items-center gap-1.5 text-sm" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <ArrowLeft size={16} />
-          돌아가기
-        </Link>
-        <div className="text-center">
-          <p className="text-xs font-semibold" style={{ color: '#E8C547' }}>체험 모드</p>
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.50)' }}>분수의 덧셈 · 초등 4~5학년</p>
-        </div>
-        <div
-          className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
-          style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547' }}
-        >
-          이해도 {understanding}%
-        </div>
-      </header>
+    <div className="flex flex-col items-center gap-2">
+      <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8E8E8', boxShadow: '0 4px 0 #C8C8C8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Lock size={32} weight="fill" color="#9EA0B4" />
+      </div>
+      <p className="text-xs text-center" style={{ color: '#9EA0B4' }}>{unit.title}</p>
+    </div>
+  )
+}
 
-      {/* 무니 캐릭터 */}
-      <div className="flex flex-col items-center pt-6 pb-2">
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative"
-          style={{ width: 100, height: 100 }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={mooniExpression}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.92 }}
-              transition={{ duration: 0.2 }}
-              style={{ width: 100, height: 100, position: 'relative' }}
-            >
-              <Image
-                src={`/mooni/${mooniExpression}.png`}
-                alt="무니"
-                fill
-                className="object-contain drop-shadow-xl"
-                priority
-              />
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+// ─── Center ────────────────────────────────────
+function CenterContent() {
+  const firstNonCompleted = DEMO_UNITS.find(u => !DEMO_COMPLETED.includes(u.id))
+
+  function getStatus(unit: typeof DEMO_UNITS[0]): NodeStatus {
+    if (DEMO_COMPLETED.includes(unit.id)) return 'completed'
+    if (unit.id === firstNonCompleted?.id) return 'current'
+    return 'locked'
+  }
+
+  return (
+    <div className="flex-1 overflow-y-auto" style={{ background: '#F7F7F7' }}>
+      <div className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3" style={{ background: '#E8C547' }}>
+        <span className="font-extrabold text-sm" style={{ color: '#1A1830' }}>섹션 1</span>
+        <span style={{ color: 'rgba(26,24,48,0.40)' }}>|</span>
+        <span className="font-bold text-sm" style={{ color: '#1A1830' }}>오늘의 학습</span>
       </div>
 
-      {/* 대화 영역 */}
-      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-3">
-        <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className="max-w-[80%] rounded-3xl px-4 py-3 text-sm leading-relaxed"
-                style={
-                  msg.role === 'user'
-                    ? { background: '#E8C547', color: '#1A1830', fontWeight: 600 }
-                    : {
-                        background: 'rgba(255,255,255,0.10)',
-                        color: 'rgba(255,255,255,0.92)',
-                        backdropFilter: 'blur(8px)',
-                      }
-                }
-              >
-                {msg.content}
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+      <div className="flex flex-col items-center py-10 gap-0">
+        {DEMO_UNITS.map((unit, i) => (
+          <div key={unit.id} className="flex flex-col items-center">
+            <UnitNode unit={unit} status={getStatus(unit)} />
+            {i < DEMO_UNITS.length - 1 && (
+              <div style={{ width: 4, height: 48, background: '#E8E8E8', margin: '8px auto', borderRadius: 2 }} />
+            )}
+          </div>
+        ))}
+      </div>
 
-        {loading && (
-          <div className="flex justify-start">
-            <div
-              className="rounded-3xl px-4 py-3 text-sm"
-              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.50)' }}
-            >
-              무니가 생각 중이에요...
+      {/* 모바일 시작 버튼 */}
+      <div className="md:hidden px-6 pb-8">
+        <Link
+          href="/demo/student/teach"
+          className="flex items-center justify-center gap-2 w-full font-extrabold text-sm rounded-full py-4"
+          style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
+        >
+          <BookOpen size={18} weight="fill" />
+          도형의 넓이 — 무니에게 알려줘
+          <ArrowRight size={16} weight="bold" />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+// ─── Right Sidebar ─────────────────────────────
+function RightSidebar() {
+  const questDone = DEMO_COMPLETED.length > 0
+  const avgScore = 82
+
+  return (
+    <aside
+      className="hidden md:flex flex-col gap-4 overflow-y-auto p-4"
+      style={{ width: 280, flexShrink: 0, background: '#FFFFFF', borderLeft: '1px solid #F0F0F0' }}
+    >
+      {/* 반 정보 */}
+      <div className="p-4" style={clayCard}>
+        <div className="flex items-center gap-2 mb-1">
+          <Users size={16} weight="fill" style={{ color: '#E8C547' }} />
+          <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>나의 반</p>
+        </div>
+        <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>{DEMO_CLASS}</p>
+        <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_PROFILE.name}</p>
+      </div>
+
+      {/* 오늘의 퀘스트 */}
+      <div className="p-4" style={clayCard}>
+        <div className="flex items-center gap-2 mb-3">
+          <Lightning size={16} weight="fill" style={{ color: '#E8C547' }} />
+          <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>오늘의 퀘스트</p>
+        </div>
+        <p className="text-sm font-bold mb-2" style={{ color: '#2D2F2F' }}>무니에게 한 번 가르쳐주기</p>
+        <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F7F7F7' }}>
+          <div
+            className="h-full rounded-full"
+            style={{ width: questDone ? '100%' : '0%', background: '#E8C547', transition: 'width 0.5s ease' }}
+          />
+        </div>
+        <p className="text-xs mt-1.5 text-right" style={{ color: '#9EA0B4' }}>
+          {questDone ? '1/1 완료 ✓' : '0/1'}
+        </p>
+      </div>
+
+      {/* 학습 통계 */}
+      <div className="p-4" style={clayCard}>
+        <p className="text-xs font-bold mb-3" style={{ color: '#9EA0B4' }}>학습 통계</p>
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
+            <Flame size={20} weight="fill" style={{ color: '#FF9600' }} />
+            <div>
+              <p className="text-xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>1</p>
+              <p className="text-xs" style={{ color: '#9EA0B4' }}>학습 횟수</p>
             </div>
           </div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      {/* 입력 영역 */}
-      <div
-        className="sticky bottom-0 px-4 py-4"
-        style={{ background: 'rgba(13,11,30,0.90)', backdropFilter: 'blur(12px)' }}
-      >
-        <div
-          className="flex items-end gap-2 rounded-3xl border px-4 py-3"
-          style={{ borderColor: 'rgba(232,197,71,0.25)', background: 'rgba(255,255,255,0.06)' }}
-        >
-          {/* 마이크 버튼 */}
-          <button
-            onClick={startVoice}
-            disabled={loading}
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-all"
-            style={{
-              background: isRecording ? '#FF5555' : 'rgba(232,197,71,0.15)',
-              border: `1.5px solid ${isRecording ? '#FF5555' : 'rgba(232,197,71,0.4)'}`,
-              boxShadow: isRecording ? '0 0 12px rgba(255,85,85,0.5)' : 'none',
-            }}
-          >
-            <Microphone size={16} weight="fill" style={{ color: isRecording ? '#fff' : '#E8C547' }} />
-          </button>
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={isRecording ? '듣고 있어요...' : '무니에게 설명해보세요...'}
-            rows={1}
-            className="flex-1 resize-none bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
-            style={{ maxHeight: 120 }}
-          />
-          <button
-            onClick={sendMessage}
-            disabled={!input.trim() || loading}
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-opacity disabled:opacity-30"
-            style={{ background: '#E8C547', boxShadow: '0 3px 0 #C8A020' }}
-          >
-            <PaperPlaneTilt size={16} weight="fill" style={{ color: '#1A1830' }} />
-          </button>
+          <div className="flex items-center gap-2">
+            <Star size={20} weight="fill" style={{ color: '#E8C547' }} />
+            <div>
+              <p className="text-xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>{avgScore}</p>
+              <p className="text-xs" style={{ color: '#9EA0B4' }}>평균 점수</p>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* 지난 학습 */}
+      <div style={clayCard}>
+        <div className="px-4 pt-4 pb-2">
+          <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>지난 학습</p>
+        </div>
+        <div className="divide-y" style={{ borderColor: '#F7F7F7' }}>
+          {DEMO_SESSIONS.map((s) => (
+            <div key={s.id} className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-2">
+                <Star size={14} weight="fill" style={{ color: '#E8C547' }} />
+                <div>
+                  <p className="font-semibold text-xs" style={{ color: '#2D2F2F' }}>{s.unitTitle}</p>
+                  <p className="text-xs" style={{ color: '#9EA0B4' }}>
+                    {new Date(s.ended_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+              <ScorePill score={s.understanding_score} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 회원가입 CTA */}
+      <div
+        className="p-4 rounded-3xl"
+        style={{ background: 'rgba(232,197,71,0.08)', border: '1px solid rgba(232,197,71,0.25)' }}
+      >
+        <p className="font-extrabold text-sm mb-1" style={{ color: '#2D2F2F' }}>무니가 기다리고 있어요! 🌙</p>
+        <p className="text-xs mb-3" style={{ color: '#9EA0B4' }}>
+          회원가입하면 내 반에서 진짜 학습을 시작할 수 있어요
+        </p>
+        <Link
+          href="/signup"
+          className="flex items-center justify-center gap-1.5 w-full font-extrabold text-xs rounded-full py-3"
+          style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 3px 0 #C8A020' }}
+        >
+          시작하기 <ArrowRight size={14} weight="bold" />
+        </Link>
+      </div>
+    </aside>
+  )
+}
+
+// ─── Page ──────────────────────────────────────
+export default function DemoStudentPage() {
+  return (
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden" style={{ background: '#F7F7F7' }}>
+      {/* 모바일 헤더 */}
+      <header className="md:hidden flex items-center justify-between px-4 py-3" style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+        <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>🌙 무니에게 알려줘</p>
+        <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ background: 'rgba(232,197,71,0.18)', color: '#C8A020' }}>
+          체험 모드
+        </span>
+      </header>
+
+      <LeftNav />
+      <CenterContent />
+      <RightSidebar />
     </div>
   )
 }
