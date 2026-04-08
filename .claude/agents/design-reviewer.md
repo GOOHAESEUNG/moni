@@ -16,6 +16,13 @@ description: UI 화면이 포함된 작업에서 코드 구현 후 반드시 실
 
 ## 실행 순서
 
+### 0. 새 화면 설계 전 (선택) — design-dna로 레퍼런스 DNA 추출
+새 화면을 만들기 전에 Duolingo 레퍼런스 DNA를 참조하면 방향이 명확해짐:
+```
+/design-dna analyze https://duolingo.com
+```
+추출된 DNA JSON을 구현 시 참조.
+
 ### 1. 변경된 UI 파일 파악
 ```bash
 git diff main...{BRANCH_NAME} --name-only | grep -E "\.tsx$|globals\.css"
