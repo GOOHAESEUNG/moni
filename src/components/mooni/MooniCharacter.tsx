@@ -109,27 +109,28 @@ export default function MooniCharacter({
           </motion.div>
         </AnimatePresence>
 
-        {/* 주변 별빛 파티클 */}
+        {/* 주변 별빛 파티클 — 잔잔하게 */}
         {animate && (
           <>
             {[...Array(3)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute text-accent"
+                className="absolute"
                 style={{
-                  fontSize: 10 + i * 4,
-                  top: `${15 + i * 25}%`,
-                  left: i % 2 === 0 ? `${-10 - i * 5}%` : `${110 + i * 3}%`,
+                  fontSize: 8 + i * 2,
+                  color: '#E8C547',
+                  top: `${20 + i * 22}%`,
+                  left: i % 2 === 0 ? `${-8 - i * 3}%` : `${108 + i * 2}%`,
                 }}
                 animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0.5, 1, 0.5],
-                  rotate: [0, 180, 360],
+                  opacity: [0, 0.6, 0],
+                  scale: [0.6, 1, 0.6],
                 }}
                 transition={{
-                  duration: 2 + i,
+                  duration: 3 + i * 1.5,
                   repeat: Infinity,
-                  delay: i * 0.7,
+                  delay: i * 1.2,
+                  ease: 'easeInOut',
                 }}
               >
                 ✦
