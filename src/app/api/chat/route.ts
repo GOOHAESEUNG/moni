@@ -19,11 +19,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'sessionId, message, unitConcept은 필수입니다.' }, { status: 400 })
     }
 
+    const history: ConversationMessage[] = Array.isArray(conversationHistory) ? conversationHistory : []
+
     const systemPrompt = getMooniSystemPrompt(unitConcept)
 
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
-      ...(conversationHistory as ConversationMessage[]).map((m) => ({
+      ...history.map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
@@ -44,7 +46,7 @@ export async function POST(req: NextRequest) {
     if (sessionId !== 'demo') {
       const supabase = await createClient()
 
-      await supabase.from('messages').insert([
+      const { error: insertError } = await supabase.from('messages').insert([
         {
           session_id: sessionId,
           role: 'user' as MessageRole,
@@ -58,6 +60,10 @@ export async function POST(req: NextRequest) {
           expression,
         },
       ])
+
+      if (insertError) {
+        console.error('[/api/chat] messages insert error:', insertError)
+      }
     }
 
     return NextResponse.json({ expression, message: mooniMessage, understanding })
