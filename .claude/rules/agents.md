@@ -49,6 +49,15 @@ description: 사용 가능한 에이전트·스킬·MCP 전체 목록 및 호출
 planner → wireframer → coder → design-reviewer → reviewer(Codex) → PR 머지
 ```
 
+## 슬래시 커맨드
+
+| 커맨드 | 용도 | 언제 |
+|--------|------|------|
+| `/ship` | 이슈+브랜치+커밋+푸시 한 번에 | 소소한 수정 (문서/설정) |
+| `/pr` | PR 생성+Codex 리뷰+squash 머지 | 작업 완료 후 |
+
+**주의**: UI 변경은 `/ship` 쓰지 말고 planner+coder 풀 파이프라인 사용.
+
 ## 로그
 - AI 활동 자동 기록: `docs/ai-log.md`
 - 워크플로우 상세: `docs/workflow.md`
