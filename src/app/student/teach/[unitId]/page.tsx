@@ -435,8 +435,8 @@ export default function TeachPage() {
                     <Image
                       src={`/mooni/${expression}.png`}
                       alt={`무니 - ${expressionLabels[expression]}`}
-                      width={208}
-                      height={208}
+                      width={360}
+                      height={240}
                       priority
                       className="drop-shadow-2xl"
                     />
@@ -574,7 +574,7 @@ export default function TeachPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <Image src="/mooni/curious.png" alt="무니" width={80} height={80} className="mx-auto mb-3" />
+              <Image src="/mooni/curious.png" alt="무니" width={120} height={80} className="mx-auto mb-3" />
               <p className="font-extrabold text-white text-lg">학습을 끝낼까요?</p>
               <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.60)' }}>
                 무니가 지금까지 배운 내용을 정리해줄 거예요!

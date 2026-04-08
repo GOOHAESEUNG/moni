@@ -97,7 +97,7 @@ export default async function ReportPage({ params }: Props) {
             <Image
               src="/mooni/impressed.png"
               alt="무니"
-              width={80}
+              width={120}
               height={80}
               className="shrink-0"
             />
@@ -217,9 +217,9 @@ export default async function ReportPage({ params }: Props) {
                       <Image
                         src={`/mooni/${pair.expression ?? 'curious'}.png`}
                         alt="무니"
-                        width={32}
+                        width={48}
                         height={32}
-                        className="shrink-0 rounded-full"
+                        className="shrink-0"
                       />
                       <div
                         className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm"

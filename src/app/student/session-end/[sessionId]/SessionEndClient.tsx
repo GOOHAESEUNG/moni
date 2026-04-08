@@ -87,7 +87,7 @@ export default function SessionEndClient({
             <Image
               src="/mooni/impressed.png"
               alt="무니 - 완벽해요!"
-              width={160}
+              width={240}
               height={160}
               priority
               className="drop-shadow-2xl"

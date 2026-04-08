@@ -121,7 +121,7 @@ function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeSt
             </div>
           </Link>
           <div className="absolute" style={{ right: -88, top: '50%', transform: 'translateY(-50%)' }}>
-            <Image src="/mooni/curious.png" alt="무니" width={80} height={80} />
+            <Image src="/mooni/curious.png" alt="무니" width={120} height={80} />
           </div>
         </div>
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>{unit.title}</p>

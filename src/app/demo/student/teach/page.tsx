@@ -254,8 +254,8 @@ export default function DemoTeachPage() {
                 <Image
                   src={`/mooni/${mooniExpression}.png`}
                   alt="무니"
-                  width={200}
-                  height={200}
+                  width={360}
+                  height={240}
                   priority
                   className="drop-shadow-2xl"
                 />
