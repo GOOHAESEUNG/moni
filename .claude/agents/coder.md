@@ -77,6 +77,13 @@ git push origin {BRANCH_NAME}
 - 테스트 파일 생성 (요청 시 제외)
 - main 브랜치에 직접 커밋
 
+## 완료 후 Discord 알림 (필수)
+```bash
+.claude/hooks/notify-discord.sh \
+  "이슈 #{번호} 구현 완료" \
+  "브랜치: {브랜치명}\n커밋: {N}개\n변경 파일: {주요 파일 목록}"
+```
+
 ## 완료 후 AI 로그 기록 (필수)
 ```bash
 .claude/hooks/log-agent-activity.sh \
