@@ -18,11 +18,13 @@ python3 ~/.claude/plugins/marketplaces/ui-ux-pro-max-skill/.claude/skills/ui-ux-
 | 항목 | 값 |
 |------|-----|
 | font | Nunito |
-| primary | `oklch(0.58 0.18 280)` |
-| accent | `oklch(0.82 0.12 85)` |
-| bg | `oklch(0.98 0.008 280)` |
+| primary | `#E8C547` `oklch(0.80 0.14 88)` — 달 옐로우 |
+| secondary | `#9EA0B4` `oklch(0.67 0.04 265)` — 쿨 그레이 |
+| bg | `#F2F2F5` `oklch(0.965 0.004 270)` — 쿨 화이트 |
+| space-bg | `#0D0B1E` — 대화 화면 우주 배경 |
 | radius | 1rem base (카드 rounded-3xl, 버튼 rounded-full) |
-| shadow | `shadow-primary/10` — 흰 그림자 금지 |
+| shadow | `shadow-primary/10` (노란 그림자) — 흰 그림자 금지 |
+| primary-foreground | `#1A1830` (노란 배경 위 어두운 텍스트) |
 
 ## 아이콘
 - `@phosphor-icons/react` 전용. lucide-react 금지.
