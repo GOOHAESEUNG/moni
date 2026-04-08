@@ -143,7 +143,10 @@ export default function TeacherDashboard({
                       {completed}/{total}명 완료
                     </span>
                   </div>
+<<<<<<< Updated upstream
                   {/* 프로그레스 바 */}
+=======
+>>>>>>> Stashed changes
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-[#E8C547] rounded-full transition-all duration-500"
@@ -212,8 +215,13 @@ export default function TeacherDashboard({
         </div>
       </div>
 
+<<<<<<< Updated upstream
       {/* 하단 고정 버튼들 */}
       <div className="fixed bottom-6 right-4 flex flex-col gap-3 items-end">
+=======
+{/* 하단 고정 단원 추가 버튼 */}
+      <div className="fixed bottom-6 right-4">
+>>>>>>> Stashed changes
         <Link
           href="/teacher/units/new"
           className="flex items-center gap-2 bg-[#E8C547] text-[#1A1830] font-bold rounded-full px-5 py-3.5 shadow-lg shadow-[#E8C547]/30 hover:bg-[#E8C547]/90 transition-colors"

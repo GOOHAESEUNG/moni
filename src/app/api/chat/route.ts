@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
     const rawText = completion.choices[0]?.message?.content ?? ''
     const { expression, message: mooniMessage, understanding } = parseMooniResponse(rawText)
 
+<<<<<<< Updated upstream
     // Supabase에 메시지 저장
     const supabase = await createClient()
 
@@ -57,6 +58,27 @@ export async function POST(req: NextRequest) {
         expression,
       },
     ])
+=======
+    // 데모 세션은 저장 건너뜀
+    if (sessionId !== 'demo') {
+      const supabase = await createClient()
+
+      await supabase.from('messages').insert([
+        {
+          session_id: sessionId,
+          role: 'user' as MessageRole,
+          content: message,
+          expression: null,
+        },
+        {
+          session_id: sessionId,
+          role: 'assistant' as MessageRole,
+          content: mooniMessage,
+          expression,
+        },
+      ])
+    }
+>>>>>>> Stashed changes
 
     return NextResponse.json({ expression, message: mooniMessage, understanding })
   } catch (error) {
