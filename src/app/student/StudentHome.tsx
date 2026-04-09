@@ -236,14 +236,18 @@ function CenterContent({
     return (
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
-          <div className="text-5xl mb-4">🌙</div>
+          <div style={{ position: 'relative', width: 180, height: 120, margin: '0 auto 16px' }}>
+            <Image src="/mooni/face-curious.png" alt="무니" fill className="object-contain" />
+          </div>
           <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>
-            반에 참여해보세요!
+            안녕! 나는 무니야 🌙
+          </p>
+          <p className="text-sm mb-1 font-medium" style={{ color: '#2D2F2F' }}>
+            달에서 왔는데 지구 공부를 배우고 싶어!
           </p>
           <p className="text-sm mb-5" style={{ color: '#9EA0B4' }}>
             선생님께 받은 초대 코드로 반에 참여하면
-            <br />
-            오늘의 학습이 여기에 나타나요
+            <br />오늘의 학습이 나타나요
           </p>
           <Link
             href="/student/join"
@@ -268,12 +272,15 @@ function CenterContent({
     return (
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
-          <div className="text-5xl mb-4">😴</div>
+          <div style={{ width: 150, height: 100, position: 'relative', margin: '0 auto 16px' }}>
+            <Image src="/mooni/face-thinking.png" alt="무니" fill className="object-contain" />
+          </div>
           <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>
-            아직 배정된 단원이 없어요
+            무니가 기다리고 있어요 😴
           </p>
           <p className="text-sm" style={{ color: '#9EA0B4' }}>
-            선생님이 단원을 만들면 여기에 나타나요
+            선생님이 오늘 배울 단원을 만들면
+            <br />여기에 나타나요!
           </p>
         </div>
       </div>
@@ -570,10 +577,13 @@ function MobileLayout({
 
           {!hasEnrollment ? (
             <div className="p-6 text-center" style={clayCard}>
-              <div className="text-4xl mb-3">🌙</div>
-              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>반에 참여해보세요!</p>
+              <div style={{ position: 'relative', width: 160, height: 106, margin: '0 auto 12px' }}>
+                <Image src="/mooni/face-curious.png" alt="무니" fill className="object-contain" />
+              </div>
+              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>안녕! 나는 무니야 🌙</p>
+              <p className="text-sm mt-1 font-medium" style={{ color: '#2D2F2F' }}>달에서 왔는데 지구 공부를 배우고 싶어!</p>
               <p className="text-sm mt-1 mb-4" style={{ color: '#9EA0B4' }}>
-                선생님께 받은 초대 코드로 반에 참여하면<br />오늘의 학습이 여기에 나타나요
+                선생님께 받은 초대 코드로 반에 참여하면<br />오늘의 학습이 나타나요
               </p>
               <Link
                 href="/student/join"
@@ -592,9 +602,11 @@ function MobileLayout({
             </div>
           ) : activeUnits.length === 0 ? (
             <div className="p-6 text-center" style={clayCard}>
-              <div className="text-4xl mb-3">😴</div>
-              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>아직 배정된 단원이 없어요</p>
-              <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>선생님이 단원을 만들면 여기에 나타나요</p>
+              <div style={{ width: 140, height: 92, position: 'relative', margin: '0 auto 12px' }}>
+                <Image src="/mooni/face-thinking.png" alt="무니" fill className="object-contain" />
+              </div>
+              <p className="font-extrabold" style={{ color: '#2D2F2F' }}>무니가 기다리고 있어요 😴</p>
+              <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>선생님이 오늘 배울 단원을 만들면<br />여기에 나타나요!</p>
             </div>
           ) : (
             <div className="flex flex-col items-center py-4 gap-0">
