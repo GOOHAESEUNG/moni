@@ -40,35 +40,41 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
     const container = containerRef.current
     if (!canvas || !container) return
 
-    const resize = () => {
-      // offsetWidth/Height: 레이아웃 완료 후 실제 크기 (getBoundingClientRect보다 안정적)
-      const w = container.offsetWidth
-      const h = container.offsetHeight
-      if (w === 0 || h === 0) return  // 아직 레이아웃 안 됐으면 건너뜀
+    let debounceTimer: ReturnType<typeof setTimeout>
 
-      const imageData = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height)
-      canvas.width = w
-      canvas.height = h
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-      ctx.fillStyle = '#F5F3EE'
-      ctx.fillRect(0, 0, w, h)
-      if (imageData && imageData.width > 0) {
-        ctx.putImageData(imageData, 0, 0)
-      }
+    const resize = () => {
+      clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => {
+        const w = container.offsetWidth
+        const h = container.offsetHeight
+        if (w === 0 || h === 0) return  // 레이아웃 미완료
+
+        // 크기 변화 없으면 스킵 — 대화 추가 시 ResizeObserver 루프 방지
+        if (canvas.width === w && canvas.height === h) return
+
+        const imageData = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height)
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+        ctx.fillStyle = '#F5F3EE'
+        ctx.fillRect(0, 0, w, h)
+        if (imageData && imageData.width > 0) {
+          ctx.putImageData(imageData, 0, 0)
+        }
+      }, 16)  // 1프레임 디바운스
     }
 
-    // 초기화: rAF로 레이아웃 완료 후 실행 + 50ms 백업
-    let raf = requestAnimationFrame(() => {
-      resize()
-    })
-    const timer = setTimeout(resize, 50)
+    // 초기화: rAF로 레이아웃 완료 후 실행 + 100ms 백업
+    let raf = requestAnimationFrame(resize)
+    const timer = setTimeout(resize, 100)
 
     const observer = new ResizeObserver(resize)
     observer.observe(container)
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(timer)
+      clearTimeout(debounceTimer)
       observer.disconnect()
     }
   }, [])
