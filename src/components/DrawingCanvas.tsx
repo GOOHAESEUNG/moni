@@ -257,8 +257,8 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
         </button>
       </div>
 
-      {/* 캔버스 영역 */}
-      <div ref={containerRef} className="flex-1 relative overflow-hidden" style={{ cursor: isEraser ? 'cell' : 'crosshair' }}>
+      {/* 캔버스 영역 — minHeight: 0 필수 (flex-1이 무한 확장하는 것 방지) */}
+      <div ref={containerRef} className="flex-1 relative overflow-hidden" style={{ cursor: isEraser ? 'cell' : 'crosshair', minHeight: 0 }}>
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full"

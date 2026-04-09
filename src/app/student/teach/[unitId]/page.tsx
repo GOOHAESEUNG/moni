@@ -183,7 +183,12 @@ export default function TeachPage() {
       if (data.message) {
         setMooniMessage(data.message)
         setExpression(data.expression ?? 'curious')
-        const newUnderstanding = data.understanding ?? understanding
+        // 이미지 포함 시 JSON 파싱 실패 → fallback 0 반환 가능
+        // 대화 중 0으로 내려가는 것 방지: 기존 값이 있으면 유지
+        const rawUnderstanding = data.understanding ?? 0
+        const newUnderstanding = (rawUnderstanding === 0 && understanding > 0)
+          ? understanding
+          : rawUnderstanding
         if (newUnderstanding - prevUnderstandingRef.current >= 10) {
           setShowUnderstandingBurst(true)
           setTimeout(() => setShowUnderstandingBurst(false), 1200)
