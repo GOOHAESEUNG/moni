@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Microphone, SpeakerHigh, X, PaperPlaneTilt } from '@phosphor-icons/react'
-import DrawingCanvas from '@/components/DrawingCanvas'
+import DrawingCanvas, { type DrawingCanvasRef } from '@/components/DrawingCanvas'
 import { createClient } from '@/lib/supabase/client'
 import type { Expression } from '@/types/database'
 
@@ -94,6 +94,7 @@ export default function TeachPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
   const sessionIdRef = useRef<string | null>(null)
+  const drawingCanvasRef = useRef<DrawingCanvasRef>(null)
 
   // 단원 정보 + 세션 시작
   useEffect(() => {
@@ -156,6 +157,9 @@ export default function TeachPage() {
   const sendMessage = useCallback(async (userText: string) => {
     if (!sessionId || !unit || !userText.trim() || isLoading) return
 
+    // 그림 데이터 캡처 (비어있으면 null)
+    const imageBase64 = drawingCanvasRef.current?.getImageBase64() ?? null
+
     setIsLoading(true)
     const newHistory: ConversationMessage[] = [
       ...conversationHistory,
@@ -172,6 +176,7 @@ export default function TeachPage() {
           message: userText,
           unitConcept: unit.concept,
           conversationHistory,
+          imageBase64,
         }),
       })
       const data = await res.json()
@@ -198,6 +203,10 @@ export default function TeachPage() {
           setIsFirstVisit(false)
           setGuideStep('done')
           localStorage.setItem('mooni-teach-visited', 'true')
+        }
+        // 그림 전송 후 캔버스 초기화
+        if (imageBase64) {
+          drawingCanvasRef.current?.clear()
         }
       }
     } catch {
@@ -677,7 +686,7 @@ export default function TeachPage() {
 
             {/* 그림판 */}
             <div className="flex-1 overflow-hidden" style={{ minHeight: 0 }}>
-              <DrawingCanvas className="h-full" />
+              <DrawingCanvas ref={drawingCanvasRef} className="h-full" />
             </div>
 
             {/* 입력 영역 (하단) */}

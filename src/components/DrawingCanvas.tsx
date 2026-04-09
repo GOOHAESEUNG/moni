@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { Eraser, Trash, PencilSimple } from '@phosphor-icons/react'
 
 const COLORS = [
@@ -13,11 +13,17 @@ const COLORS = [
 
 const BRUSH_SIZES = [2, 4, 8]
 
+export interface DrawingCanvasRef {
+  getImageBase64: () => string | null
+  clear: () => void
+  hasContent: boolean
+}
+
 interface Props {
   className?: string
 }
 
-export default function DrawingCanvas({ className = '' }: Props) {
+const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas({ className = '' }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const isDrawingRef = useRef(false)
@@ -148,6 +154,29 @@ export default function DrawingCanvas({ className = '' }: Props) {
     setIsEmpty(true)
   }, [])
 
+  const getImageBase64 = useCallback((): string | null => {
+    const canvas = canvasRef.current
+    if (!canvas || isEmpty) return null
+
+    const maxW = 800
+    const scale = Math.min(1, maxW / canvas.width)
+    const offscreen = document.createElement('canvas')
+    offscreen.width = canvas.width * scale
+    offscreen.height = canvas.height * scale
+    const ctx = offscreen.getContext('2d')!
+    ctx.fillStyle = '#FFFFFF'
+    ctx.fillRect(0, 0, offscreen.width, offscreen.height)
+    ctx.drawImage(canvas, 0, 0, offscreen.width, offscreen.height)
+
+    return offscreen.toDataURL('image/jpeg', 0.75).split(',')[1]
+  }, [isEmpty])
+
+  useImperativeHandle(ref, () => ({
+    getImageBase64,
+    clear: clearCanvas,
+    hasContent: !isEmpty,
+  }), [getImageBase64, clearCanvas, isEmpty])
+
   return (
     <div className={`flex flex-col h-full ${className}`}>
       {/* 툴바 */}
@@ -246,4 +275,6 @@ export default function DrawingCanvas({ className = '' }: Props) {
       </div>
     </div>
   )
-}
+})
+
+export default DrawingCanvas

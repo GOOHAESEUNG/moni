@@ -13,7 +13,7 @@ interface ConversationMessage {
 
 export async function POST(req: NextRequest) {
   try {
-    const { sessionId, message, conversationHistory, unitConcept } = await req.json()
+    const { sessionId, message, conversationHistory, unitConcept, imageBase64 } = await req.json()
 
     if (!sessionId || !message || !unitConcept) {
       return NextResponse.json({ error: 'sessionId, message, unitConcept은 필수입니다.' }, { status: 400 })
@@ -23,13 +23,27 @@ export async function POST(req: NextRequest) {
 
     const systemPrompt = getMooniSystemPrompt(unitConcept)
 
+    // 이미지가 있으면 multimodal content, 없으면 text only
+    const userContent: OpenAI.Chat.ChatCompletionContentPart[] | string = imageBase64
+      ? [
+          { type: 'text' as const, text: message },
+          {
+            type: 'image_url' as const,
+            image_url: {
+              url: `data:image/jpeg;base64,${imageBase64}`,
+              detail: 'low' as const,
+            },
+          },
+        ]
+      : message
+
     const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
       ...history.map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
-      { role: 'user', content: message },
+      { role: 'user', content: userContent },
     ]
 
     const completion = await openai.chat.completions.create({
