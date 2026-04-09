@@ -8,6 +8,31 @@ interface Props {
   params: Promise<{ studentId: string }>
 }
 
+interface ReportEntry {
+  id: string
+  summary: string | null
+  weak_points: string[]
+  suggestions: string[]
+  unitTitle: string
+}
+
+interface SessionRow {
+  id: string
+  understanding_score: number | null
+  ended_at: string | null
+  units: { title: string } | { title: string }[] | null
+}
+
+interface ReportRow {
+  id: string
+  session_id: string
+  summary: string | null
+  weak_points: string[]
+  suggestions: string[]
+  created_at: string
+  units: { title: string } | { title: string }[] | null
+}
+
 export default async function StudentDetailPage({ params }: Props) {
   const { studentId } = await params
   const supabase = await createClient()
@@ -30,9 +55,10 @@ export default async function StudentDetailPage({ params }: Props) {
   if (!ownership) redirect('/teacher')
 
   const { data: student } = await admin.from('profiles').select('name, email').eq('id', studentId).single()
+
   const { data: reports } = await admin
     .from('reports')
-    .select('id, summary, weak_points, understanding_score: sessions(understanding_score), created_at, units(title)')
+    .select('id, session_id, summary, weak_points, suggestions, created_at, units(title)')
     .eq('student_id', studentId)
     .order('created_at', { ascending: false })
 
@@ -42,6 +68,20 @@ export default async function StudentDetailPage({ params }: Props) {
     .eq('student_id', studentId)
     .not('ended_at', 'is', null)
     .order('ended_at', { ascending: false })
+
+  // session_id → report 매핑
+  const reportBySessionId = new Map<string, ReportEntry>(
+    ((reports ?? []) as ReportRow[]).map((r) => [
+      r.session_id,
+      {
+        id: r.id,
+        summary: r.summary,
+        weak_points: r.weak_points ?? [],
+        suggestions: r.suggestions ?? [],
+        unitTitle: Array.isArray(r.units) ? r.units[0]?.title : r.units?.title ?? '단원',
+      }
+    ])
+  )
 
   const clayCard = 'rounded-[20px] p-5 bg-white'
   const clayStyle = { boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)' }
@@ -75,33 +115,110 @@ export default async function StudentDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* 세션 목록 */}
+        {/* 학습 리포트 */}
         <section>
-          <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: '#9EA0B4' }}>학습 기록</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: '#9EA0B4' }}>학습 리포트</h2>
           {sessions && sessions.length > 0 ? (
-            <div className={clayCard} style={{ ...clayStyle, padding: 0, overflow: 'hidden' }}>
-              {sessions.map((s: any, i: number) => (
-                <div key={s.id} className="flex items-center justify-between px-5 py-4"
-                  style={{ borderTop: i > 0 ? '1px solid #F7F7F7' : 'none' }}>
-                  <div>
-                    <p className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>
-                      {Array.isArray(s.units) ? s.units[0]?.title : s.units?.title ?? '단원'}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>
-                      {s.ended_at ? new Date(s.ended_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }) : ''}
-                    </p>
+            <div className="space-y-0">
+              {(sessions as SessionRow[]).map((s) => {
+                const report = reportBySessionId.get(s.id)
+                const unitTitle = Array.isArray(s.units) ? s.units[0]?.title : s.units?.title ?? '단원'
+                const dateStr = s.ended_at
+                  ? new Date(s.ended_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })
+                  : ''
+                const score = s.understanding_score
+
+                if (report) {
+                  return (
+                    <div key={s.id} className="rounded-[20px] overflow-hidden bg-white"
+                      style={{ boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)', marginBottom: 12 }}>
+
+                      {/* 카드 헤더 */}
+                      <div className="flex items-center justify-between px-5 py-4"
+                        style={{ borderBottom: '1px solid #F7F7F7' }}>
+                        <div>
+                          <p className="font-bold text-sm" style={{ color: '#2D2F2F' }}>
+                            {unitTitle}
+                          </p>
+                          <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>
+                            {dateStr}
+                          </p>
+                        </div>
+                        {score !== null && (
+                          <span className="text-xs font-bold px-3 py-1 rounded-full"
+                            style={{
+                              background: score >= 80 ? '#4CAF5020' : score >= 60 ? '#E8C54720' : '#FF960020',
+                              color: score >= 80 ? '#4CAF50' : score >= 60 ? '#C8A020' : '#FF9600',
+                            }}>
+                            {score}점
+                          </span>
+                        )}
+                      </div>
+
+                      {/* 리포트 내용 */}
+                      <div className="px-5 py-4 space-y-3">
+                        {report.summary && (
+                          <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>
+                            {report.summary}
+                          </p>
+                        )}
+
+                        {report.weak_points.length > 0 && (
+                          <div>
+                            <p className="text-xs font-bold mb-2" style={{ color: '#FF9600' }}>
+                              💡 더 알아볼 부분
+                            </p>
+                            <ul className="space-y-1">
+                              {report.weak_points.map((point, i) => (
+                                <li key={i} className="text-xs flex items-start gap-1.5" style={{ color: '#6B6B8D' }}>
+                                  <span style={{ color: '#FF9600', flexShrink: 0 }}>•</span>
+                                  {point}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {report.suggestions.length > 0 && (
+                          <div>
+                            <p className="text-xs font-bold mb-2" style={{ color: '#4CAF50' }}>
+                              ✓ 다음 학습 제안
+                            </p>
+                            <ul className="space-y-1">
+                              {report.suggestions.map((suggestion, i) => (
+                                <li key={i} className="text-xs flex items-start gap-1.5" style={{ color: '#6B6B8D' }}>
+                                  <span style={{ color: '#4CAF50', flexShrink: 0 }}>•</span>
+                                  {suggestion}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                }
+
+                // 리포트 없는 세션 — compact row
+                return (
+                  <div key={s.id} className="flex items-center justify-between px-5 py-3 bg-white rounded-[16px] mb-2"
+                    style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                    <div>
+                      <p className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>{unitTitle}</p>
+                      <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{dateStr}</p>
+                    </div>
+                    {score !== null && (
+                      <span className="text-xs font-bold px-3 py-1 rounded-full"
+                        style={{
+                          background: score >= 80 ? '#4CAF5020' : score >= 60 ? '#E8C54720' : '#FF960020',
+                          color: score >= 80 ? '#4CAF50' : score >= 60 ? '#C8A020' : '#FF9600',
+                        }}>
+                        {score}점
+                      </span>
+                    )}
                   </div>
-                  {s.understanding_score !== null && (
-                    <span className="text-xs font-bold px-3 py-1 rounded-full"
-                      style={{
-                        background: s.understanding_score >= 80 ? '#4CAF5020' : s.understanding_score >= 60 ? '#E8C54720' : '#FF960020',
-                        color: s.understanding_score >= 80 ? '#4CAF50' : s.understanding_score >= 60 ? '#C8A020' : '#FF9600',
-                      }}>
-                      {s.understanding_score}점
-                    </span>
-                  )}
-                </div>
-              ))}
+                )
+              })}
             </div>
           ) : (
             <div className={clayCard} style={{ ...clayStyle, textAlign: 'center' }}>
