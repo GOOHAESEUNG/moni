@@ -41,24 +41,36 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
     if (!canvas || !container) return
 
     const resize = () => {
-      const rect = container.getBoundingClientRect()
-      // 기존 내용 보존
+      // offsetWidth/Height: 레이아웃 완료 후 실제 크기 (getBoundingClientRect보다 안정적)
+      const w = container.offsetWidth
+      const h = container.offsetHeight
+      if (w === 0 || h === 0) return  // 아직 레이아웃 안 됐으면 건너뜀
+
       const imageData = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height)
-      canvas.width = rect.width
-      canvas.height = rect.height
+      canvas.width = w
+      canvas.height = h
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.fillStyle = '#F5F3EE'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.fillRect(0, 0, w, h)
       if (imageData && imageData.width > 0) {
         ctx.putImageData(imageData, 0, 0)
       }
     }
 
-    resize()
+    // 초기화: rAF로 레이아웃 완료 후 실행 + 50ms 백업
+    let raf = requestAnimationFrame(() => {
+      resize()
+    })
+    const timer = setTimeout(resize, 50)
+
     const observer = new ResizeObserver(resize)
     observer.observe(container)
-    return () => observer.disconnect()
+    return () => {
+      cancelAnimationFrame(raf)
+      clearTimeout(timer)
+      observer.disconnect()
+    }
   }, [])
 
   const getPos = useCallback((e: MouseEvent | Touch, canvas: HTMLCanvasElement) => {
