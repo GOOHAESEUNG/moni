@@ -2,19 +2,26 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft } from '@phosphor-icons/react'
+import Link from 'next/link'
+import {
+  BookOpen, Users, Trophy,
+} from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 import type { Unit } from '@/types/database'
 
 interface Student { id: string; name: string }
 
 interface Props {
-  classId: string
+  profile: { name: string }
+  currentClass: { id: string; name: string }
   units: Unit[]
   students: Student[]
 }
 
-export default function QuestFormClient({ classId, units, students }: Props) {
+const inputClass = "w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
+const cardClass = "bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 space-y-3"
+
+export default function QuestFormClient({ profile, currentClass, units, students }: Props) {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -41,7 +48,7 @@ export default function QuestFormClient({ classId, units, students }: Props) {
     const supabase = createClient()
 
     const base = {
-      class_id: classId,
+      class_id: currentClass.id,
       unit_id: unitId || null,
       title: title.trim(),
       description: description.trim() || null,
@@ -58,100 +65,182 @@ export default function QuestFormClient({ classId, units, students }: Props) {
     router.push('/teacher')
   }
 
-  const clayCard = 'bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 space-y-2'
-
   return (
-    <div className="min-h-screen bg-[#F2F2F5] font-sans pb-24">
-      <div className="bg-white border-b border-border px-4 pt-10 pb-5 flex items-center gap-3">
-        <button onClick={() => router.back()} className="p-2 rounded-full hover:bg-muted" aria-label="뒤로가기">
-          <ArrowLeft size={22} weight="bold" className="text-[#1A1830]" />
-        </button>
-        <h1 className="text-xl font-bold text-[#1A1830]">새 퀘스트 만들기</h1>
-      </div>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F7F7F7' }}>
 
-      <div className="max-w-lg mx-auto px-4 pt-6">
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* 제목 */}
-          <div className={clayCard}>
-            <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-title">
-              퀘스트 제목 <span style={{ color: '#FF9600' }}>*</span>
-            </label>
-            <input id="quest-title" type="text" placeholder="예: 분수의 덧셈 무니에게 가르치기"
-              value={title} onChange={e => setTitle(e.target.value)} required
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all" />
+      {/* ── Left Nav (220px) ── */}
+      <nav
+        className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
+        style={{ background: '#FFFFFF', borderRight: '1px solid #F0F0F0' }}
+      >
+        <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid #F7F7F7' }}>
+          <p className="text-sm font-extrabold mb-4" style={{ color: '#E8C547' }}>🌙 무니에게 알려줘</p>
+          <p className="font-extrabold text-sm leading-tight" style={{ color: '#2D2F2F' }}>{profile.name} 선생님</p>
+          <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{currentClass.name}</p>
+        </div>
+
+        <div className="flex-1 px-3 py-4 space-y-1">
+          <Link href="/teacher"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
+            style={{ color: '#9EA0B4' }}>
+            <BookOpen size={18} weight="regular" />
+            <span className="font-semibold text-sm">단원 관리</span>
+          </Link>
+
+          <Link href="/teacher/students"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
+            style={{ color: '#9EA0B4' }}>
+            <Users size={18} weight="regular" />
+            <span className="font-semibold text-sm">학생 목록</span>
+          </Link>
+
+          {/* 퀘스트 — active */}
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+            style={{ background: 'rgba(232,197,71,0.12)', color: '#1A1830', borderLeft: '3px solid #E8C547' }}>
+            <Trophy size={18} weight="fill" />
+            <span className="font-bold text-sm">퀘스트</span>
           </div>
+        </div>
+      </nav>
 
-          {/* 설명 */}
-          <div className={clayCard}>
-            <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-desc">
-              설명 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
-            </label>
-            <textarea id="quest-desc" placeholder="퀘스트에 대한 추가 설명" value={description}
-              onChange={e => setDescription(e.target.value)} rows={3}
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none" />
-          </div>
+      {/* ── Main Content ── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* 헤더 */}
+        <div
+          className="px-6 py-4 shrink-0"
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}
+        >
+          <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>새 퀘스트 만들기</h1>
+          <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학생에게 학습 목표를 퀘스트로 부여하세요</p>
+        </div>
 
-          {/* 단원 선택 */}
-          <div className={clayCard}>
-            <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-unit">
-              연결 단원 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
-            </label>
-            <select id="quest-unit" value={unitId} onChange={e => setUnitId(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] outline-none focus:border-[#E8C547] transition-all">
-              <option value="">없음</option>
-              {units.map(u => <option key={u.id} value={u.id}>{u.title}</option>)}
-            </select>
-            {unitId && <p className="text-xs" style={{ color: '#9EA0B4' }}>선택한 단원 학습을 완료하면 자동 달성돼요.</p>}
-          </div>
+        {/* 폼 (2컬럼) */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 max-w-4xl">
 
-          {/* 마감일 */}
-          <div className={clayCard}>
-            <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-due">
-              마감일 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
-            </label>
-            <input id="quest-due" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] outline-none focus:border-[#E8C547] transition-all" />
-          </div>
+              {/* 좌측: 퀘스트 기본 정보 */}
+              <div className="space-y-4">
+                {/* 제목 */}
+                <div className={cardClass}>
+                  <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-title">
+                    퀘스트 제목 <span style={{ color: '#FF9600' }}>*</span>
+                  </label>
+                  <input id="quest-title" type="text"
+                    placeholder="예: 분수의 덧셈 무니에게 가르치기"
+                    value={title} onChange={e => setTitle(e.target.value)} required
+                    className={inputClass} />
+                </div>
 
-          {/* 대상 */}
-          <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 space-y-3">
-            <p className="text-sm font-semibold text-[#1A1830]">대상</p>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="target" checked={targetAll} onChange={() => setTargetAll(true)} className="accent-[#E8C547]" />
-                <span className="text-sm" style={{ color: '#2D2F2F' }}>반 전체</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="radio" name="target" checked={!targetAll} onChange={() => setTargetAll(false)} className="accent-[#E8C547]" />
-                <span className="text-sm" style={{ color: '#2D2F2F' }}>개별 학생</span>
-              </label>
-            </div>
+                {/* 설명 */}
+                <div className={cardClass}>
+                  <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-desc">
+                    설명 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
+                  </label>
+                  <textarea id="quest-desc" placeholder="퀘스트에 대한 추가 설명"
+                    value={description} onChange={e => setDescription(e.target.value)} rows={3}
+                    className={inputClass + ' resize-none'} />
+                </div>
 
-            {!targetAll && (
-              <div className="pt-2 space-y-2">
-                {students.length === 0 ? (
-                  <p className="text-xs" style={{ color: '#9EA0B4' }}>반에 등록된 학생이 없어요.</p>
-                ) : (
-                  students.map(s => (
-                    <label key={s.id} className="flex items-center gap-3 cursor-pointer py-1">
-                      <input type="checkbox" checked={selectedStudents.includes(s.id)}
-                        onChange={() => toggleStudent(s.id)} className="accent-[#E8C547] w-4 h-4" />
-                      <span className="text-sm" style={{ color: '#2D2F2F' }}>{s.name}</span>
-                    </label>
-                  ))
-                )}
+                {/* 연결 단원 */}
+                <div className={cardClass}>
+                  <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-unit">
+                    연결 단원 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
+                  </label>
+                  <select id="quest-unit" value={unitId} onChange={e => setUnitId(e.target.value)}
+                    className={inputClass}>
+                    <option value="">없음</option>
+                    {units.map(u => <option key={u.id} value={u.id}>{u.title}</option>)}
+                  </select>
+                  {unitId && (
+                    <p className="text-xs" style={{ color: '#9EA0B4' }}>
+                      선택한 단원 학습을 완료하면 자동 달성돼요.
+                    </p>
+                  )}
+                </div>
+
+                {/* 마감일 */}
+                <div className={cardClass}>
+                  <label className="text-sm font-semibold text-[#1A1830]" htmlFor="quest-due">
+                    마감일 <span className="text-xs font-normal" style={{ color: '#9EA0B4' }}>(선택)</span>
+                  </label>
+                  <input id="quest-due" type="date" value={dueDate}
+                    onChange={e => setDueDate(e.target.value)}
+                    className={inputClass} />
+                </div>
               </div>
-            )}
-          </div>
 
-          {error && <p className="text-sm text-orange-500 font-medium px-1">{error}</p>}
+              {/* 우측: 대상 + 저장 */}
+              <div className="space-y-4">
+                {/* 대상 */}
+                <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5 space-y-4">
+                  <p className="text-sm font-semibold text-[#1A1830]">대상</p>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="target" checked={targetAll}
+                        onChange={() => setTargetAll(true)} className="accent-[#E8C547]" />
+                      <span className="text-sm font-medium" style={{ color: '#2D2F2F' }}>반 전체</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="target" checked={!targetAll}
+                        onChange={() => setTargetAll(false)} className="accent-[#E8C547]" />
+                      <span className="text-sm font-medium" style={{ color: '#2D2F2F' }}>개별 학생</span>
+                    </label>
+                  </div>
 
-          <button type="submit" disabled={loading}
-            className="w-full font-bold rounded-full py-4 text-base transition-all disabled:opacity-60"
-            style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}>
-            {loading ? '저장 중...' : '퀘스트 저장하기'}
-          </button>
-        </form>
+                  {!targetAll && (
+                    <div className="space-y-2 pt-1">
+                      {students.length === 0 ? (
+                        <p className="text-xs" style={{ color: '#9EA0B4' }}>반에 등록된 학생이 없어요.</p>
+                      ) : (
+                        students.map(s => (
+                          <label
+                            key={s.id}
+                            className="flex items-center gap-3 cursor-pointer p-2.5 rounded-xl transition-colors"
+                            style={{
+                              background: selectedStudents.includes(s.id)
+                                ? 'rgba(232,197,71,0.10)'
+                                : 'transparent',
+                              border: selectedStudents.includes(s.id)
+                                ? '1.5px solid rgba(232,197,71,0.35)'
+                                : '1.5px solid transparent',
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedStudents.includes(s.id)}
+                              onChange={() => toggleStudent(s.id)}
+                              className="accent-[#E8C547] w-4 h-4 shrink-0"
+                            />
+                            <div
+                              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                              style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}
+                            >
+                              {s.name[0]}
+                            </div>
+                            <span className="text-sm font-medium" style={{ color: '#2D2F2F' }}>{s.name}</span>
+                          </label>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {error && <p className="text-sm font-medium px-1" style={{ color: '#FF9600' }}>{error}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full font-bold rounded-full py-4 text-base transition-all disabled:opacity-60"
+                  style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
+                >
+                  {loading ? '저장 중...' : '퀘스트 저장하기'}
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   )

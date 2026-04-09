@@ -1,11 +1,14 @@
+import React from 'react'
+
 // 학생 대시보드 하단 배경 — 달 + 구름 SVG
 // position: absolute bottom 0 으로 사용 → 콘텐츠 끝에 붙음
 // 단원 많을수록 위쪽 보라 하늘이 길어지는 구조
 
-export function MoonWithClouds({ className = '' }: { className?: string }) {
+export function MoonWithClouds({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 800 400"
       preserveAspectRatio="xMidYMax slice"
       fill="none"

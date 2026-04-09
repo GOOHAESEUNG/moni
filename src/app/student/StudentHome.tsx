@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { MoonWithClouds } from '@/components/icons/MoonWithClouds'
 import {
@@ -56,6 +57,94 @@ function ScorePill({ score }: { score: number | null }) {
   )
 }
 
+const MOONI_MESSAGES = [
+  '오늘은 어떤 걸 배울까? 🌙',
+  '무니한테 알려줘! 🐰',
+  '같이 공부하자~! ⭐',
+  '설명해 주면\n무니도 똑똑해져! 💛',
+  '오늘도 최고야! 🌟',
+  '무니가 기다리고 있었어! 🎉',
+  '오늘도 파이팅! ✨',
+  '우주에서 제일 열심히\n하는 너! 🚀',
+  '오늘도 무니 도와줄 거지? 🌸',
+  '넌 진짜 대단해! 🥕',
+]
+
+function MooniSpeechBubble() {
+  const [idx, setIdx] = useState(0)
+  const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const iv = setInterval(() => {
+      setVisible(false)
+      setTimeout(() => {
+        setIdx(p => (p + 1) % MOONI_MESSAGES.length)
+        setVisible(true)
+      }, 350)
+    }, 6400)
+    return () => clearInterval(iv)
+  }, [])
+
+  const bubble: React.CSSProperties = {
+    background: 'rgba(255,255,255,0.93)',
+    borderRadius: '22px',
+    padding: '14px 20px',
+    minWidth: 160,
+    maxWidth: 200,
+    boxShadow: '0 6px 24px rgba(130,110,200,0.28)',
+    position: 'relative',
+    zIndex: 2,
+    textAlign: 'center',
+  }
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(6px)',
+        transition: 'opacity 0.35s ease, transform 0.35s ease',
+        zIndex: 2,
+      }}
+    >
+      {/* 몽글몽글 범프 */}
+      {[
+        { w: 30, h: 30, top: -12, left: 18 },
+        { w: 24, h: 24, top: -16, left: 44 },
+        { w: 32, h: 32, top: -14, left: 68 },
+        { w: 26, h: 26, top: -12, left: 100 },
+        { w: 22, h: 22, top: -10, left: 130 },
+        { w: 28, h: 28, top: -13, right: 14 },
+      ].map((b, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          width: b.w, height: b.h,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.93)',
+          top: b.top,
+          left: (b as any).left,
+          right: (b as any).right,
+          boxShadow: '0 -2px 8px rgba(130,110,200,0.12)',
+        }} />
+      ))}
+
+      {/* 말풍선 본체 */}
+      <div style={bubble}>
+        <p
+          className="font-extrabold text-sm leading-snug whitespace-pre-line text-center"
+          style={{ color: '#5A4FA0', wordBreak: 'keep-all' }}
+        >
+          {MOONI_MESSAGES[idx]}
+        </p>
+      </div>
+
+      {/* 꼬리 (아래쪽 동그라미 2개) */}
+      <div style={{ position: 'absolute', bottom: -12, left: 36, width: 14, height: 14, borderRadius: '50%', background: 'rgba(255,255,255,0.88)', boxShadow: '0 2px 6px rgba(130,110,200,0.18)' }} />
+      <div style={{ position: 'absolute', bottom: -22, left: 46, width: 9, height: 9, borderRadius: '50%', background: 'rgba(255,255,255,0.75)' }} />
+    </div>
+  )
+}
+
 const clayCard = {
   background: 'rgba(255,255,255,0.92)',
   borderRadius: '20px',
@@ -80,7 +169,7 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
       style={{
         width: 220,
         flexShrink: 0,
-        background: 'rgba(255,255,255,0.88)',
+        background: '#FFFFFF',
         borderRight: '1px solid rgba(180,160,220,0.35)',
       }}
     >
@@ -159,20 +248,116 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
 // ──────────────────────────────────────────────
 type NodeStatus = 'completed' | 'current' | 'locked'
 
+/* 완료 노드 — 금빛 메달 + 체크 + 스파클 */
+function CompletedNode() {
+  return (
+    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="cn-gold" cx="38%" cy="32%" r="68%">
+          <stop offset="0%" stopColor="#FFFDE0" />
+          <stop offset="45%" stopColor="#F0CC3A" />
+          <stop offset="100%" stopColor="#C8A020" />
+        </radialGradient>
+        <radialGradient id="cn-hi" cx="35%" cy="28%" r="45%">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.55)" />
+          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+        </radialGradient>
+        <filter id="cn-glow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      {/* 바깥 글로우 링 */}
+      <circle cx="42" cy="42" r="41" fill="rgba(232,197,71,0.18)" />
+      <circle cx="42" cy="42" r="36" fill="rgba(232,197,71,0.10)" />
+      {/* 메달 본체 */}
+      <circle cx="42" cy="42" r="30" fill="url(#cn-gold)" />
+      <circle cx="42" cy="42" r="30" fill="url(#cn-hi)" />
+      <circle cx="42" cy="42" r="30" stroke="#B8920A" strokeWidth="2" fill="none" />
+      {/* 체크마크 */}
+      <path d="M26 42 L37 53 L58 30" stroke="#3D2E00" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" filter="url(#cn-glow)" />
+      {/* 스파클 별 — 좌상 */}
+      <path d="M9 18 L10.4 22.8 L15 24 L10.4 25.2 L9 30 L7.6 25.2 L3 24 L7.6 22.8Z" fill="#F0CC3A" opacity="0.95" />
+      {/* 스파클 별 — 우상 */}
+      <path d="M73 12 L74.1 15.8 L78 17 L74.1 18.2 L73 22 L71.9 18.2 L68 17 L71.9 15.8Z" fill="#F0CC3A" opacity="0.85" />
+      {/* 작은 점 스파클 */}
+      <circle cx="76" cy="54" r="3.5" fill="#F0CC3A" opacity="0.70" />
+      <circle cx="10" cy="58" r="2.5" fill="#F0CC3A" opacity="0.60" />
+      <circle cx="68" cy="72" r="2" fill="#F0CC3A" opacity="0.50" />
+      <circle cx="18" cy="72" r="1.8" fill="#F0CC3A" opacity="0.45" />
+    </svg>
+  )
+}
+
+/* 현재 노드 — 빛나는 플레이 오브 + 펄스 */
+function CurrentNode() {
+  return (
+    <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="curr-orb" cx="38%" cy="32%" r="68%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="40%" stopColor="#FFF176" />
+          <stop offset="80%" stopColor="#E8C547" />
+          <stop offset="100%" stopColor="#C8A020" />
+        </radialGradient>
+        <radialGradient id="curr-hi" cx="32%" cy="26%" r="42%">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.70)" />
+          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+        </radialGradient>
+      </defs>
+      {/* 펄스 링 — CSS 애니메이션 클래스 */}
+      <circle cx="48" cy="48" r="46" fill="rgba(232,197,71,0.12)" className="node-pulse-outer" />
+      <circle cx="48" cy="48" r="40" fill="rgba(232,197,71,0.20)" className="node-pulse-inner" />
+      {/* 흰 테두리 링 */}
+      <circle cx="48" cy="48" r="34" fill="none" stroke="rgba(255,255,255,0.80)" strokeWidth="3" />
+      {/* 오브 본체 */}
+      <circle cx="48" cy="48" r="32" fill="url(#curr-orb)" />
+      <circle cx="48" cy="48" r="32" fill="url(#curr-hi)" />
+      {/* 플레이 삼각형 */}
+      <path d="M40 33 L66 48 L40 63Z" fill="#1A1830" />
+      {/* 작은 빛 점들 */}
+      <circle cx="22" cy="28" r="3" fill="rgba(255,255,255,0.90)" />
+      <circle cx="76" cy="22" r="2.2" fill="rgba(255,255,255,0.80)" />
+      <circle cx="80" cy="68" r="2.8" fill="rgba(255,255,255,0.70)" />
+    </svg>
+  )
+}
+
+/* 잠금 노드 — 흐릿한 크레센트 + 자물쇠 */
+function LockedNode() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="lock-moon" cx="60%" cy="35%" r="65%">
+          <stop offset="0%" stopColor="#C8C5DC" />
+          <stop offset="100%" stopColor="#9A97B8" />
+        </radialGradient>
+      </defs>
+      {/* 크레센트 */}
+      <path
+        d="M46 32 C46 19.8 37.6 10 27 10 C23.6 10 20.4 11 17.6 12.8 C24.4 16.4 29 23.6 29 32 C29 40.4 24.4 47.6 17.6 51.2 C20.4 53 23.6 54 27 54 C37.6 54 46 44.2 46 32Z"
+        fill="url(#lock-moon)" opacity="0.55"
+      />
+      {/* 자물쇠 몸체 */}
+      <rect x="26" y="36" width="14" height="11" rx="2.5" fill="#9A97B8" opacity="0.75" />
+      {/* 자물쇠 걸쇠 */}
+      <path d="M29 36 V31.5 C29 27.4 37 27.4 37 31.5 V36" stroke="#9A97B8" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.75" />
+      {/* 자물쇠 구멍 */}
+      <circle cx="33" cy="41.5" r="2" fill="rgba(255,255,255,0.35)" />
+    </svg>
+  )
+}
+
 function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   if (status === 'completed') {
     return (
       <div className="flex flex-col items-center gap-2">
         <div className="px-3 py-1 rounded-full text-xs font-extrabold mb-1"
-          style={{ background: 'rgba(232,197,71,0.20)', color: '#C8A020' }}>
+          style={{ background: 'rgba(255,255,255,0.90)', color: '#5A4FA0' }}>
           다시 가르치기
         </div>
-        <Link href={`/student/teach/${unit.id}`}>
-          <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8C547',
-            boxShadow: '0 4px 0 #C8A020', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', cursor: 'pointer', opacity: 0.85 }}>
-            <CheckCircle size={36} weight="fill" color="#1A1830" />
-          </div>
+        <Link href={`/student/teach/${unit.id}`} className="block transition-transform hover:scale-105 active:scale-95">
+          <CompletedNode />
         </Link>
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>
           {unit.title}
@@ -184,18 +369,16 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   if (status === 'current') {
     return (
       <div className="flex flex-col items-center gap-2 relative">
-        {/* 시작 레이블 */}
         <div
           className="px-3 py-1 rounded-full text-xs font-extrabold mb-1"
-          style={{ background: '#E8C547', color: '#1A1830' }}
+          style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 2px 8px rgba(232,197,71,0.5)' }}
         >
           시작!
         </div>
         <div className="relative">
-          <Link href={`/student/teach/${unit.id}`} className="current-node block cursor-pointer">
-            <StarBurstNode size={80} />
+          <Link href={`/student/teach/${unit.id}`} className="block transition-transform hover:scale-105 active:scale-95">
+            <CurrentNode />
           </Link>
-          {/* 무니 캐릭터 */}
           <div
             className="absolute"
             style={{ right: -88, top: '50%', transform: 'translateY(-50%)' }}
@@ -213,7 +396,7 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   // locked
   return (
     <div className="flex flex-col items-center gap-2">
-      <CrescentMoonNode size={72} />
+      <LockedNode />
       <p className="text-xs text-center" style={{ color: '#9EA0B4' }}>
         {unit.title}
       </p>
@@ -337,7 +520,7 @@ function RightSidebar({
       style={{
         width: 280,
         flexShrink: 0,
-        background: 'rgba(255,255,255,0.88)',
+        background: '#FFFFFF',
         borderLeft: '1px solid rgba(180,160,220,0.35)',
       }}
     >
@@ -681,22 +864,47 @@ export default function StudentHome({
         className="hidden md:flex flex-row h-screen overflow-hidden relative"
         style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}
       >
-        {/* ── 고정 배경 레이어 (스크롤 영향 없음) ── */}
-        {/* 달 + 구름: 우측 하단에 고정 */}
-        <MoonWithClouds
+        {/* ── 고정 배경 레이어 (달+구름) — 중앙 영역에만 보이도록 clipPath 사용 ── */}
+        <div
           className="absolute pointer-events-none"
-          style={{ bottom: 0, right: 0, width: '65%', height: '60%', zIndex: 0 } as React.CSSProperties}
-        />
-        {/* 금색 별 파티클 */}
+          style={{
+            left: 220,
+            right: 280,
+            bottom: 0,
+            height: '95%',
+            zIndex: 0,
+            overflow: 'hidden',
+          }}
+        >
+          <MoonWithClouds className="w-full h-full" />
+
+        </div>
+
+        {/* 무니 캐릭터 + 말풍선 */}
+        <div
+          className="absolute pointer-events-none mooni-float"
+          style={{ left: 220, bottom: '26%', zIndex: 2 }}
+        >
+          {/* 말풍선 — 무니 완전 위 */}
+          <div style={{ position: 'absolute', bottom: '100%', left: 60, marginBottom: 8 }}>
+            <MooniSpeechBubble />
+          </div>
+          <Image
+            src="/mooni/happy.png"
+            alt="무니"
+            width={480}
+            height={480}
+          />
+        </div>
+
+        {/* 별 파티클 — 사각 별 */}
         {[
-          { top: '8%',  left: '30%', size: 14, delay: 0.3, dur: 3.5 },
-          { top: '5%',  left: '55%', size: 12, delay: 1.1, dur: 4.0 },
-          { top: '15%', left: '75%', size: 16, delay: 0.5, dur: 3.2 },
-          { top: '25%', left: '85%', size: 11, delay: 2.0, dur: 4.5 },
+          { top: '8%',  left: '32%', size: 14, delay: 0.3, dur: 3.5 },
+          { top: '5%',  left: '52%', size: 12, delay: 1.1, dur: 4.0 },
+          { top: '15%', left: '66%', size: 16, delay: 0.5, dur: 3.2 },
           { top: '12%', left: '40%', size: 13, delay: 0.8, dur: 3.8 },
-          { top: '35%', left: '90%', size: 12, delay: 1.5, dur: 4.2 },
-          { top: '3%',  left: '65%', size: 14, delay: 0.2, dur: 3.0 },
-          { top: '20%', left: '48%', size: 11, delay: 1.8, dur: 4.8 },
+          { top: '3%',  left: '60%', size: 14, delay: 0.2, dur: 3.0 },
+          { top: '20%', left: '45%', size: 11, delay: 1.8, dur: 4.8 },
         ].map((s, i) => (
           <div key={i} className="star-particle-slow absolute pointer-events-none"
             style={{ top: s.top, left: s.left, '--dur': `${s.dur}s`, '--delay': `${s.delay}s`, zIndex: 0 } as React.CSSProperties}>
@@ -704,6 +912,33 @@ export default function StudentHome({
               <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="rgba(232,197,71,0.85)" />
             </svg>
           </div>
+        ))}
+
+        {/* 별 파티클 — 동그란 빤짝이 */}
+        {[
+          { top: '10%', left: '28%', size: 5,  delay: 0.0, dur: 2.2 },
+          { top: '18%', left: '55%', size: 4,  delay: 0.7, dur: 2.8 },
+          { top: '6%',  left: '70%', size: 6,  delay: 1.3, dur: 2.0 },
+          { top: '28%', left: '38%', size: 3,  delay: 0.4, dur: 3.1 },
+          { top: '35%', left: '62%', size: 5,  delay: 1.9, dur: 2.5 },
+          { top: '14%', left: '48%', size: 4,  delay: 0.9, dur: 2.3 },
+          { top: '22%', left: '72%', size: 3,  delay: 1.5, dur: 3.4 },
+          { top: '40%', left: '30%', size: 5,  delay: 0.2, dur: 2.7 },
+          { top: '8%',  left: '58%', size: 3,  delay: 2.1, dur: 2.1 },
+          { top: '32%', left: '50%', size: 4,  delay: 0.6, dur: 3.0 },
+          { top: '45%', left: '65%', size: 5,  delay: 1.1, dur: 2.6 },
+          { top: '2%',  left: '42%', size: 6,  delay: 1.7, dur: 2.4 },
+        ].map((s, i) => (
+          <div
+            key={`dot-${i}`}
+            className="star-bg"
+            style={{
+              top: s.top, left: s.left,
+              width: s.size, height: s.size,
+              '--dur': `${s.dur}s`, '--delay': `${s.delay}s`,
+              zIndex: 0,
+            } as React.CSSProperties}
+          />
         ))}
 
         {/* ── 콘텐츠 레이어 ── */}

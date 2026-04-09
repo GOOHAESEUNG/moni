@@ -1,255 +1,332 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Users, BookOpen, ChartBar, CheckCircle } from '@phosphor-icons/react'
+import {
+  BookOpen,
+  Copy,
+  PencilSimple,
+  Trash,
+  Trophy,
+  Users,
+} from '@phosphor-icons/react'
+import { MoonStarIcon } from '@/components/icons'
 
+const DEMO_TEACHER = { name: '이선생' }
 const DEMO_CLASS = { name: '3학년 2반', inviteCode: 'ABC123' }
-const DEMO_UNIT = { title: '도형의 넓이', gradeHint: '3학년' }
-
-interface DemoStudent {
-  id: string
-  name: string
-  score: number | null
-  status: '완료' | '진행 중' | '미시작'
-  report: {
-    summary: string
-    weakPoints: string[]
-    suggestions: string[]
-  } | null
-}
-
-const DEMO_STUDENTS: DemoStudent[] = [
+const DEMO_UNITS = [
+  { id: 'u1', title: '분수의 덧셈', gradeHint: '3~4학년', completed: 3, total: 5 },
+  { id: 'u2', title: '도형의 넓이', gradeHint: '3~4학년', completed: 1, total: 5 },
+]
+const DEMO_REPORTS = [
   {
-    id: '1', name: '김지민', score: 88, status: '완료',
-    report: {
-      summary: '직사각형과 삼각형의 넓이 공식을 정확히 이해하고 설명했어요. 특히 삼각형에서 높이의 의미를 무니에게 잘 설명했어요.',
-      weakPoints: ['평행사변형 넓이에서 "밑변×높이"의 의미를 혼동함', '사다리꼴 넓이 공식을 아직 연결짓지 못함'],
-      suggestions: ['평행사변형을 직사각형으로 변환하는 시각화 연습', '사다리꼴을 두 삼각형으로 나누는 방법 탐구'],
-    },
+    studentName: '김지민',
+    score: 88,
+    summary: '직사각형과 삼각형의 넓이 공식을 정확히 이해...',
+    weakPoints: ['평행사변형 넓이 혼동'],
   },
   {
-    id: '2', name: '박서연', score: 72, status: '완료',
-    report: {
-      summary: '기본 공식은 알고 있지만 왜 그 공식이 성립하는지 설명할 때 어려움을 겪었어요. 암기보다 이해가 더 필요해요.',
-      weakPoints: ['넓이 공식의 이유를 설명하지 못함', '단위(cm²)의 의미를 정확히 이해하지 못함'],
-      suggestions: ['격자 종이에 도형을 직접 그려보며 넓이 세기 연습', '단위 면적(1cm²)의 개념을 실생활과 연결'],
-    },
+    studentName: '박서연',
+    score: 72,
+    summary: '기본 공식은 알고 있지만 원리 설명에 어려움...',
+    weakPoints: ['단위 의미 불명확'],
   },
   {
-    id: '3', name: '이준혁', score: 45, status: '완료',
-    report: {
-      summary: '직사각형 넓이는 구할 수 있지만 다른 도형으로 확장이 어려워요. 기초부터 차근차근 다시 접근이 필요해요.',
-      weakPoints: ['삼각형 높이의 개념이 불명확함', '가로와 세로, 밑변과 높이의 차이를 혼동함'],
-      suggestions: ['직사각형 → 삼각형 순서로 차근차근 복습', '실물 도형을 오려서 넓이 비교 활동 추천'],
-    },
+    studentName: '이준혁',
+    score: 45,
+    summary: '직사각형 넓이는 구할 수 있지만 확장이 어려워...',
+    weakPoints: ['삼각형 높이 개념 불명확'],
   },
-  { id: '4', name: '최유나', score: null, status: '진행 중', report: null },
-  { id: '5', name: '정하늘', score: null, status: '미시작', report: null },
 ]
 
-const clayCard = {
+const cardStyle = {
   background: '#FFFFFF',
   borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+  boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
 } as const
 
-function getScoreColor(score: number) {
-  if (score >= 80) return '#4CAF50'
-  if (score >= 60) return '#E8C547'
-  return '#FF9600'
+function ScoreBadge({ score }: { score: number }) {
+  const color = score >= 80 ? '#4CAF50' : score >= 60 ? '#E8C547' : '#F44336'
+
+  return (
+    <span
+      className="rounded-full px-2.5 py-1 text-xs font-bold"
+      style={{ background: `${color}20`, color }}
+    >
+      {score}점
+    </span>
+  )
 }
 
-const completedStudents = DEMO_STUDENTS.filter((s) => s.score !== null)
-const avgScore =
-  completedStudents.length > 0
-    ? Math.round(completedStudents.reduce((sum, s) => sum + (s.score ?? 0), 0) / completedStudents.length)
-    : null
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="px-5 py-4" style={cardStyle}>
+      <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>
+        {label}
+      </p>
+      <p className="mt-1 text-2xl font-extrabold leading-tight" style={{ color: '#2D2F2F' }}>
+        {value}
+      </p>
+    </div>
+  )
+}
+
+function LeftNav() {
+  return (
+    <aside
+      className="flex w-[220px] shrink-0 flex-col overflow-y-auto"
+      style={{ background: '#FFFFFF', borderRight: '1px solid #F0F0F0' }}
+    >
+      <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid #F7F7F7' }}>
+        <div className="flex items-center gap-2">
+          <MoonStarIcon size={24} color="#7A6CC0" />
+          <span className="text-lg font-extrabold" style={{ color: '#2D2F2F' }}>
+            Moni
+          </span>
+        </div>
+
+        <div className="mt-5">
+          <p className="text-sm font-extrabold" style={{ color: '#2D2F2F' }}>
+            {DEMO_TEACHER.name} 선생님
+          </p>
+          <p className="mt-0.5 text-xs" style={{ color: '#9EA0B4' }}>
+            {DEMO_CLASS.name}
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <p className="mb-1.5 text-xs font-semibold" style={{ color: '#9EA0B4' }}>
+            학생 초대 코드
+          </p>
+          <div
+            className="flex items-center justify-between rounded-2xl p-3"
+            style={{ background: '#F7F7F7', border: '1px solid #EBEBEB' }}
+          >
+            <span className="font-mono text-base font-extrabold tracking-widest" style={{ color: '#2D2F2F' }}>
+              {DEMO_CLASS.inviteCode}
+            </span>
+            <button
+              type="button"
+              onClick={() => alert('체험 모드에서는 복사가 제한됩니다')}
+              className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold"
+              style={{ background: '#FFFFFF', color: '#2D2F2F', border: '1px solid #E8E8E8' }}
+            >
+              <Copy size={13} />
+              복사
+            </button>
+          </div>
+        </div>
+
+        <span
+          className="mt-4 inline-flex w-fit rounded-full px-3 py-1 text-xs font-bold"
+          style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}
+        >
+          체험 모드
+        </span>
+      </div>
+
+      <div className="flex-1 px-3 py-4 space-y-1">
+        <div
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+          style={{ background: 'rgba(122,108,192,0.12)', color: '#5A4FA0', borderLeft: '3px solid #7A6CC0' }}
+        >
+          <BookOpen size={18} weight="fill" />
+          <span className="text-sm font-bold">단원 관리</span>
+        </div>
+
+        <Link
+          href="/demo/teacher"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+          style={{ color: '#9EA0B4' }}
+        >
+          <Users size={18} />
+          <span className="text-sm font-semibold">학생 목록</span>
+        </Link>
+
+        <div className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ color: '#9EA0B4' }}>
+          <Trophy size={18} />
+          <span className="text-sm font-semibold">퀘스트</span>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+function UnitCard({
+  title,
+  gradeHint,
+  completed,
+  total,
+}: {
+  title: string
+  gradeHint: string
+  completed: number
+  total: number
+}) {
+  const percent = Math.round((completed / total) * 100)
+
+  return (
+    <div className="flex flex-col gap-4 p-5" style={cardStyle}>
+      <div>
+        <p className="text-sm font-extrabold" style={{ color: '#2D2F2F' }}>
+          {title}
+        </p>
+        <p className="mt-0.5 text-xs" style={{ color: '#9EA0B4' }}>
+          {gradeHint}
+        </p>
+      </div>
+
+      <div>
+        <div className="mb-1.5 flex items-center justify-between text-xs">
+          <span style={{ color: '#9EA0B4' }}>학생 완료</span>
+          <span className="font-extrabold" style={{ color: '#E8C547' }}>
+            {completed}/{total}명
+          </span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full" style={{ background: '#F0F0F0' }}>
+          <div
+            className="h-full rounded-full"
+            style={{ width: `${percent}%`, background: percent === 100 ? '#4CAF50' : '#E8C547' }}
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          disabled
+          title="체험 모드에서는 비활성화됩니다"
+          className="flex-1 cursor-not-allowed rounded-xl py-2 text-xs font-bold opacity-50"
+          style={{ background: 'rgba(90,79,160,0.10)', color: '#5A4FA0' }}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <PencilSimple size={13} weight="bold" />
+            수정
+          </span>
+        </button>
+        <button
+          type="button"
+          disabled
+          title="체험 모드에서는 비활성화됩니다"
+          className="flex-1 cursor-not-allowed rounded-xl py-2 text-xs font-bold opacity-50"
+          style={{ background: 'rgba(244,67,54,0.10)', color: '#F44336' }}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <Trash size={13} weight="bold" />
+            삭제
+          </span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function RightSidebar() {
+  return (
+    <aside
+      className="flex w-[280px] shrink-0 flex-col overflow-y-auto p-4"
+      style={{ background: '#FFFFFF', borderLeft: '1px solid #F0F0F0' }}
+    >
+      <div className="mb-4">
+        <h2 className="text-base font-extrabold" style={{ color: '#2D2F2F' }}>
+          최근 리포트
+        </h2>
+      </div>
+
+      <div className="space-y-3">
+        {DEMO_REPORTS.map((report) => (
+          <div
+            key={`${report.studentName}-${report.score}`}
+            className="rounded-2xl border p-4"
+            style={{ borderColor: '#F3F3F3', background: '#FFFFFF' }}
+          >
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <p className="text-sm font-bold" style={{ color: '#2D2F2F' }}>
+                {report.studentName}
+              </p>
+              <ScoreBadge score={report.score} />
+            </div>
+            <p
+              className="text-sm leading-relaxed"
+              style={{
+                color: '#6B6B8D',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {report.summary}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {report.weakPoints.map((point) => (
+                <span
+                  key={point}
+                  className="rounded-full px-2.5 py-1 text-xs font-medium"
+                  style={{ background: 'rgba(244,67,54,0.08)', color: '#C24A4A' }}
+                >
+                  {point}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  )
+}
 
 export default function DemoTeacherPage() {
   return (
-    <div className="flex flex-col min-h-screen" style={{ background: '#F7F7F7' }}>
-      {/* 헤더 */}
-      <header
-        className="sticky top-0 z-20 flex items-center justify-between px-5 border-b"
-        style={{ background: '#FFFFFF', borderColor: '#EBEBEB', height: 56 }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-black" style={{ color: '#E8C547' }}>무니에게 알려줘</span>
-          <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: 'rgba(232,197,71,0.12)', color: '#9B7E00' }}>
-            선생님 대시보드 체험
-          </span>
-        </div>
-        <Link
-          href="/demo"
-          className="flex items-center gap-1 text-sm transition-opacity hover:opacity-70"
-          style={{ color: '#9EA0B4' }}
-        >
-          <ArrowLeft size={14} />
-          돌아가기
-        </Link>
-      </header>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F7F7F7' }}>
+      <LeftNav />
 
-      <main className="flex-1 px-5 py-6 max-w-2xl mx-auto w-full">
-        {/* 체험 배너 */}
-        <div
-          className="mb-6 rounded-2xl px-4 py-3 text-sm font-medium text-center"
-          style={{ background: 'rgba(232,197,71,0.10)', color: '#9B7E00', border: '1px solid rgba(232,197,71,0.25)' }}
-        >
-          샘플 데이터로 보는 체험 모드
-        </div>
-
-        {/* 2x2 통계 그리드 */}
-        <div className="mb-5 grid grid-cols-2 gap-3">
-          <div className="flex flex-col items-center py-5" style={clayCard}>
-            <Users size={22} weight="fill" style={{ color: '#E8C547', marginBottom: 6 }} />
-            <span className="text-2xl font-black" style={{ color: '#2D2F2F' }}>{DEMO_STUDENTS.length}명</span>
-            <span className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학생 수</span>
+      <main className="flex-1 overflow-y-auto p-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-5 flex items-center justify-between">
+            <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>
+              단원 관리
+            </h1>
           </div>
-          <div className="flex flex-col items-center py-5" style={clayCard}>
-            <CheckCircle size={22} weight="fill" style={{ color: '#4CAF50', marginBottom: 6 }} />
-            <span className="text-2xl font-black" style={{ color: '#2D2F2F' }}>{completedStudents.length}명</span>
-            <span className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>완료</span>
+
+          <div
+            className="mb-5 w-full rounded-2xl px-4 py-3 text-sm font-medium"
+            style={{ background: 'rgba(232,197,71,0.16)', color: '#9B7E00', border: '1px solid rgba(232,197,71,0.30)' }}
+          >
+            샘플 데이터 · 실제 데이터는 회원가입 후 확인 가능
           </div>
-          <div className="flex flex-col items-center py-5" style={clayCard}>
-            <ChartBar size={22} weight="fill" style={{ color: '#E8C547', marginBottom: 6 }} />
-            <span className="text-2xl font-black" style={{ color: '#2D2F2F' }}>{avgScore ?? '—'}</span>
-            <span className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>평균 점수</span>
+
+          <div className="mb-5 grid grid-cols-4 gap-3">
+            <StatCard label="학생 수" value="5명" />
+            <StatCard label="활성 단원" value="2개" />
+            <StatCard label="평균 이해도" value="68점" />
+            <StatCard label="완료 세션" value="4회" />
           </div>
-          <div className="flex flex-col items-center py-5" style={clayCard}>
-            <BookOpen size={22} weight="fill" style={{ color: '#E8C547', marginBottom: 6 }} />
-            <span className="text-2xl font-black" style={{ color: '#2D2F2F' }}>1개</span>
-            <span className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>활성 단원</span>
+
+          <div className="grid grid-cols-2 gap-4">
+            {DEMO_UNITS.map((unit) => (
+              <UnitCard
+                key={unit.id}
+                title={unit.title}
+                gradeHint={unit.gradeHint}
+                completed={unit.completed}
+                total={unit.total}
+              />
+            ))}
           </div>
-        </div>
 
-        {/* 활성 단원 카드 */}
-        <div className="mb-5 p-5" style={clayCard}>
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-base font-bold" style={{ color: '#2D2F2F' }}>{DEMO_UNIT.title}</p>
-              <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_UNIT.gradeHint}</p>
-            </div>
-            <span
-              className="rounded-full px-3 py-1 text-xs font-semibold"
-              style={{ background: 'rgba(76,175,80,0.12)', color: '#4CAF50' }}
-            >
-              진행 중
-            </span>
-          </div>
-          <div className="flex justify-between text-xs mb-1.5" style={{ color: '#9EA0B4' }}>
-            <span>완료 학생</span>
-            <span>{completedStudents.length} / {DEMO_STUDENTS.length}명 완료 (
-              {Math.round((completedStudents.length / DEMO_STUDENTS.length) * 100)}%)
-            </span>
-          </div>
-          <div className="h-2 rounded-full" style={{ background: '#F7F7F7' }}>
-            <div
-              className="h-2 rounded-full transition-all"
-              style={{
-                width: `${(completedStudents.length / DEMO_STUDENTS.length) * 100}%`,
-                background: '#E8C547',
-              }}
-            />
-          </div>
-        </div>
-
-        {/* 학생 리포트 섹션 */}
-        <div className="mb-5">
-          <h2 className="mb-3 text-sm font-bold" style={{ color: '#6B6B8D' }}>학생 리포트</h2>
-
-          {/* 완료 학생 — 확장 카드 */}
-          {DEMO_STUDENTS.filter((s) => s.status === '완료' && s.report).map((s) => (
-            <div key={s.id} className="overflow-hidden" style={{ ...clayCard, padding: 0, marginBottom: 12 }}>
-              {/* 헤더 */}
-              <div
-                className="flex items-center justify-between px-5 py-4"
-                style={{ borderBottom: '1px solid #F7F7F7' }}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold"
-                    style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547' }}
-                  >
-                    {s.name[0]}
-                  </div>
-                  <p className="font-bold text-sm" style={{ color: '#2D2F2F' }}>{s.name}</p>
-                </div>
-                <span
-                  className="text-xs font-bold px-3 py-1 rounded-full"
-                  style={{ background: `${getScoreColor(s.score!)}20`, color: getScoreColor(s.score!) }}
-                >
-                  {s.score}점
-                </span>
-              </div>
-
-              {/* 리포트 본문 */}
-              <div className="px-5 py-4 space-y-3">
-                <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{s.report!.summary}</p>
-
-                {s.report!.weakPoints.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold mb-1.5" style={{ color: '#FF9600' }}>💡 더 알아볼 부분</p>
-                    {s.report!.weakPoints.map((p, i) => (
-                      <p key={i} className="text-xs flex gap-1.5 mb-1" style={{ color: '#6B6B8D' }}>
-                        <span style={{ color: '#FF9600' }}>•</span>{p}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {s.report!.suggestions.length > 0 && (
-                  <div>
-                    <p className="text-xs font-bold mb-1.5" style={{ color: '#4CAF50' }}>✓ 다음 학습 제안</p>
-                    {s.report!.suggestions.map((sg, i) => (
-                      <p key={i} className="text-xs flex gap-1.5 mb-1" style={{ color: '#6B6B8D' }}>
-                        <span style={{ color: '#4CAF50' }}>•</span>{sg}
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {/* 미완료 학생 — compact row */}
-          {DEMO_STUDENTS.filter((s) => s.status !== '완료').map((s) => (
-            <div
-              key={s.id}
-              className="flex items-center justify-between px-5 py-3.5 bg-white rounded-[16px] mb-2"
-              style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold"
-                  style={{ background: '#F7F7F7', color: '#9EA0B4' }}
-                >
-                  {s.name[0]}
-                </div>
-                <span className="font-semibold text-sm" style={{ color: '#9EA0B4' }}>{s.name}</span>
-              </div>
-              <span
-                className="text-xs px-2 py-1 rounded-full"
-                style={{ background: '#F7F7F7', color: '#9EA0B4' }}
-              >
-                {s.status}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* 초대 코드 카드 */}
-        <div className="p-5" style={clayCard}>
-          <p className="text-xs mb-1" style={{ color: '#9EA0B4' }}>학생 초대 코드 (샘플)</p>
-          <div className="flex items-center justify-between">
-            <span className="text-2xl font-extrabold tracking-widest" style={{ color: '#2D2F2F' }}>
-              {DEMO_CLASS.inviteCode}
-            </span>
-            <span className="text-xs px-3 py-1.5 rounded-full" style={{ background: '#F7F7F7', color: '#9EA0B4' }}>
-              체험 모드
-            </span>
-          </div>
+          <button
+            type="button"
+            disabled
+            title="체험 모드에서는 비활성화됩니다"
+            className="mt-6 cursor-not-allowed rounded-full px-5 py-3 text-sm font-extrabold opacity-50"
+            style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
+          >
+            단원 추가
+          </button>
         </div>
       </main>
+
+      <RightSidebar />
     </div>
   )
 }

@@ -8,6 +8,12 @@ export default async function NewQuestPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('name')
+    .eq('id', user.id)
+    .single()
+
   const admin = createAdmin(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -16,7 +22,7 @@ export default async function NewQuestPage() {
   // 선생님 반 조회
   const { data: classes } = await supabase
     .from('classes')
-    .select('id')
+    .select('id, name')
     .eq('teacher_id', user.id)
     .order('created_at', { ascending: true })
     .limit(1)
@@ -48,7 +54,8 @@ export default async function NewQuestPage() {
 
   return (
     <QuestFormClient
-      classId={classId}
+      profile={{ name: profile?.name ?? '' }}
+      currentClass={{ id: classId, name: classes[0].name ?? '' }}
       units={units ?? []}
       students={students}
     />

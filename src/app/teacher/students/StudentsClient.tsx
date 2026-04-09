@@ -2,7 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Copy, Check, User, ChartBar } from '@phosphor-icons/react'
+import {
+  Copy, Check, Users, BookOpen, Trophy,
+  ChartBar, User,
+} from '@phosphor-icons/react'
 import type { Class } from '@/types/database'
 
 interface Student {
@@ -18,15 +21,27 @@ interface Report {
   summary: string
   weak_points: string[]
   created_at: string
+  understanding_score?: number | null
 }
 
 interface Props {
+  profile: { name: string }
   currentClass: Class
   students: Student[]
   reports: Report[]
 }
 
-export default function StudentsClient({ currentClass, students, reports }: Props) {
+function ScorePill({ score }: { score: number | null | undefined }) {
+  if (score == null) return null
+  const color = score >= 90 ? '#4CAF50' : score >= 70 ? '#E8C547' : score >= 60 ? '#FF9600' : '#F44336'
+  return (
+    <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ background: `${color}20`, color }}>
+      {score}점
+    </span>
+  )
+}
+
+export default function StudentsClient({ profile, currentClass, students, reports }: Props) {
   const [copied, setCopied] = useState(false)
 
   function copyInviteCode() {
@@ -40,83 +55,140 @@ export default function StudentsClient({ currentClass, students, reports }: Prop
   }
 
   return (
-    <div className="min-h-screen bg-[#F2F2F5] font-sans pb-10">
-      {/* 헤더 */}
-      <div className="bg-white border-b border-border px-4 pt-10 pb-5 flex items-center gap-3">
-        <Link
-          href="/teacher"
-          className="p-2 rounded-full hover:bg-muted transition-colors"
-          aria-label="뒤로가기"
-        >
-          <ArrowLeft size={22} weight="bold" className="text-[#1A1830]" />
-        </Link>
-        <h1 className="text-xl font-bold text-[#1A1830]">학생 관리</h1>
-      </div>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F7F7F7' }}>
 
-      <div className="max-w-lg mx-auto px-4 pt-6 space-y-5">
-        {/* 초대 코드 카드 */}
-        <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5">
-          <p className="text-xs text-muted-foreground mb-1">초대 코드로 학생을 추가하세요</p>
-          <div className="flex items-center justify-between">
-            <span className="text-3xl font-bold tracking-widest text-[#1A1830]">
+      {/* ── Left Nav (220px) ── */}
+      <nav
+        className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
+        style={{ background: '#FFFFFF', borderRight: '1px solid #F0F0F0' }}
+      >
+        {/* 로고 + 선생님 정보 + 초대 코드 */}
+        <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid #F7F7F7' }}>
+          <p className="text-sm font-extrabold mb-4" style={{ color: '#E8C547' }}>🌙 무니에게 알려줘</p>
+          <p className="font-extrabold text-sm leading-tight" style={{ color: '#2D2F2F' }}>{profile.name} 선생님</p>
+          <p className="text-xs mt-0.5 mb-4" style={{ color: '#9EA0B4' }}>{currentClass.name}</p>
+
+          <p className="text-xs mb-1.5 font-semibold" style={{ color: '#9EA0B4' }}>학생 초대 코드</p>
+          <div className="flex items-center justify-between p-3 rounded-2xl" style={{ background: '#F7F7F7', border: '1px solid #EBEBEB' }}>
+            <span className="text-base font-extrabold tracking-widest" style={{ color: '#2D2F2F' }}>
               {currentClass.invite_code}
             </span>
             <button
               onClick={copyInviteCode}
-              className="flex items-center gap-1.5 bg-[#F2F2F5] hover:bg-[#E8C547]/20 transition-colors rounded-full px-4 py-2 text-sm font-medium text-[#1A1830]"
+              className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition-all"
+              style={{ background: '#FFFFFF', color: '#2D2F2F', border: '1px solid #E8E8E8' }}
             >
-              {copied ? <Check size={16} weight="bold" className="text-emerald-500" /> : <Copy size={16} />}
-              {copied ? '복사됨!' : '복사'}
+              {copied ? <Check size={13} weight="bold" style={{ color: '#4CAF50' }} /> : <Copy size={13} />}
+              {copied ? '복사됨' : '복사'}
             </button>
           </div>
         </div>
 
-        {/* 학생 목록 */}
-        <div>
-          <p className="text-sm font-semibold text-[#1A1830] px-1 mb-3">
-            학생 {students.length}명
-          </p>
+        {/* 네비게이션 */}
+        <div className="flex-1 px-3 py-4 space-y-1">
+          <Link href="/teacher"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
+            style={{ color: '#9EA0B4' }}>
+            <BookOpen size={18} weight="regular" />
+            <span className="font-semibold text-sm">단원 관리</span>
+          </Link>
 
+          {/* 학생 목록 — active */}
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+            style={{ background: 'rgba(232,197,71,0.12)', color: '#1A1830', borderLeft: '3px solid #E8C547' }}>
+            <Users size={18} weight="fill" />
+            <span className="font-bold text-sm">학생 목록</span>
+            {students.length > 0 && (
+              <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(232,197,71,0.20)', color: '#B8920A' }}>
+                {students.length}
+              </span>
+            )}
+          </div>
+
+          <Link href="/teacher/quests/new"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
+            style={{ color: '#9EA0B4' }}>
+            <Trophy size={18} weight="regular" />
+            <span className="font-semibold text-sm">퀘스트</span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* ── Main Content ── */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* 헤더 */}
+        <div
+          className="px-6 py-4 flex items-center gap-3 shrink-0"
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}
+        >
+          <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>학생 목록</h1>
+          <span
+            className="text-xs font-bold px-2.5 py-1 rounded-full"
+            style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}
+          >
+            {students.length}명
+          </span>
+        </div>
+
+        {/* 학생 카드 그리드 */}
+        <div className="flex-1 overflow-y-auto px-6 py-5">
           {students.length === 0 ? (
-            <div className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-8 text-center">
-              <User size={40} className="text-muted-foreground mx-auto mb-3" />
-              <p className="font-semibold text-[#1A1830]">아직 등록된 학생이 없어요</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                위 초대 코드를 학생에게 공유해주세요!
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4"
+                style={{ background: 'rgba(232,197,71,0.12)' }}>
+                <Users size={32} style={{ color: '#E8C547' }} />
+              </div>
+              <p className="font-extrabold text-base mb-1" style={{ color: '#2D2F2F' }}>아직 학생이 없어요</p>
+              <p className="text-sm" style={{ color: '#9EA0B4' }}>
+                초대 코드 <span className="font-extrabold" style={{ color: '#2D2F2F' }}>{currentClass.invite_code}</span>를 학생들에게 공유해보세요
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {students.map((student) => {
                 const report = getLatestReport(student.id)
                 return (
                   <div
                     key={student.id}
-                    className="bg-white rounded-3xl shadow-[0_4px_20px_0_rgba(232,197,71,0.10)] p-5"
+                    className="p-5"
+                    style={{
+                      background: '#FFFFFF',
+                      borderRadius: '20px',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+                    }}
                   >
+                    {/* 상단: 이름 + 점수 + 리포트 링크 */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-9 h-9 rounded-full bg-[#E8C547]/20 flex items-center justify-center">
-                          <User size={18} className="text-[#E8C547]" />
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
+                          style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}
+                        >
+                          {student.name[0]}
                         </div>
                         <div>
-                          <p className="font-bold text-[#1A1830] text-sm">{student.name}</p>
-                          <p className="text-xs text-muted-foreground">{student.email}</p>
+                          <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>{student.name}</p>
+                          <p className="text-xs" style={{ color: '#9EA0B4' }}>{student.email}</p>
                         </div>
                       </div>
-                      <Link
-                        href={`/teacher/students/${student.id}`}
-                        className="flex items-center gap-1 text-xs font-medium text-[#E8C547] hover:text-[#E8C547]/80 transition-colors"
-                      >
-                        <ChartBar size={14} />
-                        리포트
-                      </Link>
+                      <div className="flex items-center gap-2">
+                        <ScorePill score={report?.understanding_score} />
+                        <Link
+                          href={`/teacher/students/${student.id}`}
+                          className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full transition-colors hover:opacity-80"
+                          style={{ background: 'rgba(90,79,160,0.08)', color: '#5A4FA0' }}
+                        >
+                          <ChartBar size={13} weight="bold" />
+                          리포트
+                        </Link>
+                      </div>
                     </div>
 
-                    {report && (
-                      <div className="bg-[#F2F2F5] rounded-2xl p-3">
-                        <p className="text-xs font-semibold text-muted-foreground mb-1">최근 리포트</p>
-                        <p className="text-xs text-[#1A1830] leading-relaxed line-clamp-2">
+                    {/* 최근 리포트 요약 */}
+                    {report ? (
+                      <div className="rounded-2xl p-3" style={{ background: '#F7F7F7' }}>
+                        <p className="text-xs font-semibold mb-1" style={{ color: '#9EA0B4' }}>최근 리포트</p>
+                        <p className="text-xs leading-relaxed line-clamp-2" style={{ color: '#2D2F2F' }}>
                           {report.summary}
                         </p>
                         {report.weak_points?.length > 0 && (
@@ -124,13 +196,18 @@ export default function StudentsClient({ currentClass, students, reports }: Prop
                             {report.weak_points.slice(0, 2).map((wp, i) => (
                               <span
                                 key={i}
-                                className="text-xs bg-[#E8C547]/20 text-[#1A1830] rounded-full px-2 py-0.5"
+                                className="text-xs px-2 py-0.5 rounded-full font-medium"
+                                style={{ background: 'rgba(255,150,0,0.12)', color: '#FF9600' }}
                               >
                                 {wp}
                               </span>
                             ))}
                           </div>
                         )}
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl p-3" style={{ background: '#F7F7F7' }}>
+                        <p className="text-xs" style={{ color: '#C0C0D0' }}>아직 세션 기록이 없어요</p>
                       </div>
                     )}
                   </div>

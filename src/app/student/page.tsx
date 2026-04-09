@@ -55,6 +55,7 @@ export default async function StudentPage() {
       .select('unit_id')
       .eq('student_id', user.id)
       .not('ended_at', 'is', null)
+      .gte('understanding_score', 60)
       .in('unit_id', activeUnits.map(u => u.id))
     completedUnitIds = [...new Set((completedSessions ?? []).map(s => s.unit_id))]
   }

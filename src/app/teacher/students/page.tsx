@@ -44,15 +44,23 @@ export default async function StudentsPage() {
 
   const { data: reports } = await admin
     .from('reports')
-    .select('id, student_id, unit_id, summary, weak_points, created_at')
+    .select('id, student_id, unit_id, summary, weak_points, created_at, sessions!inner(understanding_score)')
     .in('student_id', students.map((s: { id: string }) => s.id))
     .order('created_at', { ascending: false })
 
+  // understanding_score를 report 최상위로 flatten
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const flatReports = (reports ?? []).map((r: any) => {
+    const s = Array.isArray(r.sessions) ? r.sessions[0] : r.sessions
+    return { ...r, understanding_score: s?.understanding_score ?? null }
+  })
+
   return (
     <StudentsClient
+      profile={{ name: profile.name }}
       currentClass={currentClass}
       students={students}
-      reports={reports ?? []}
+      reports={flatReports}
     />
   )
 }
