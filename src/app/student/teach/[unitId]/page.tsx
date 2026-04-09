@@ -74,6 +74,8 @@ export default function TeachPage() {
   const [initError, setInitError] = useState(false)
   const [expression, setExpression] = useState<Expression>('curious')
   const [mooniMessage, setMooniMessage] = useState('안녕! 나는 무니야. 달에서 왔는데... 선생님이 오늘 뭘 배웠는지 알려준대서 기다리고 있었어! 🌙')
+  const [isFirstVisit, setIsFirstVisit] = useState(false)
+  const [guideStep, setGuideStep] = useState<'mic' | 'done'>('mic')
   const [understanding, setUnderstanding] = useState(0)
   const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -115,9 +117,21 @@ export default function TeachPage() {
       } else {
         setInitError(true)
       }
+
+      const visited = localStorage.getItem('mooni-teach-visited')
+      if (!visited) {
+        setIsFirstVisit(true)
+      }
     }
     init()
   }, [unitId, router])
+
+  // 첫 방문 시 무니 메시지 업데이트
+  useEffect(() => {
+    if (isFirstVisit) {
+      setMooniMessage('안녕! 나는 무니야 🌙 아래 🎤 버튼을 눌러서 오늘 배운 걸 설명해줘!')
+    }
+  }, [isFirstVisit])
 
   // 언마운트 시 cleanup
   useEffect(() => {
@@ -163,6 +177,11 @@ export default function TeachPage() {
           ...newHistory,
           { role: 'assistant', content: data.message },
         ])
+        if (isFirstVisit) {
+          setIsFirstVisit(false)
+          setGuideStep('done')
+          localStorage.setItem('mooni-teach-visited', 'true')
+        }
       }
     } catch {
       setMooniMessage('앗, 잠깐 연결이 끊겼어요. 다시 말해줘! 🌙')
@@ -589,8 +608,31 @@ export default function TeachPage() {
                   ? '🤔 무니가 생각하고 있어요...'
                   : isRecording
                   ? '🔴 듣고 있어요...'
+                  : isFirstVisit
+                  ? `"${unit?.title ?? '오늘 배운 것'}"을 무니에게 설명해봐요!`
                   : '지금 말해보세요...'}
               </div>
+
+              {/* 첫 방문 가이드 레이블 */}
+              {isFirstVisit && guideStep === 'mic' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex flex-col items-center gap-1"
+                >
+                  <motion.div
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    style={{ color: '#E8C547', fontSize: 20 }}
+                  >
+                    ↓
+                  </motion.div>
+                  <p className="text-xs font-bold px-3 py-1.5 rounded-full"
+                    style={{ background: 'rgba(232,197,71,0.20)', color: '#E8C547' }}>
+                    여기를 눌러봐! 🎤
+                  </p>
+                </motion.div>
+              )}
 
               {/* 마이크 버튼 */}
               <motion.button

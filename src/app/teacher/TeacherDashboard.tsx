@@ -8,6 +8,7 @@ import {
   Check,
   ArrowRight,
   Users,
+  CheckCircle,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import type { Profile, Class, Unit, Quest, QuestCompletion } from '@/types/database'
@@ -206,9 +207,25 @@ export default function TeacherDashboard({
               })}
             </div>
           ) : (
-            <div className="text-center py-6">
-              <BookOpen size={28} style={{ color: '#E8C547' }} className="mx-auto mb-2" />
-              <p className="text-xs" style={{ color: '#9EA0B4' }}>단원이 없어요</p>
+            <div className="px-3 py-2">
+              <p className="text-xs font-bold mb-2" style={{ color: '#9EA0B4' }}>시작하기</p>
+              {[
+                { step: 1, text: '단원 추가하기', done: false, href: '/teacher/units/new' },
+                { step: 2, text: '초대 코드 공유', done: students.length > 0, href: null },
+                { step: 3, text: '첫 리포트 확인', done: completedSessions.length > 0, href: null },
+              ].map(item => (
+                <div key={item.step} className="flex items-center gap-2 py-1.5">
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                    style={{ background: item.done ? '#4CAF50' : 'rgba(232,197,71,0.20)', color: item.done ? 'white' : '#C8A020' }}>
+                    {item.done ? <CheckCircle size={14} weight="fill" /> : item.step}
+                  </div>
+                  {item.href ? (
+                    <Link href={item.href} className="text-xs font-semibold" style={{ color: '#E8C547' }}>{item.text} →</Link>
+                  ) : (
+                    <span className="text-xs" style={{ color: item.done ? '#4CAF50' : '#9EA0B4' }}>{item.text}</span>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
@@ -334,12 +351,18 @@ export default function TeacherDashboard({
               </div>
             ))
           ) : (
-            <div className="p-8 text-center" style={clayCard}>
-              <Users size={36} style={{ color: '#E8C547' }} className="mx-auto mb-3" />
-              <p className="font-bold" style={{ color: '#2D2F2F' }}>아직 학생이 없어요</p>
-              <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>
-                초대 코드 <strong style={{ color: '#E8C547' }}>{currentClass.invite_code}</strong>를 학생에게 알려주세요
+            <div className="flex flex-col items-center justify-center h-full px-8 text-center">
+              <div className="text-5xl mb-4">🌙</div>
+              <p className="font-extrabold text-base mb-2" style={{ color: '#2D2F2F' }}>
+                아직 학생이 없어요
               </p>
+              <p className="text-sm mb-4" style={{ color: '#9EA0B4' }}>
+                초대 코드를 학생들에게 공유해보세요
+              </p>
+              <div className="px-4 py-2 rounded-full text-lg font-extrabold tracking-widest"
+                style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}>
+                {currentClass.invite_code}
+              </div>
             </div>
           )}
         </div>
