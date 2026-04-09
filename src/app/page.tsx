@@ -138,11 +138,11 @@ export default function LandingPage() {
           {/* 달 + 무니 (모바일) */}
           <div className="relative flex items-center justify-center mb-8" style={{ width: 280, height: 280 }}>
             <svg
-              width={250}
-              height={250}
+              width={320}
+              height={320}
               viewBox="0 0 380 380"
               className="absolute"
-              style={{ filter: 'drop-shadow(0 0 40px rgba(232,197,71,0.35))' }}
+              style={{ filter: 'drop-shadow(0 0 50px rgba(232,197,71,0.40))' }}
             >
               <defs>
                 <radialGradient id="mobileMoonGrad" cx="35%" cy="30%">
@@ -165,7 +165,7 @@ export default function LandingPage() {
               animate={{ y: [0, -14, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="relative z-10"
-              style={{ width: 240, height: 160 }}
+              style={{ width: 330, height: 220 }}
             >
               <Image
                 src="/mooni/happy.png"
@@ -284,14 +284,14 @@ export default function LandingPage() {
           </div>
 
           {/* 오른쪽: 달 + 무니 */}
-          <div className="relative flex items-center justify-center" style={{ minHeight: 500 }}>
+          <div className="relative flex items-center justify-center" style={{ minHeight: 580 }}>
             {/* 대형 달 SVG */}
             <svg
-              width={380}
-              height={380}
+              width={520}
+              height={520}
               viewBox="0 0 380 380"
               className="absolute"
-              style={{ filter: 'drop-shadow(0 0 60px rgba(232,197,71,0.35))' }}
+              style={{ filter: 'drop-shadow(0 0 80px rgba(232,197,71,0.40))' }}
             >
               <defs>
                 <radialGradient id="landingMoonGrad" cx="35%" cy="30%">
@@ -316,7 +316,7 @@ export default function LandingPage() {
               animate={{ y: [0, -18, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               className="relative z-10"
-              style={{ width: 360, height: 240 }}
+              style={{ width: 540, height: 360 }}
             >
               <Image
                 src="/mooni/happy.png"
@@ -330,7 +330,7 @@ export default function LandingPage() {
             {/* 우상단 작은 무니 */}
             <div
               className="absolute"
-              style={{ top: 20, right: 10, opacity: 0.35, width: 90, height: 60 }}
+              style={{ top: 20, right: -10, opacity: 0.40, width: 135, height: 90 }}
             >
               <Image src="/mooni/curious.png" alt="" fill className="object-contain" />
             </div>
@@ -338,7 +338,7 @@ export default function LandingPage() {
             {/* 좌하단 작은 무니 */}
             <div
               className="absolute"
-              style={{ bottom: 30, left: 0, opacity: 0.25, width: 75, height: 50 }}
+              style={{ bottom: 30, left: -10, opacity: 0.30, width: 120, height: 80 }}
             >
               <Image src="/mooni/oops.png" alt="" fill className="object-contain" />
             </div>
@@ -441,7 +441,7 @@ export default function LandingPage() {
         <motion.div
           animate={{ y: [0, -12, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ width: 300, height: 200, position: 'relative', marginBottom: 24 }}
+          style={{ width: 420, height: 280, position: 'relative', marginBottom: 24 }}
         >
           <Image
             src="/mooni/impressed.png"
