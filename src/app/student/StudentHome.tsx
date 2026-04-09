@@ -298,6 +298,28 @@ function CenterContent({
 
   return (
     <div className="flex-1 overflow-y-auto relative" style={{ background: 'transparent' }}>
+      {/* 대형 달 배경 이미지 */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          right: '-80px',
+          bottom: '-60px',
+          width: 520,
+          height: 520,
+          opacity: 0.22,
+          mixBlendMode: 'screen',
+          zIndex: 0,
+        }}
+      >
+        <Image
+          src="/mooni/moonbackground.png"
+          alt=""
+          fill
+          className="object-contain"
+          aria-hidden="true"
+        />
+      </div>
+
       {/* 금색 별 파티클 */}
       {[
         { top: '8%', left: '10%', size: 14, delay: 0.3, dur: 3.5 },
