@@ -13,6 +13,42 @@ interface Message {
   expression?: Expression
 }
 
+// 별빛 파티클 (고정값으로 SSR hydration 불일치 방지)
+const STARS = [
+  { id: 0, top: 8.2, left: 12.5, size: 1.8, delay: 0.3, dur: 2.8 },
+  { id: 1, top: 15.7, left: 78.3, size: 2.3, delay: 1.1, dur: 3.5 },
+  { id: 2, top: 3.4, left: 45.6, size: 1.5, delay: 0.7, dur: 2.2 },
+  { id: 3, top: 22.1, left: 91.2, size: 2.8, delay: 2.0, dur: 4.1 },
+  { id: 4, top: 35.9, left: 5.7, size: 1.6, delay: 0.4, dur: 3.0 },
+  { id: 5, top: 48.3, left: 87.4, size: 2.1, delay: 1.8, dur: 2.5 },
+  { id: 6, top: 62.5, left: 33.2, size: 1.9, delay: 0.9, dur: 3.8 },
+  { id: 7, top: 75.1, left: 67.8, size: 2.5, delay: 1.5, dur: 2.9 },
+  { id: 8, top: 88.7, left: 20.4, size: 1.7, delay: 2.3, dur: 3.3 },
+  { id: 9, top: 6.8, left: 58.9, size: 2.2, delay: 0.2, dur: 4.0 },
+  { id: 10, top: 19.3, left: 25.1, size: 1.4, delay: 1.6, dur: 2.7 },
+  { id: 11, top: 31.6, left: 71.5, size: 2.6, delay: 0.8, dur: 3.6 },
+  { id: 12, top: 44.9, left: 48.2, size: 1.8, delay: 2.1, dur: 2.4 },
+  { id: 13, top: 57.4, left: 14.7, size: 2.0, delay: 1.3, dur: 4.2 },
+  { id: 14, top: 70.8, left: 83.6, size: 1.5, delay: 0.6, dur: 3.1 },
+  { id: 15, top: 83.2, left: 39.8, size: 2.4, delay: 1.9, dur: 2.6 },
+  { id: 16, top: 12.6, left: 93.4, size: 1.7, delay: 0.5, dur: 3.9 },
+  { id: 17, top: 27.9, left: 3.2, size: 2.1, delay: 2.4, dur: 2.3 },
+  { id: 18, top: 52.3, left: 56.7, size: 1.6, delay: 1.0, dur: 4.4 },
+  { id: 19, top: 93.8, left: 74.1, size: 2.7, delay: 0.1, dur: 3.2 },
+]
+
+// 크고 밝은 4각 별 — 8개
+const BIG_STARS = [
+  { id: 0, top: 10, left: 20, size: 12, delay: 0.5, dur: 3.5 },
+  { id: 1, top: 5, left: 60, size: 10, delay: 1.2, dur: 4.0 },
+  { id: 2, top: 18, left: 85, size: 14, delay: 0.3, dur: 3.2 },
+  { id: 3, top: 30, left: 40, size: 10, delay: 2.0, dur: 4.5 },
+  { id: 4, top: 8, left: 75, size: 12, delay: 0.8, dur: 3.8 },
+  { id: 5, top: 25, left: 10, size: 11, delay: 1.5, dur: 4.2 },
+  { id: 6, top: 15, left: 50, size: 13, delay: 0.2, dur: 3.0 },
+  { id: 7, top: 35, left: 70, size: 10, delay: 1.8, dur: 4.8 },
+]
+
 const DEMO_CONCEPT = '도형의 넓이를 구하는 방법: 직사각형은 가로×세로, 삼각형은 밑변×높이÷2, 평행사변형은 밑변×높이로 구한다.'
 const DEMO_UNIT_TITLE = '도형의 넓이'
 
@@ -124,9 +160,79 @@ export default function DemoTeachPage() {
 
   return (
     <div
-      className="flex h-screen overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 50%, #1E1A35 100%)' }}
+      className="relative flex h-screen overflow-hidden"
+      style={{ background: 'linear-gradient(160deg, #0A0818 0%, #0D0B1E 30%, #12103A 60%, #1A1535 80%, #1E1A35 100%)' }}
     >
+      {/* 작은 원형 별 */}
+      {STARS.map((s) => (
+        <div
+          key={s.id}
+          className="star-particle"
+          style={{
+            top: `${s.top}%`,
+            left: `${s.left}%`,
+            width: s.size,
+            height: s.size,
+            '--dur': `${s.dur}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size} height={s.size} viewBox="0 0 10 10">
+            <polygon
+              points="5,0 6,3.5 10,3.5 7,5.5 8,9 5,7 2,9 3,5.5 0,3.5 4,3.5"
+              fill="white"
+            />
+          </svg>
+        </div>
+      ))}
+
+      {/* 크고 밝은 별 */}
+      {BIG_STARS.map((s) => (
+        <div
+          key={`big-${s.id}`}
+          className="star-particle-slow"
+          style={{
+            top: `${s.top}%`,
+            left: `${s.left}%`,
+            '--dur': `${s.dur}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size} height={s.size} viewBox="0 0 24 24">
+            <path
+              d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
+              fill="rgba(232,197,71,0.9)"
+            />
+          </svg>
+        </div>
+      ))}
+
+      {/* 우상단 대형 달 글로우 */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: -60,
+          right: -60,
+          width: 200,
+          height: 200,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(232,197,71,0.20) 0%, rgba(232,197,71,0.08) 40%, transparent 70%)',
+        }}
+      />
+
+      {/* 배경 성운 (좌하단 은은한 블루 글로우) */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          bottom: -40,
+          left: -40,
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(100,120,255,0.08) 0%, transparent 70%)',
+        }}
+      />
+
       {/* 대화 히스토리 패널 (md+) */}
       <div
         className="hidden md:flex flex-col"
