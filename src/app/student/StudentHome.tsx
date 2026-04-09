@@ -306,7 +306,7 @@ function CenterContent({
           bottom: '-60px',
           width: 520,
           height: 520,
-          opacity: 0.22,
+          opacity: 0.55,
           mixBlendMode: 'screen',
           zIndex: 0,
         }}
