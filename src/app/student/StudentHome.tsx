@@ -13,7 +13,7 @@ import {
   CheckCircle,
 } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
-import type { Profile, Unit } from '@/types/database'
+import type { Profile, Unit, Quest, QuestCompletion } from '@/types/database'
 import { FullMoonNode, CrescentMoonNode, StarBurstNode, CarrotIcon, RabbitPawIcon, MoonStarIcon } from '@/components/icons'
 import { MoonSurfaceBg } from '@/components/icons/MoonSurface'
 
@@ -32,6 +32,8 @@ interface Props {
   hasEnrollment: boolean
   completedUnitIds: string[]
   className: string | null
+  quests: Quest[]
+  questCompletions: QuestCompletion[]
 }
 
 function getUnitTitle(session: RecentSession): string {
@@ -339,13 +341,15 @@ function RightSidebar({
   className: cls,
   hasEnrollment,
   recentSessions,
-  completedUnitIds,
+  quests,
+  questCompletions,
 }: {
   profile: Profile
   className: string | null
   hasEnrollment: boolean
   recentSessions: RecentSession[]
-  completedUnitIds: string[]
+  quests: Quest[]
+  questCompletions: QuestCompletion[]
 }) {
   const streak = recentSessions.length
   const avgScore =
@@ -357,8 +361,6 @@ function RightSidebar({
             Math.max(recentSessions.filter(s => s.understanding_score !== null).length, 1)
         )
       : null
-
-  const questDone = completedUnitIds.length > 0
 
   return (
     <aside
@@ -398,30 +400,38 @@ function RightSidebar({
         {/* 오늘의 퀘스트 */}
         <div className="p-4" style={clayCard}>
           <div className="flex items-center gap-2 mb-3">
-            <CarrotIcon size={18} color="#FF8C42" />
-            <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>
-              오늘의 학습 퀘스트
-            </p>
+            <CarrotIcon size={16} color="#FF8C42" />
+            <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>퀘스트</p>
           </div>
-          <p className="text-xs mb-3" style={{ color: '#9EA0B4' }}>
-            무니에게 한 번 가르쳐주기
-          </p>
-          {/* 프로그레스 바 */}
-          <div
-            className="w-full h-3 rounded-full overflow-hidden"
-            style={{ background: '#F0F0F0' }}
-          >
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: questDone ? '100%' : '0%',
-                background: '#E8C547',
-              }}
-            />
-          </div>
-          <p className="text-xs mt-1 text-right font-bold" style={{ color: questDone ? '#4CAF50' : '#9EA0B4' }}>
-            {questDone ? '완료! ✓' : '0 / 1'}
-          </p>
+          {quests.length === 0 ? (
+            <p className="text-xs" style={{ color: '#C0C0D0' }}>선생님이 퀘스트를 만들면 여기에 나타나요</p>
+          ) : (
+            <div className="space-y-3">
+              {quests.map(q => {
+                const done = questCompletions.some(c => c.quest_id === q.id)
+                return (
+                  <div key={q.id}>
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="text-sm font-bold" style={{ color: done ? '#4CAF50' : '#2D2F2F' }}>
+                        {done ? '✓ ' : ''}{q.title}
+                      </p>
+                      {q.due_date && (
+                        <span className="text-xs" style={{ color: '#9EA0B4' }}>
+                          ~{new Date(q.due_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                        </span>
+                      )}
+                    </div>
+                    {q.description && (
+                      <p className="text-xs mb-1.5" style={{ color: '#9EA0B4' }}>{q.description}</p>
+                    )}
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F7F7F7' }}>
+                      <div className="h-full rounded-full" style={{ width: done ? '100%' : '0%', background: done ? '#4CAF50' : '#E8C547', transition: 'width 0.5s' }} />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* 학습 통계 */}
@@ -489,12 +499,16 @@ function MobileLayout({
   recentSessions,
   hasEnrollment,
   completedUnitIds,
+  quests,
+  questCompletions,
 }: {
   profile: Profile
   activeUnits: Unit[]
   recentSessions: RecentSession[]
   hasEnrollment: boolean
   completedUnitIds: string[]
+  quests: Quest[]
+  questCompletions: QuestCompletion[]
 }) {
   const streak = recentSessions.length
   const avgScore =
@@ -599,6 +613,48 @@ function MobileLayout({
           )}
         </section>
 
+        {/* 퀘스트 (모바일) */}
+        <section>
+          <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: '#9EA0B4' }}>
+            퀘스트
+          </h2>
+          <div className="p-4" style={clayCard}>
+            <div className="flex items-center gap-2 mb-3">
+              <CarrotIcon size={16} color="#FF8C42" />
+              <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>퀘스트</p>
+            </div>
+            {quests.length === 0 ? (
+              <p className="text-xs" style={{ color: '#C0C0D0' }}>선생님이 퀘스트를 만들면 여기에 나타나요</p>
+            ) : (
+              <div className="space-y-3">
+                {quests.map(q => {
+                  const done = questCompletions.some(c => c.quest_id === q.id)
+                  return (
+                    <div key={q.id}>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-bold" style={{ color: done ? '#4CAF50' : '#2D2F2F' }}>
+                          {done ? '✓ ' : ''}{q.title}
+                        </p>
+                        {q.due_date && (
+                          <span className="text-xs" style={{ color: '#9EA0B4' }}>
+                            ~{new Date(q.due_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                          </span>
+                        )}
+                      </div>
+                      {q.description && (
+                        <p className="text-xs mb-1.5" style={{ color: '#9EA0B4' }}>{q.description}</p>
+                      )}
+                      <div className="h-2 rounded-full overflow-hidden" style={{ background: '#F7F7F7' }}>
+                        <div className="h-full rounded-full" style={{ width: done ? '100%' : '0%', background: done ? '#4CAF50' : '#E8C547', transition: 'width 0.5s' }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+
         {/* 지난 학습 */}
         {recentSessions.length > 0 && (
           <section>
@@ -640,6 +696,8 @@ export default function StudentHome({
   hasEnrollment,
   completedUnitIds,
   className,
+  quests,
+  questCompletions,
 }: Props) {
   return (
     <>
@@ -656,7 +714,8 @@ export default function StudentHome({
           className={className}
           hasEnrollment={hasEnrollment}
           recentSessions={recentSessions}
-          completedUnitIds={completedUnitIds}
+          quests={quests}
+          questCompletions={questCompletions}
         />
       </div>
 
@@ -668,6 +727,8 @@ export default function StudentHome({
           recentSessions={recentSessions}
           hasEnrollment={hasEnrollment}
           completedUnitIds={completedUnitIds}
+          quests={quests}
+          questCompletions={questCompletions}
         />
       </div>
     </>

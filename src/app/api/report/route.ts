@@ -113,6 +113,27 @@ export async function POST(req: NextRequest) {
       console.error('[/api/report] sessions update error:', sessionUpdateError)
     }
 
+    // 해당 unit_id와 매칭되는 활성 퀘스트 자동 완료
+    if (session.unit_id) {
+      const { data: matchedQuests } = await supabase
+        .from('quests')
+        .select('id, student_id')
+        .eq('unit_id', session.unit_id)
+        .eq('is_active', true)
+
+      if (matchedQuests && matchedQuests.length > 0) {
+        const completions = matchedQuests
+          .filter((q: { id: string; student_id: string | null }) => q.student_id === null || q.student_id === session.student_id)
+          .map((q: { id: string; student_id: string | null }) => ({ quest_id: q.id, student_id: session.student_id }))
+
+        if (completions.length > 0) {
+          await supabase
+            .from('quest_completions')
+            .upsert(completions, { onConflict: 'quest_id,student_id', ignoreDuplicates: true })
+        }
+      }
+    }
+
     return NextResponse.json({
       ...report,
       understanding_score,

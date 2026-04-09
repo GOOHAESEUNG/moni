@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import StudentHome from './StudentHome'
 import type { Unit } from '@/types/database'
 
+
 export default async function StudentPage() {
   const supabase = await createClient()
 
@@ -58,6 +59,17 @@ export default async function StudentPage() {
     completedUnitIds = [...new Set((completedSessions ?? []).map(s => s.unit_id))]
   }
 
+  // 내 퀘스트 (RLS가 본인 반 + 본인 대상만 반환)
+  const { data: quests } = enrollment
+    ? await supabase.from('quests').select('*').eq('is_active', true)
+    : { data: [] }
+
+  // 내 완료 기록
+  const questIds = (quests ?? []).map((q: { id: string }) => q.id)
+  const { data: questCompletions } = questIds.length > 0
+    ? await supabase.from('quest_completions').select('*').eq('student_id', user.id).in('quest_id', questIds)
+    : { data: [] }
+
   // 반 이름 추출
   type ClassInfo = { name: string; grade: number | null; class_number: number | null } | null
   const classInfo = enrollment?.classes as ClassInfo | ClassInfo[] | undefined
@@ -72,6 +84,8 @@ export default async function StudentPage() {
       hasEnrollment={!!enrollment?.class_id}
       completedUnitIds={completedUnitIds}
       className={className}
+      quests={quests ?? []}
+      questCompletions={questCompletions ?? []}
     />
   )
 }
