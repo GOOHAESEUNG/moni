@@ -48,7 +48,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
       canvas.height = rect.height
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      ctx.fillStyle = '#FAFAFA'
+      ctx.fillStyle = '#F5F3EE'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       if (imageData && imageData.width > 0) {
         ctx.putImageData(imageData, 0, 0)
@@ -79,7 +79,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
     ctx.beginPath()
     ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y)
     ctx.lineTo(pos.x, pos.y)
-    ctx.strokeStyle = isEraser ? '#FAFAFA' : color
+    ctx.strokeStyle = isEraser ? '#F5F3EE' : color
     ctx.lineWidth = isEraser ? brushSize * 4 : brushSize
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
@@ -149,7 +149,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (!ctx || !canvas) return
-    ctx.fillStyle = '#FAFAFA'
+    ctx.fillStyle = '#F5F3EE'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     setIsEmpty(true)
   }, [])

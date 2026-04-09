@@ -455,7 +455,7 @@ export default function TeachPage() {
         style={{ gridRow: 2, display: 'grid', gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }}
       >
         {/* md+: 3컬럼 래퍼 */}
-        <div className="h-full overflow-hidden md:grid md:grid-cols-[300px_1fr_320px] md:grid-rows-[1fr] flex flex-col">
+        <div className="h-full overflow-hidden md:grid md:grid-cols-[280px_1fr_400px] md:grid-rows-[1fr] flex flex-col">
 
           {/* 대화 히스토리 패널 (md+ 전용) */}
           <div
@@ -671,7 +671,7 @@ export default function TeachPage() {
           {/* 오른쪽: 그림판 + 입력 (md+ 전용) */}
           <div
             className="hidden md:flex flex-col h-full"
-            style={{ borderLeft: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.03)' }}
+            style={{ borderLeft: 'none', background: 'rgba(255,255,255,0.03)' }}
           >
             {/* 그림판 섹션 헤더 */}
             <div className="flex items-center justify-between px-3 py-2 flex-shrink-0"
