@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { MoonWithClouds } from '@/components/icons/MoonWithClouds'
 import {
   House,
   Trophy,
@@ -298,27 +299,18 @@ function CenterContent({
 
   return (
     <div className="flex-1 overflow-y-auto relative" style={{ background: 'transparent' }}>
-      {/* 대형 달 배경 이미지 */}
-      <div
+      {/* 대형 달 + 구름 SVG 배경 */}
+      <MoonWithClouds
         className="absolute pointer-events-none"
         style={{
-          right: '-80px',
-          bottom: '-60px',
-          width: 520,
-          height: 520,
-          opacity: 1,
-          mixBlendMode: 'screen',
+          right: '-40px',
+          bottom: '-20px',
+          width: 640,
+          height: 726,
           zIndex: 0,
-        }}
-      >
-        <Image
-          src="/mooni/moonbackground.png"
-          alt=""
-          fill
-          className="object-contain"
-          aria-hidden="true"
-        />
-      </div>
+          opacity: 0.95,
+        } as React.CSSProperties}
+      />
 
       {/* 금색 별 파티클 */}
       {[
