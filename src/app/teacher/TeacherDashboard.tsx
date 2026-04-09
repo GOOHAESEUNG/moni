@@ -10,7 +10,7 @@ import {
   Users,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
-import type { Profile, Class, Unit } from '@/types/database'
+import type { Profile, Class, Unit, Quest, QuestCompletion } from '@/types/database'
 
 interface Student {
   id: string
@@ -46,6 +46,9 @@ interface Props {
   unitCompletions: Record<string, number>
   avgScore: number | null
   reports: ReportItem[]
+  quests: Quest[]
+  questCompletions: QuestCompletion[]
+  totalStudents: number
 }
 
 const clayCard = {
@@ -94,6 +97,9 @@ export default function TeacherDashboard({
   studentScores,
   unitCompletions,
   reports,
+  quests,
+  questCompletions,
+  totalStudents,
 }: Props) {
   const [copied, setCopied] = useState(false)
 
@@ -102,8 +108,6 @@ export default function TeacherDashboard({
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
-
-  const totalStudents = students.length
 
   // 최근 리포트 5개 + 학생 이름 매핑
   const studentMap = new Map(students.map((s) => [s.id, s.name]))
@@ -205,6 +209,46 @@ export default function TeacherDashboard({
             <div className="text-center py-6">
               <BookOpen size={28} style={{ color: '#E8C547' }} className="mx-auto mb-2" />
               <p className="text-xs" style={{ color: '#9EA0B4' }}>단원이 없어요</p>
+            </div>
+          )}
+        </div>
+
+        {/* 퀘스트 */}
+        <div className="px-4 mb-3">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9EA0B4' }}>퀘스트</p>
+            <Link href="/teacher/quests/new"
+              className="text-xs font-bold px-2 py-1 rounded-full"
+              style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}>
+              + 추가
+            </Link>
+          </div>
+          {quests.length === 0 ? (
+            <p className="text-xs" style={{ color: '#C0C0D0' }}>퀘스트가 없어요</p>
+          ) : (
+            <div className="space-y-2">
+              {quests.map(q => {
+                const completedCount = questCompletions.filter(c => c.quest_id === q.id).length
+                const total = q.student_id ? 1 : totalStudents
+                const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0
+                return (
+                  <div key={q.id} className="rounded-xl p-3"
+                    style={{ background: '#F7F7F7' }}>
+                    <p className="text-xs font-bold mb-1" style={{ color: '#2D2F2F' }}>{q.title}</p>
+                    {q.due_date && (
+                      <p className="text-xs mb-1" style={{ color: '#9EA0B4' }}>
+                        ~{new Date(q.due_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-1.5 rounded-full" style={{ background: '#E0E0E0' }}>
+                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: '#E8C547' }} />
+                      </div>
+                      <span className="text-xs" style={{ color: '#9EA0B4' }}>{completedCount}/{total}</span>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>

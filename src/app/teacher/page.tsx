@@ -96,6 +96,20 @@ export default async function TeacherPage() {
     ? Math.round(scoredSessions.reduce((sum: number, s: { understanding_score: number | null }) => sum + (s.understanding_score ?? 0), 0) / scoredSessions.length)
     : null
 
+  // 반의 활성 퀘스트
+  const { data: quests } = await admin
+    .from('quests')
+    .select('*')
+    .eq('class_id', currentClass.id)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+
+  // 퀘스트 완료 기록
+  const questIds = (quests ?? []).map((q: { id: string }) => q.id)
+  const { data: questCompletions } = questIds.length > 0
+    ? await admin.from('quest_completions').select('*').in('quest_id', questIds)
+    : { data: [] }
+
   // 최근 리포트 (우측 패널용)
   const { data: reports } = students.length > 0
     ? await admin
@@ -117,6 +131,9 @@ export default async function TeacherPage() {
       unitCompletions={unitCompletions}
       avgScore={avgScore}
       reports={reports ?? []}
+      quests={quests ?? []}
+      questCompletions={questCompletions ?? []}
+      totalStudents={students.length}
     />
   )
 }

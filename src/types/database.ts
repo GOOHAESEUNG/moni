@@ -66,3 +66,22 @@ export interface Report {
   suggestions: string[]
   created_at: string
 }
+
+export interface Quest {
+  id: string
+  class_id: string
+  unit_id: string | null
+  student_id: string | null  // null = 반 전체
+  title: string
+  description: string | null
+  due_date: string | null
+  is_active: boolean
+  created_at: string
+}
+
+export interface QuestCompletion {
+  id: string
+  quest_id: string
+  student_id: string
+  completed_at: string
+}
