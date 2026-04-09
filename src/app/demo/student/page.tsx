@@ -3,9 +3,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  House, Trophy, User, Star, Lock, CheckCircle,
-  Users, Lightning, Flame, ArrowRight, BookOpen,
+  House, Trophy, User,
+  Users, ArrowRight, BookOpen,
 } from '@phosphor-icons/react'
+import { FullMoonNode, CrescentMoonNode, StarBurstNode, CarrotIcon, RabbitPawIcon, MoonStarIcon } from '@/components/icons'
+import { MoonSurfaceBg } from '@/components/icons/MoonSurface'
 
 // ─── Mock 데이터 ───────────────────────────────
 const DEMO_PROFILE = { name: '김무니' }
@@ -98,9 +100,7 @@ function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeSt
   if (status === 'completed') {
     return (
       <div className="flex flex-col items-center gap-2">
-        <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8C547', boxShadow: '0 4px 0 #C8A020', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <CheckCircle size={36} weight="fill" color="#1A1830" />
-        </div>
+        <FullMoonNode size={72} />
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>{unit.title}</p>
       </div>
     )
@@ -113,12 +113,8 @@ function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeSt
           시작!
         </div>
         <div className="relative">
-          <Link href="/demo/student/teach">
-            <div
-              style={{ width: 80, height: 80, borderRadius: '50%', background: '#E8C547', boxShadow: '0 6px 0 #C8A020', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-            >
-              <Star size={40} weight="fill" color="#1A1830" />
-            </div>
+          <Link href="/demo/student/teach" className="block cursor-pointer">
+            <StarBurstNode size={80} />
           </Link>
           <div className="absolute" style={{ right: -88, top: '50%', transform: 'translateY(-50%)' }}>
             <Image src="/mooni/curious.png" alt="무니" width={120} height={80} />
@@ -131,9 +127,7 @@ function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeSt
 
   return (
     <div className="flex flex-col items-center gap-2">
-      <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8E8E8', boxShadow: '0 4px 0 #C8C8C8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Lock size={32} weight="fill" color="#9EA0B4" />
-      </div>
+      <CrescentMoonNode size={72} />
       <p className="text-xs text-center" style={{ color: '#9EA0B4' }}>{unit.title}</p>
     </div>
   )
@@ -150,14 +144,15 @@ function CenterContent() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto" style={{ background: '#F7F7F7' }}>
+    <div className="flex-1 overflow-y-auto relative" style={{ background: '#F7F7F7' }}>
+      <MoonSurfaceBg />
       <div className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3" style={{ background: '#E8C547' }}>
         <span className="font-extrabold text-sm" style={{ color: '#1A1830' }}>섹션 1</span>
         <span style={{ color: 'rgba(26,24,48,0.40)' }}>|</span>
         <span className="font-bold text-sm" style={{ color: '#1A1830' }}>오늘의 학습</span>
       </div>
 
-      <div className="flex flex-col items-center py-10 gap-0">
+      <div className="flex flex-col items-center py-10 gap-0" style={{ position: 'relative', zIndex: 1 }}>
         {DEMO_UNITS.map((unit, i) => (
           <div key={unit.id} className="flex flex-col items-center">
             <UnitNode unit={unit} status={getStatus(unit)} />
@@ -207,7 +202,7 @@ function RightSidebar() {
       {/* 오늘의 퀘스트 */}
       <div className="p-4" style={clayCard}>
         <div className="flex items-center gap-2 mb-3">
-          <Lightning size={16} weight="fill" style={{ color: '#E8C547' }} />
+          <CarrotIcon size={16} color="#FF8C42" />
           <p className="text-xs font-bold" style={{ color: '#9EA0B4' }}>오늘의 퀘스트</p>
         </div>
         <p className="text-sm font-bold mb-2" style={{ color: '#2D2F2F' }}>무니에게 한 번 가르쳐주기</p>
@@ -227,14 +222,14 @@ function RightSidebar() {
         <p className="text-xs font-bold mb-3" style={{ color: '#9EA0B4' }}>학습 통계</p>
         <div className="flex gap-6">
           <div className="flex items-center gap-2">
-            <Flame size={20} weight="fill" style={{ color: '#FF9600' }} />
+            <RabbitPawIcon size={20} color="#FF9600" />
             <div>
               <p className="text-xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>1</p>
               <p className="text-xs" style={{ color: '#9EA0B4' }}>학습 횟수</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Star size={20} weight="fill" style={{ color: '#E8C547' }} />
+            <MoonStarIcon size={20} color="#E8C547" />
             <div>
               <p className="text-xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>{avgScore}</p>
               <p className="text-xs" style={{ color: '#9EA0B4' }}>평균 점수</p>
@@ -252,7 +247,7 @@ function RightSidebar() {
           {DEMO_SESSIONS.map((s) => (
             <div key={s.id} className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-2">
-                <Star size={14} weight="fill" style={{ color: '#E8C547' }} />
+                <MoonStarIcon size={14} color="#E8C547" />
                 <div>
                   <p className="font-semibold text-xs" style={{ color: '#2D2F2F' }}>{s.unitTitle}</p>
                   <p className="text-xs" style={{ color: '#9EA0B4' }}>

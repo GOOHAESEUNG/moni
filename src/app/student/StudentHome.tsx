@@ -8,16 +8,13 @@ import {
   Trophy,
   User,
   SignOut,
-  Star,
-  Lock,
-  CheckCircle,
   Users,
-  Lightning,
-  Flame,
   DoorOpen,
 } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, Unit } from '@/types/database'
+import { FullMoonNode, CrescentMoonNode, StarBurstNode, CarrotIcon, RabbitPawIcon, MoonStarIcon } from '@/components/icons'
+import { MoonSurfaceBg } from '@/components/icons/MoonSurface'
 
 interface RecentSession {
   id: string
@@ -162,20 +159,7 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   if (status === 'completed') {
     return (
       <div className="flex flex-col items-center gap-2">
-        <div
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: '50%',
-            background: '#E8C547',
-            boxShadow: '0 4px 0 #C8A020',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CheckCircle size={36} weight="fill" color="#1A1830" />
-        </div>
+        <FullMoonNode size={72} />
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>
           {unit.title}
         </p>
@@ -194,23 +178,8 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
           시작!
         </div>
         <div className="relative">
-          <Link href={`/student/teach/${unit.id}`}>
-            <div
-              className="current-node"
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: '50%',
-                background: '#E8C547',
-                boxShadow: '0 6px 0 #C8A020',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <Star size={40} weight="fill" color="#1A1830" />
-            </div>
+          <Link href={`/student/teach/${unit.id}`} className="current-node block cursor-pointer">
+            <StarBurstNode size={80} />
           </Link>
           {/* 무니 캐릭터 */}
           <div
@@ -230,20 +199,7 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   // locked
   return (
     <div className="flex flex-col items-center gap-2">
-      <div
-        style={{
-          width: 72,
-          height: 72,
-          borderRadius: '50%',
-          background: '#E8E8E8',
-          boxShadow: '0 4px 0 #C8C8C8',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Lock size={32} weight="fill" color="#9EA0B4" />
-      </div>
+      <CrescentMoonNode size={72} />
       <p className="text-xs text-center" style={{ color: '#9EA0B4' }}>
         {unit.title}
       </p>
@@ -321,7 +277,8 @@ function CenterContent({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto" style={{ background: '#F7F7F7' }}>
+    <div className="flex-1 overflow-y-auto relative" style={{ background: '#F7F7F7' }}>
+      <MoonSurfaceBg />
       {/* 헤더 바 */}
       <div
         className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3"
@@ -337,7 +294,7 @@ function CenterContent({
       </div>
 
       {/* Unit 노드 목록 */}
-      <div className="flex flex-col items-center py-10 gap-0">
+      <div className="flex flex-col items-center py-10 gap-0" style={{ position: 'relative', zIndex: 1 }}>
         {activeUnits.map((unit, i) => {
           const status = getStatus(unit)
           return (
@@ -430,7 +387,7 @@ function RightSidebar({
         {/* 오늘의 퀘스트 */}
         <div className="p-4" style={clayCard}>
           <div className="flex items-center gap-2 mb-3">
-            <Lightning size={18} weight="fill" style={{ color: '#E8C547' }} />
+            <CarrotIcon size={18} color="#FF8C42" />
             <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>
               오늘의 학습 퀘스트
             </p>
@@ -460,14 +417,14 @@ function RightSidebar({
         <div className="p-4 space-y-3" style={clayCard}>
           <p className="font-extrabold text-sm" style={{ color: '#2D2F2F' }}>학습 통계</p>
           <div className="flex items-center gap-2">
-            <Flame size={18} weight="fill" style={{ color: '#FF9600' }} />
+            <RabbitPawIcon size={20} color="#FF9600" />
             <span className="text-sm" style={{ color: '#6B6C7E' }}>학습 횟수</span>
             <span className="ml-auto font-extrabold text-sm" style={{ color: '#2D2F2F' }}>
               {streak}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Star size={18} weight="fill" style={{ color: '#E8C547' }} />
+            <MoonStarIcon size={20} color="#E8C547" />
             <span className="text-sm" style={{ color: '#6B6C7E' }}>평균 점수</span>
             <span className="ml-auto font-extrabold text-sm" style={{ color: '#2D2F2F' }}>
               {avgScore !== null ? `${avgScore}점` : '-'}
@@ -563,14 +520,14 @@ function MobileLayout({
         {/* 통계 */}
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-center gap-3 p-4" style={clayCard}>
-            <Flame size={28} weight="fill" style={{ color: '#FF9600' }} />
+            <RabbitPawIcon size={28} color="#FF9600" />
             <div>
               <p className="text-2xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>{streak}</p>
               <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학습 횟수</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4" style={clayCard}>
-            <Star size={28} weight="fill" style={{ color: '#E8C547' }} />
+            <MoonStarIcon size={28} color="#E8C547" />
             <div>
               <p className="text-2xl font-extrabold leading-none" style={{ color: '#2D2F2F' }}>
                 {avgScore !== null ? avgScore : '-'}
@@ -641,7 +598,7 @@ function MobileLayout({
               {recentSessions.map(session => (
                 <div key={session.id} className="flex items-center justify-between px-5 py-4">
                   <div className="flex items-center gap-3">
-                    <Star size={18} weight="fill" style={{ color: '#E8C547' }} />
+                    <MoonStarIcon size={18} color="#E8C547" />
                     <div>
                       <p className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>{getUnitTitle(session)}</p>
                       {session.ended_at && (
