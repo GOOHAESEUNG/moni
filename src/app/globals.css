@@ -167,3 +167,8 @@
   pointer-events: none;
   animation: twinkleSlow var(--dur, 4s) var(--delay, 0s) infinite ease-in-out;
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}

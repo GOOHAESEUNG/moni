@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 
 const STARS = [
   { id: 0, top: '5%', left: '10%', size: 1.8, delay: 0.3, duration: 2.8 },
@@ -30,7 +29,6 @@ const ROLES = [
     title: '학생으로 체험',
     desc: '무니에게 "분수의 덧셈"을 직접 설명해보세요. 무니가 질문하며 반응해요.',
     cta: '학생 체험 시작',
-    delay: 0.1,
   },
   {
     href: '/demo/teacher',
@@ -38,7 +36,6 @@ const ROLES = [
     title: '선생님으로 체험',
     desc: '학생별 이해도 리포트와 대시보드가 어떻게 생겼는지 미리 살펴보세요.',
     cta: '대시보드 체험',
-    delay: 0.2,
   },
 ]
 
@@ -49,23 +46,31 @@ export default function DemoPage() {
       style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 55%, #1E1A35 100%)' }}
     >
       {STARS.map((s) => (
-        <motion.div
+        <div
           key={s.id}
-          className="absolute rounded-full bg-white pointer-events-none"
-          style={{ top: s.top, left: s.left, width: s.size, height: s.size }}
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: s.duration, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
-        />
+          className="star-particle"
+          style={{
+            top: s.top,
+            left: s.left,
+            '--dur': `${s.duration}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size * 4} height={s.size * 4} viewBox="0 0 10 10">
+            <polygon points="5,0 6,3.5 10,3.5 7,5.5 8,9 5,7 2,9 3,5.5 0,3.5 4,3.5" fill="white" />
+          </svg>
+        </div>
       ))}
 
-      <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+      <div
         className="relative mb-6"
-        style={{ width: 120, height: 120 }}
+        style={{
+          width: 180, height: 120,
+          animation: 'float 3.5s ease-in-out infinite',
+        }}
       >
         <Image src="/mooni/curious.png" alt="무니" fill className="object-contain drop-shadow-xl" priority />
-      </motion.div>
+      </div>
 
       <p className="mb-2 text-sm font-black tracking-widest" style={{ color: '#E8C547' }}>
         무니에게 알려줘
@@ -76,21 +81,14 @@ export default function DemoPage() {
       </p>
 
       <div className="flex w-full max-w-xl flex-col gap-4 sm:flex-row">
-        {ROLES.map(({ href, emoji, title, desc, cta, delay }) => (
-          <motion.div
-            key={href}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay, duration: 0.4 }}
-            className="flex-1"
-          >
+        {ROLES.map(({ href, emoji, title, desc, cta }) => (
+          <div key={href} className="flex-1" style={{ opacity: 1 }}>
             <Link
               href={href}
               className="flex flex-col gap-4 rounded-3xl border p-6 transition-all hover:scale-[1.02] active:scale-[0.98]"
               style={{
-                background: 'rgba(255,255,255,0.06)',
+                background: 'rgba(255,255,255,0.09)',
                 borderColor: 'rgba(232,197,71,0.25)',
-                backdropFilter: 'blur(12px)',
               }}
             >
               <span className="text-4xl">{emoji}</span>
@@ -107,7 +105,7 @@ export default function DemoPage() {
                 {cta}
               </span>
             </Link>
-          </motion.div>
+          </div>
         ))}
       </div>
 
