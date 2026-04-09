@@ -241,39 +241,9 @@ function CenterContent({
     return 'locked'
   }
 
-  const STARS = [
-    { top: '12%', left: '8%',  size: 14, delay: 0.3, dur: 3.5 },
-    { top: '6%',  left: '70%', size: 12, delay: 1.1, dur: 4.0 },
-    { top: '20%', left: '88%', size: 16, delay: 0.5, dur: 3.2 },
-    { top: '40%', left: '5%',  size: 11, delay: 2.0, dur: 4.5 },
-    { top: '55%', left: '92%', size: 13, delay: 0.8, dur: 3.8 },
-    { top: '3%',  left: '45%', size: 12, delay: 1.5, dur: 4.2 },
-    { top: '30%', left: '78%', size: 14, delay: 0.2, dur: 3.0 },
-    { top: '68%', left: '15%', size: 11, delay: 1.8, dur: 4.8 },
-  ]
-
   return (
-    /* 외부: overflow-hidden + 배경 고정, 내부: overflow-y-auto */
-    <div className="flex-1 relative overflow-hidden">
-
-      {/* 배경 레이어 (스크롤 안 됨) */}
-      {/* 달 + 구름 — 항상 하단 고정 */}
-      <MoonWithClouds
-        className="absolute pointer-events-none"
-        style={{ bottom: 0, left: 0, width: '100%', height: 380, zIndex: 0 } as React.CSSProperties}
-      />
-      {/* 금색 별 파티클 — 고정 */}
-      {STARS.map((s, i) => (
-        <div key={i} className="star-particle-slow absolute pointer-events-none"
-          style={{ top: s.top, left: s.left, '--dur': `${s.dur}s`, '--delay': `${s.delay}s` } as React.CSSProperties}>
-          <svg width={s.size} height={s.size} viewBox="0 0 24 24">
-            <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="rgba(232,197,71,0.85)" />
-          </svg>
-        </div>
-      ))}
-
-      {/* ── 내부: 스크롤 콘텐츠 레이어 (배경 위에 올라감) ── */}
-      <div className="relative h-full overflow-y-auto" style={{ zIndex: 1 }}>
+    // 투명 배경 — 외부 wrapper의 그라디언트+달+구름이 비침
+    <div className="flex-1 h-full overflow-y-auto relative" style={{ background: 'transparent', zIndex: 1 }}>
 
         {!hasEnrollment ? (
           <div className="flex items-center justify-center min-h-full px-6">
@@ -328,7 +298,6 @@ function CenterContent({
           </>
         )}
 
-      </div>
     </div>
   )
 }
@@ -707,7 +676,37 @@ export default function StudentHome({
   return (
     <>
       {/* 태블릿/데스크탑: 3컬럼 */}
-      <div className="hidden md:flex flex-row h-screen overflow-hidden" style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}>
+      {/* 배경 + 3컬럼 래퍼 */}
+      <div
+        className="hidden md:flex flex-row h-screen overflow-hidden relative"
+        style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}
+      >
+        {/* ── 고정 배경 레이어 (스크롤 영향 없음) ── */}
+        {/* 달 + 구름: 우측 하단에 고정 */}
+        <MoonWithClouds
+          className="absolute pointer-events-none"
+          style={{ bottom: 0, right: 0, width: '65%', height: '60%', zIndex: 0 } as React.CSSProperties}
+        />
+        {/* 금색 별 파티클 */}
+        {[
+          { top: '8%',  left: '30%', size: 14, delay: 0.3, dur: 3.5 },
+          { top: '5%',  left: '55%', size: 12, delay: 1.1, dur: 4.0 },
+          { top: '15%', left: '75%', size: 16, delay: 0.5, dur: 3.2 },
+          { top: '25%', left: '85%', size: 11, delay: 2.0, dur: 4.5 },
+          { top: '12%', left: '40%', size: 13, delay: 0.8, dur: 3.8 },
+          { top: '35%', left: '90%', size: 12, delay: 1.5, dur: 4.2 },
+          { top: '3%',  left: '65%', size: 14, delay: 0.2, dur: 3.0 },
+          { top: '20%', left: '48%', size: 11, delay: 1.8, dur: 4.8 },
+        ].map((s, i) => (
+          <div key={i} className="star-particle-slow absolute pointer-events-none"
+            style={{ top: s.top, left: s.left, '--dur': `${s.dur}s`, '--delay': `${s.delay}s`, zIndex: 0 } as React.CSSProperties}>
+            <svg width={s.size} height={s.size} viewBox="0 0 24 24">
+              <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="rgba(232,197,71,0.85)" />
+            </svg>
+          </div>
+        ))}
+
+        {/* ── 콘텐츠 레이어 ── */}
         <LeftNav profile={profile} className={className} />
         <CenterContent
           activeUnits={activeUnits}
