@@ -332,7 +332,7 @@ export default function LandingPage() {
               className="absolute"
               style={{ top: 20, right: -10, opacity: 0.40, width: 135, height: 90 }}
             >
-              <Image src="/mooni/curious.png" alt="" fill className="object-contain" />
+              <Image src="/mooni/curious.png" alt="" fill className="object-contain" aria-hidden="true" />
             </div>
 
             {/* 좌하단 작은 무니 */}
@@ -340,7 +340,7 @@ export default function LandingPage() {
               className="absolute"
               style={{ bottom: 30, left: -10, opacity: 0.30, width: 120, height: 80 }}
             >
-              <Image src="/mooni/oops.png" alt="" fill className="object-contain" />
+              <Image src="/mooni/oops.png" alt="" fill className="object-contain" aria-hidden="true" />
             </div>
           </div>
         </div>
@@ -368,7 +368,7 @@ export default function LandingPage() {
                     <Icon size={22} weight="fill" style={{ color: '#E8C547' }} />
                   </div>
                   <div style={{ width: 72, height: 48, position: 'relative', opacity: 0.9 }}>
-                    <Image src={mooniImg} alt="" fill className="object-contain" />
+                    <Image src={mooniImg} alt="무니 캐릭터" fill className="object-contain" />
                   </div>
                 </div>
                 <p className="text-base font-bold" style={{ color: '#1A1830' }}>{title}</p>
