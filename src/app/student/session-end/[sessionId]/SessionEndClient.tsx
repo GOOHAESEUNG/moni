@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -31,6 +31,19 @@ export default function SessionEndClient({
   const [reflection, setReflection] = useState(initialReflection)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [displayScore, setDisplayScore] = useState(0)
+
+  useEffect(() => {
+    if (understandingScore <= 0) { setDisplayScore(0); return }
+    let current = 0
+    const step = Math.ceil(understandingScore / 30)
+    const interval = setInterval(() => {
+      current = Math.min(current + step, understandingScore)
+      setDisplayScore(current)
+      if (current >= understandingScore) clearInterval(interval)
+    }, 40)
+    return () => clearInterval(interval)
+  }, [understandingScore])
 
   async function saveReflection() {
     if (!reflection.trim() || saving) return
@@ -59,15 +72,24 @@ export default function SessionEndClient({
       {/* confetti 이펙트 (80점 이상) */}
       {understandingScore >= 80 && (
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
-          {[...Array(12)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-2xl"
-              style={{ left: `${8 + i * 8}%`, top: -20 }}
-              animate={{ y: '110vh', rotate: [0, 360], opacity: [1, 1, 0] }}
-              transition={{ duration: 2 + (i % 3) * 0.4, delay: i * 0.1, ease: 'easeIn' }}
+              className="absolute text-xl select-none"
+              style={{ left: `${5 + i * 5}%`, top: -30 }}
+              initial={{ y: -30, opacity: 1, rotate: 0 }}
+              animate={{
+                y: '115vh',
+                opacity: [1, 1, 0.8, 0],
+                rotate: (i % 2 === 0 ? 1 : -1) * (90 + (i % 4) * 45),
+              }}
+              transition={{
+                duration: 2.5 + (i % 5) * 0.3,
+                delay: i * 0.08,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
             >
-              {(['⭐', '✨', '🌙', '💫'] as const)[i % 4]}
+              {(['⭐', '✨', '🌙', '💫', '🎉'] as const)[i % 5]}
             </motion.div>
           ))}
         </div>
@@ -124,7 +146,7 @@ export default function SessionEndClient({
           </p>
           <div className="flex items-end gap-2 mb-4">
             <span className="text-5xl font-black" style={{ color: scoreColor }}>
-              {understandingScore}
+              {displayScore}
             </span>
             <span className="text-xl font-bold mb-1" style={{ color: scoreColor }}>
               점
