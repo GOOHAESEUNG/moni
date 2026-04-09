@@ -299,16 +299,16 @@ function CenterContent({
 
   return (
     <div className="flex-1 overflow-y-auto relative" style={{ background: 'transparent' }}>
-      {/* 대형 달 + 구름 SVG 배경 */}
+      {/* 달 + 구름 SVG — 하단 전체 너비 고정, 단원 많을수록 위 하늘이 길어짐 */}
       <MoonWithClouds
         className="absolute pointer-events-none"
         style={{
-          right: '-40px',
-          bottom: '-20px',
-          width: 640,
-          height: 726,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: '100%',
+          height: 400,
           zIndex: 0,
-          opacity: 0.95,
         } as React.CSSProperties}
       />
 
