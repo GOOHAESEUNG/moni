@@ -48,25 +48,25 @@ const BIG_STARS = [
 const FEATURES = [
   {
     icon: Brain,
-    mooniImg: '/mooni/curious.png',
+    mooniImg: '/mooni/face-curious.png',
     title: '설명하면서 배워요',
     desc: '가르치는 사람이 가장 많이 배웁니다. 프로테제 효과를 AI로 구현했어요.',
   },
   {
     icon: ChartBar,
-    mooniImg: '/mooni/thinking.png',
+    mooniImg: '/mooni/face-thinking.png',
     title: '리포트 자동 생성',
     desc: '무니가 대화를 분석해 학생별 이해도 리포트를 선생님에게 바로 전달해요.',
   },
   {
     icon: Microphone,
-    mooniImg: '/mooni/happy.png',
+    mooniImg: '/mooni/face-happy.png',
     title: '음성으로 설명해요',
     desc: '초등 저학년도 타이핑 없이 말로 설명할 수 있어요.',
   },
   {
     icon: Moon,
-    mooniImg: '/mooni/impressed.png',
+    mooniImg: '/mooni/face-impressed.png',
     title: '모든 과목 지원',
     desc: '수학, 영어, 과학 등 어떤 개념이든 무니가 배울 준비가 됐어요.',
   },
