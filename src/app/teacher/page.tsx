@@ -96,6 +96,16 @@ export default async function TeacherPage() {
     ? Math.round(scoredSessions.reduce((sum: number, s: { understanding_score: number | null }) => sum + (s.understanding_score ?? 0), 0) / scoredSessions.length)
     : null
 
+  // 최근 리포트 (우측 패널용)
+  const { data: reports } = students.length > 0
+    ? await admin
+        .from('reports')
+        .select('id, session_id, student_id, summary, weak_points, created_at, sessions!inner(understanding_score)')
+        .in('student_id', students.map((s) => s.id))
+        .order('created_at', { ascending: false })
+        .limit(10)
+    : { data: [] }
+
   return (
     <TeacherDashboard
       profile={profile}
@@ -106,6 +116,7 @@ export default async function TeacherPage() {
       studentScores={studentScores}
       unitCompletions={unitCompletions}
       avgScore={avgScore}
+      reports={reports ?? []}
     />
   )
 }
