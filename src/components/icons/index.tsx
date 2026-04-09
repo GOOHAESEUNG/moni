@@ -74,13 +74,13 @@ export function FullMoonNode({ size = 72 }: { size?: number }) {
 export function CrescentMoonNode({ size = 72 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 72 72">
-      {/* 바깥 원 (회색 달) */}
-      <circle cx="36" cy="36" r="34" fill="#D8D8D8" />
+      {/* 바깥 원 (라벤더 달) */}
+      <circle cx="36" cy="36" r="34" fill="#C4B8E0" />
       {/* 초승달 음영 (겹치는 원으로 초승달 형태) */}
-      <circle cx="48" cy="28" r="30" fill="#EFEFEF" />
+      <circle cx="48" cy="28" r="30" fill="#DDD8F0" />
       {/* 자물쇠 아이콘 */}
-      <rect x="28" y="36" width="16" height="13" rx="3" fill="#9EA0B4"/>
-      <path d="M30 36 L30 30 C30 25 42 25 42 30 L42 36" stroke="#9EA0B4" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+      <rect x="28" y="36" width="16" height="13" rx="3" fill="#8B7EC8"/>
+      <path d="M30 36 L30 30 C30 25 42 25 42 30 L42 36" stroke="#8B7EC8" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
       <circle cx="36" cy="42" r="2" fill="white"/>
     </svg>
   )

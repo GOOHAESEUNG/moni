@@ -56,9 +56,9 @@ function ScorePill({ score }: { score: number | null }) {
 }
 
 const clayCard = {
-  background: '#FFFFFF',
+  background: 'rgba(255,255,255,0.92)',
   borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+  boxShadow: '0 8px 24px rgba(130,110,200,0.22), 0 2px 8px rgba(100,85,170,0.10)',
 } as const
 
 // ──────────────────────────────────────────────
@@ -79,13 +79,13 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
       style={{
         width: 220,
         flexShrink: 0,
-        background: '#FFFFFF',
-        borderRight: '1px solid #F0F0F0',
+        background: 'rgba(255,255,255,0.88)',
+        borderRight: '1px solid rgba(180,160,220,0.35)',
       }}
     >
       {/* 로고 */}
       <div className="px-5 pt-6 pb-4">
-        <p className="font-extrabold text-base" style={{ color: '#2D2F2F' }}>
+        <p className="font-extrabold text-base" style={{ color: '#5A4FA0' }}>
           🌙 무니에게 알려줘
         </p>
       </div>
@@ -297,18 +297,43 @@ function CenterContent({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto relative" style={{ background: '#F7F7F7' }}>
+    <div className="flex-1 overflow-y-auto relative" style={{ background: 'transparent' }}>
+      {/* 금색 별 파티클 */}
+      {[
+        { top: '8%', left: '10%', size: 14, delay: 0.3, dur: 3.5 },
+        { top: '15%', left: '75%', size: 12, delay: 1.1, dur: 4.0 },
+        { top: '5%', left: '50%', size: 16, delay: 0.5, dur: 3.2 },
+        { top: '25%', left: '88%', size: 11, delay: 2.0, dur: 4.5 },
+        { top: '35%', left: '5%', size: 13, delay: 0.8, dur: 3.8 },
+        { top: '60%', left: '92%', size: 12, delay: 1.5, dur: 4.2 },
+        { top: '70%', left: '15%', size: 14, delay: 0.2, dur: 3.0 },
+        { top: '80%', left: '60%', size: 11, delay: 1.8, dur: 4.8 },
+      ].map((s, i) => (
+        <div
+          key={i}
+          className="star-particle-slow absolute pointer-events-none"
+          style={{
+            top: s.top, left: s.left,
+            '--dur': `${s.dur}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size} height={s.size} viewBox="0 0 24 24">
+            <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="rgba(232,197,71,0.85)" />
+          </svg>
+        </div>
+      ))}
       <MoonSurfaceBg />
       {/* 헤더 바 */}
       <div
         className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3"
-        style={{ background: '#E8C547' }}
+        style={{ background: 'linear-gradient(90deg, #8B7EC8, #9A8DD0)' }}
       >
-        <span className="font-extrabold text-sm" style={{ color: '#1A1830' }}>
+        <span className="font-extrabold text-sm" style={{ color: 'white' }}>
           섹션 1
         </span>
-        <span style={{ color: 'rgba(26,24,48,0.40)' }}>|</span>
-        <span className="font-bold text-sm" style={{ color: '#1A1830' }}>
+        <span style={{ color: 'rgba(255,255,255,0.50)' }}>|</span>
+        <span className="font-bold text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>
           오늘의 학습
         </span>
       </div>
@@ -375,8 +400,8 @@ function RightSidebar({
       style={{
         width: 280,
         flexShrink: 0,
-        background: '#FFFFFF',
-        borderLeft: '1px solid #F0F0F0',
+        background: 'rgba(255,255,255,0.88)',
+        borderLeft: '1px solid rgba(180,160,220,0.35)',
       }}
     >
       <div className="px-5 pt-6 pb-4 space-y-4">
@@ -537,13 +562,13 @@ function MobileLayout({
   }
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen pb-12" style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}>
       {/* 인사말 헤더 */}
       <div className="px-5 pt-12 pb-2">
-        <h1 className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>
+        <h1 className="text-2xl font-extrabold" style={{ color: 'white' }}>
           안녕, {profile.name}!
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>
+        <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.75)' }}>
           오늘도 무니를 도와줄래요?
         </p>
       </div>
@@ -571,7 +596,7 @@ function MobileLayout({
 
         {/* 오늘의 학습 */}
         <section>
-          <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: '#9EA0B4' }}>
+          <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.65)' }}>
             오늘의 학습
           </h2>
 
@@ -627,7 +652,7 @@ function MobileLayout({
 
         {/* 퀘스트 (모바일) */}
         <section>
-          <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: '#9EA0B4' }}>
+          <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.65)' }}>
             퀘스트
           </h2>
           <div className="p-4" style={clayCard}>
@@ -670,7 +695,7 @@ function MobileLayout({
         {/* 지난 학습 */}
         {recentSessions.length > 0 && (
           <section>
-            <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: '#9EA0B4' }}>
+            <h2 className="font-bold text-xs mb-3 px-1 uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.65)' }}>
               지난 학습
             </h2>
             <div className="overflow-hidden divide-y" style={{ ...clayCard, borderColor: '#F7F7F7' }}>
@@ -714,7 +739,7 @@ export default function StudentHome({
   return (
     <>
       {/* 태블릿/데스크탑: 3컬럼 */}
-      <div className="hidden md:flex flex-row h-screen overflow-hidden">
+      <div className="hidden md:flex flex-row h-screen overflow-hidden" style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}>
         <LeftNav profile={profile} className={className} />
         <CenterContent
           activeUnits={activeUnits}
