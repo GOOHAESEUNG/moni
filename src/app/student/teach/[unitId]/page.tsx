@@ -43,6 +43,18 @@ const STARS = [
   { id: 19, top: 93.8, left: 74.1, size: 2.7, delay: 0.1, dur: 3.2 },
 ]
 
+// 크고 밝은 4각 별 — 8개
+const BIG_STARS = [
+  { id: 0, top: 10, left: 20, size: 12, delay: 0.5, dur: 3.5 },
+  { id: 1, top: 5, left: 60, size: 10, delay: 1.2, dur: 4.0 },
+  { id: 2, top: 18, left: 85, size: 14, delay: 0.3, dur: 3.2 },
+  { id: 3, top: 30, left: 40, size: 10, delay: 2.0, dur: 4.5 },
+  { id: 4, top: 8, left: 75, size: 12, delay: 0.8, dur: 3.8 },
+  { id: 5, top: 25, left: 10, size: 11, delay: 1.5, dur: 4.2 },
+  { id: 6, top: 15, left: 50, size: 13, delay: 0.2, dur: 3.0 },
+  { id: 7, top: 35, left: 70, size: 10, delay: 1.8, dur: 4.8 },
+]
+
 const expressionLabels: Record<Expression, string> = {
   curious: '궁금해요!',
   confused: '모르겠어요...',
@@ -260,7 +272,7 @@ export default function TeachPage() {
     return (
       <div
         className="flex flex-col h-screen items-center justify-center font-sans"
-        style={{ background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 50%, #1E1A35 100%)' }}
+        style={{ background: 'linear-gradient(160deg, #0A0818 0%, #0D0B1E 30%, #12103A 60%, #1A1535 80%, #1E1A35 100%)' }}
       >
         <p className="text-white text-sm">연결에 문제가 생겼어요. 새로고침해 주세요.</p>
       </div>
@@ -274,27 +286,82 @@ export default function TeachPage() {
     <div
       className="h-screen overflow-hidden font-sans relative"
       style={{
-        background: 'linear-gradient(180deg, #0D0B1E 0%, #151325 50%, #1E1A35 100%)',
+        background: 'linear-gradient(160deg, #0A0818 0%, #0D0B1E 30%, #12103A 60%, #1A1535 80%, #1E1A35 100%)',
         display: 'grid',
         gridTemplateRows: '56px 1fr',
         gridTemplateColumns: '1fr',
       }}
     >
-      {/* 별빛 파티클 */}
+      {/* 작은 원형 별 (기존 유지) */}
       {STARS.map((s) => (
-        <motion.div
+        <div
           key={s.id}
-          className="absolute rounded-full bg-white pointer-events-none"
+          className="star-particle"
           style={{
             top: `${s.top}%`,
             left: `${s.left}%`,
             width: s.size,
             height: s.size,
-          }}
-          animate={{ opacity: [0.15, 0.9, 0.15] }}
-          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
-        />
+            '--dur': `${s.dur}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size} height={s.size} viewBox="0 0 10 10">
+            <polygon
+              points="5,0 6,3.5 10,3.5 7,5.5 8,9 5,7 2,9 3,5.5 0,3.5 4,3.5"
+              fill="white"
+            />
+          </svg>
+        </div>
       ))}
+
+      {/* 크고 밝은 별 */}
+      {BIG_STARS.map((s) => (
+        <div
+          key={`big-${s.id}`}
+          className="star-particle-slow"
+          style={{
+            top: `${s.top}%`,
+            left: `${s.left}%`,
+            '--dur': `${s.dur}s`,
+            '--delay': `${s.delay}s`,
+          } as React.CSSProperties}
+        >
+          <svg width={s.size} height={s.size} viewBox="0 0 24 24">
+            {/* 4각 별 (✦) */}
+            <path
+              d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
+              fill="rgba(232,197,71,0.9)"
+            />
+          </svg>
+        </div>
+      ))}
+
+      {/* 우상단 대형 달 글로우 */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: -60,
+          right: -60,
+          width: 200,
+          height: 200,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(232,197,71,0.20) 0%, rgba(232,197,71,0.08) 40%, transparent 70%)',
+        }}
+      />
+
+      {/* 배경 성운 (좌하단 은은한 블루 글로우) */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          bottom: -40,
+          left: -40,
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(100,120,255,0.08) 0%, transparent 70%)',
+        }}
+      />
 
       {/* 헤더 */}
       <header

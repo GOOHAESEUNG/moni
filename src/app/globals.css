@@ -144,3 +144,26 @@
     @apply font-sans;
   }
 }
+
+/* 별 파티클 애니메이션 */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes twinkleSlow {
+  0%, 100% { opacity: 0.1; transform: scale(0.9) rotate(0deg); }
+  50% { opacity: 0.9; transform: scale(1.1) rotate(15deg); }
+}
+
+.star-particle {
+  position: absolute;
+  pointer-events: none;
+  animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite ease-in-out;
+}
+
+.star-particle-slow {
+  position: absolute;
+  pointer-events: none;
+  animation: twinkleSlow var(--dur, 4s) var(--delay, 0s) infinite ease-in-out;
+}
