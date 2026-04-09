@@ -66,6 +66,11 @@ export default function DemoTeachPage() {
   const [mooniExpression, setMooniExpression] = useState<Expression>('curious')
   const [isRecording, setIsRecording] = useState(false)
   const [showHistory, setShowHistory] = useState(true)
+  const [micSuccess, setMicSuccess] = useState(false)
+  const [showUnderstandingBurst, setShowUnderstandingBurst] = useState(false)
+  const [showAwesomePopup, setShowAwesomePopup] = useState(false)
+  const prevUnderstandingRef = useRef(0)
+  const hasReached85Ref = useRef(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const recognitionRef = useRef<any>(null)
@@ -80,6 +85,8 @@ export default function DemoTeachPage() {
     recognition.onresult = (e: any) => {
       setInput(e.results[0][0].transcript)
       setIsRecording(false)
+      setMicSuccess(true)
+      setTimeout(() => setMicSuccess(false), 600)
     }
     recognition.onerror = () => setIsRecording(false)
     recognition.onend = () => setIsRecording(false)
@@ -138,7 +145,18 @@ export default function DemoTeachPage() {
         expression: data.expression ?? 'curious',
       }
       setMooniExpression(data.expression ?? 'curious')
-      setUnderstanding(data.understanding ?? 0)
+      const newUnderstanding = data.understanding ?? 0
+      if (newUnderstanding - prevUnderstandingRef.current >= 10) {
+        setShowUnderstandingBurst(true)
+        setTimeout(() => setShowUnderstandingBurst(false), 1200)
+      }
+      if (newUnderstanding >= 85 && !hasReached85Ref.current) {
+        hasReached85Ref.current = true
+        setShowAwesomePopup(true)
+        setTimeout(() => setShowAwesomePopup(false), 2000)
+      }
+      prevUnderstandingRef.current = newUnderstanding
+      setUnderstanding(newUnderstanding)
       setMessages((prev) => [...prev, assistantMsg])
     } catch {
       setMessages((prev) => [...prev, {
@@ -343,11 +361,28 @@ export default function DemoTeachPage() {
         </div>
 
         {/* 무니 캐릭터 */}
-        <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="flex-1 flex flex-col items-center justify-center relative">
           <div
             className="absolute rounded-full pointer-events-none"
             style={{ width: 240, height: 240, background: 'radial-gradient(circle, rgba(232,197,71,0.15) 0%, transparent 70%)' }}
           />
+
+          {/* 85점 달성 팝업 */}
+          <AnimatePresence>
+            {showAwesomePopup && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                animate={{ opacity: 1, y: -10, scale: 1 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                className="absolute z-20 px-4 py-2 rounded-full font-extrabold text-sm pointer-events-none"
+                style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 16px rgba(232,197,71,0.5)', top: 20, whiteSpace: 'nowrap' }}
+              >
+                완벽해요! 🌙✨
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <AnimatePresence mode="wait">
             <motion.div
               key={mooniExpression}
@@ -370,7 +405,22 @@ export default function DemoTeachPage() {
           </AnimatePresence>
 
           {/* 이해도 */}
-          <div className="mt-4 w-52 flex flex-col items-center gap-2">
+          <div className="mt-4 w-52 flex flex-col items-center gap-2 relative">
+            {/* 파티클 burst */}
+            <AnimatePresence>
+              {showUnderstandingBurst && [...Array(6)].map((_, i) => (
+                <motion.div key={i} className="absolute pointer-events-none"
+                  style={{ left: `${15 + i * 13}%`, top: '50%' }}
+                  initial={{ opacity: 1, y: 0, scale: 0 }}
+                  animate={{ opacity: 0, y: -28, x: (i % 2 === 0 ? 1 : -1) * (4 + i * 2), scale: 1.2 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}>
+                  <svg width={10} height={10} viewBox="0 0 24 24">
+                    <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="#E8C547" />
+                  </svg>
+                </motion.div>
+              ))}
+            </AnimatePresence>
             <div className="flex items-center gap-2">
               <p className="text-sm font-bold" style={{ color: '#E8C547' }}>{understanding}%</p>
               <p className="text-xs" style={{ color: 'rgba(255,255,255,0.40)' }}>무니 이해도</p>
@@ -403,8 +453,10 @@ export default function DemoTeachPage() {
             whileTap={{ scale: 0.92 }}
             className="relative w-20 h-20 rounded-full flex items-center justify-center disabled:opacity-40"
             style={{
-              background: isRecording ? 'rgba(239,68,68,0.85)' : '#E8C547',
-              boxShadow: isRecording
+              background: micSuccess ? 'rgba(76,175,80,0.85)' : isRecording ? 'rgba(239,68,68,0.85)' : '#E8C547',
+              boxShadow: micSuccess
+                ? '0 0 0 8px rgba(76,175,80,0.20), 0 8px 32px rgba(76,175,80,0.40)'
+                : isRecording
                 ? '0 0 0 8px rgba(239,68,68,0.20), 0 8px 32px rgba(239,68,68,0.40)'
                 : '0 0 0 8px rgba(232,197,71,0.20), 0 8px 32px rgba(232,197,71,0.40)',
             }}
