@@ -541,6 +541,16 @@ export default function TeachPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="w-full max-w-sm"
                 >
+                  {/* 닫기 버튼 행 */}
+                  <div className="flex justify-end mb-1">
+                    <button
+                      onClick={() => setShowTextInput(false)}
+                      className="text-xs flex items-center gap-1 px-2 py-1 rounded-full"
+                      style={{ color: 'rgba(255,255,255,0.45)', background: 'rgba(255,255,255,0.08)' }}
+                    >
+                      <X size={12} weight="bold" /> 닫기
+                    </button>
+                  </div>
                   <div
                     className="flex items-end gap-2 rounded-2xl p-3"
                     style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}
