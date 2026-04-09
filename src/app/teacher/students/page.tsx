@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@supabase/supabase-js'
 import StudentsClient from './StudentsClient'
 
 export default async function StudentsPage() {
@@ -26,7 +27,12 @@ export default async function StudentsPage() {
   const currentClass = classes?.[0]
   if (!currentClass) redirect('/teacher')
 
-  const { data: enrollments } = await supabase
+  const admin = createAdmin(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  const { data: enrollments } = await admin
     .from('enrollments')
     .select('student_id, profiles!inner(id, name, email)')
     .eq('class_id', currentClass.id)
@@ -36,7 +42,7 @@ export default async function StudentsPage() {
     return { id: e.student_id, name: p?.name ?? '학생', email: p?.email ?? '' }
   })
 
-  const { data: reports } = await supabase
+  const { data: reports } = await admin
     .from('reports')
     .select('id, student_id, unit_id, summary, weak_points, created_at')
     .in('student_id', students.map((s: { id: string }) => s.id))

@@ -10,6 +10,7 @@ import {
   SignOut,
   Users,
   DoorOpen,
+  CheckCircle,
 } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 import type { Profile, Unit } from '@/types/database'
@@ -159,7 +160,17 @@ function UnitNode({ unit, status }: { unit: Unit; status: NodeStatus }) {
   if (status === 'completed') {
     return (
       <div className="flex flex-col items-center gap-2">
-        <FullMoonNode size={72} />
+        <div className="px-3 py-1 rounded-full text-xs font-extrabold mb-1"
+          style={{ background: 'rgba(232,197,71,0.20)', color: '#C8A020' }}>
+          다시 가르치기
+        </div>
+        <Link href={`/student/teach/${unit.id}`}>
+          <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8C547',
+            boxShadow: '0 4px 0 #C8A020', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', cursor: 'pointer', opacity: 0.85 }}>
+            <CheckCircle size={36} weight="fill" color="#1A1830" />
+          </div>
+        </Link>
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>
           {unit.title}
         </p>

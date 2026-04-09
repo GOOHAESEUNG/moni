@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   House, Trophy, User,
-  Users, ArrowRight, BookOpen,
+  Users, ArrowRight, BookOpen, CheckCircle,
 } from '@phosphor-icons/react'
 import { FullMoonNode, CrescentMoonNode, StarBurstNode, CarrotIcon, RabbitPawIcon, MoonStarIcon } from '@/components/icons'
 import { MoonSurfaceBg } from '@/components/icons/MoonSurface'
@@ -100,7 +100,17 @@ function UnitNode({ unit, status }: { unit: typeof DEMO_UNITS[0]; status: NodeSt
   if (status === 'completed') {
     return (
       <div className="flex flex-col items-center gap-2">
-        <FullMoonNode size={72} />
+        <div className="px-3 py-1 rounded-full text-xs font-extrabold mb-1"
+          style={{ background: 'rgba(232,197,71,0.20)', color: '#C8A020' }}>
+          다시 가르치기
+        </div>
+        <Link href="/demo/student/teach">
+          <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#E8C547',
+            boxShadow: '0 4px 0 #C8A020', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', cursor: 'pointer', opacity: 0.85 }}>
+            <CheckCircle size={36} weight="fill" color="#1A1830" />
+          </div>
+        </Link>
         <p className="font-bold text-sm text-center" style={{ color: '#2D2F2F' }}>{unit.title}</p>
       </div>
     )
