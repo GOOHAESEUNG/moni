@@ -233,62 +233,6 @@ function CenterContent({
   completedUnitIds: string[]
   hasEnrollment: boolean
 }) {
-  if (!hasEnrollment) {
-    return (
-      <div className="flex-1 flex items-center justify-center px-6">
-        <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
-          <div style={{ position: 'relative', width: 180, height: 120, margin: '0 auto 16px' }}>
-            <Image src="/mooni/face-curious.png" alt="무니" fill className="object-contain" />
-          </div>
-          <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>
-            안녕! 나는 무니야 🌙
-          </p>
-          <p className="text-sm mb-1 font-medium" style={{ color: '#2D2F2F' }}>
-            달에서 왔는데 지구 공부를 배우고 싶어!
-          </p>
-          <p className="text-sm mb-5" style={{ color: '#9EA0B4' }}>
-            선생님께 받은 초대 코드로 반에 참여하면
-            <br />오늘의 학습이 나타나요
-          </p>
-          <Link
-            href="/student/join"
-            className="inline-flex items-center gap-2 font-extrabold text-sm"
-            style={{
-              background: '#E8C547',
-              borderRadius: '9999px',
-              padding: '12px 24px',
-              color: '#1A1830',
-              boxShadow: '0 4px 0 #C8A020',
-            }}
-          >
-            <DoorOpen size={18} weight="fill" />
-            반 참여하기
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (activeUnits.length === 0) {
-    return (
-      <div className="flex-1 flex items-center justify-center px-6">
-        <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
-          <div style={{ width: 150, height: 100, position: 'relative', margin: '0 auto 16px' }}>
-            <Image src="/mooni/face-thinking.png" alt="무니" fill className="object-contain" />
-          </div>
-          <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>
-            무니가 기다리고 있어요 😴
-          </p>
-          <p className="text-sm" style={{ color: '#9EA0B4' }}>
-            선생님이 오늘 배울 단원을 만들면
-            <br />여기에 나타나요!
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  // 첫 번째 non-completed unit = current
   const firstNonCompleted = activeUnits.find(u => !completedUnitIds.includes(u.id))
 
   function getStatus(unit: Unit): NodeStatus {
@@ -297,83 +241,93 @@ function CenterContent({
     return 'locked'
   }
 
+  const STARS = [
+    { top: '12%', left: '8%',  size: 14, delay: 0.3, dur: 3.5 },
+    { top: '6%',  left: '70%', size: 12, delay: 1.1, dur: 4.0 },
+    { top: '20%', left: '88%', size: 16, delay: 0.5, dur: 3.2 },
+    { top: '40%', left: '5%',  size: 11, delay: 2.0, dur: 4.5 },
+    { top: '55%', left: '92%', size: 13, delay: 0.8, dur: 3.8 },
+    { top: '3%',  left: '45%', size: 12, delay: 1.5, dur: 4.2 },
+    { top: '30%', left: '78%', size: 14, delay: 0.2, dur: 3.0 },
+    { top: '68%', left: '15%', size: 11, delay: 1.8, dur: 4.8 },
+  ]
+
   return (
-    <div className="flex-1 overflow-y-auto relative" style={{ background: 'transparent' }}>
-      {/* 달 + 구름 SVG — 하단 전체 너비 고정, 단원 많을수록 위 하늘이 길어짐 */}
+    /* 외부: overflow-hidden + 배경 고정, 내부: overflow-y-auto */
+    <div className="flex-1 relative overflow-hidden">
+
+      {/* 배경 레이어 (스크롤 안 됨) */}
+      {/* 달 + 구름 — 항상 하단 고정 */}
       <MoonWithClouds
         className="absolute pointer-events-none"
-        style={{
-          bottom: 0,
-          left: 0,
-          right: 0,
-          width: '100%',
-          height: 400,
-          zIndex: 0,
-        } as React.CSSProperties}
+        style={{ bottom: 0, left: 0, width: '100%', height: 380, zIndex: 0 } as React.CSSProperties}
       />
-
-      {/* 금색 별 파티클 */}
-      {[
-        { top: '8%', left: '10%', size: 14, delay: 0.3, dur: 3.5 },
-        { top: '15%', left: '75%', size: 12, delay: 1.1, dur: 4.0 },
-        { top: '5%', left: '50%', size: 16, delay: 0.5, dur: 3.2 },
-        { top: '25%', left: '88%', size: 11, delay: 2.0, dur: 4.5 },
-        { top: '35%', left: '5%', size: 13, delay: 0.8, dur: 3.8 },
-        { top: '60%', left: '92%', size: 12, delay: 1.5, dur: 4.2 },
-        { top: '70%', left: '15%', size: 14, delay: 0.2, dur: 3.0 },
-        { top: '80%', left: '60%', size: 11, delay: 1.8, dur: 4.8 },
-      ].map((s, i) => (
-        <div
-          key={i}
-          className="star-particle-slow absolute pointer-events-none"
-          style={{
-            top: s.top, left: s.left,
-            '--dur': `${s.dur}s`,
-            '--delay': `${s.delay}s`,
-          } as React.CSSProperties}
-        >
+      {/* 금색 별 파티클 — 고정 */}
+      {STARS.map((s, i) => (
+        <div key={i} className="star-particle-slow absolute pointer-events-none"
+          style={{ top: s.top, left: s.left, '--dur': `${s.dur}s`, '--delay': `${s.delay}s` } as React.CSSProperties}>
           <svg width={s.size} height={s.size} viewBox="0 0 24 24">
             <path d="M12 2L13.5 10.5L22 12L13.5 13.5L12 22L10.5 13.5L2 12L10.5 10.5Z" fill="rgba(232,197,71,0.85)" />
           </svg>
         </div>
       ))}
-      <MoonSurfaceBg />
-      {/* 헤더 바 */}
-      <div
-        className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3"
-        style={{ background: 'linear-gradient(90deg, #8B7EC8, #9A8DD0)' }}
-      >
-        <span className="font-extrabold text-sm" style={{ color: 'white' }}>
-          섹션 1
-        </span>
-        <span style={{ color: 'rgba(255,255,255,0.50)' }}>|</span>
-        <span className="font-bold text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>
-          오늘의 학습
-        </span>
-      </div>
 
-      {/* Unit 노드 목록 */}
-      <div className="flex flex-col items-center py-10 gap-0" style={{ position: 'relative', zIndex: 1 }}>
-        {activeUnits.map((unit, i) => {
-          const status = getStatus(unit)
-          return (
-            <div key={unit.id} className="flex flex-col items-center">
-              <UnitNode unit={unit} status={status} />
-              {/* 연결선 (마지막 노드 제외) */}
-              {i < activeUnits.length - 1 && (
-                <div
-                  style={{
-                    width: 4,
-                    height: 48,
-                    background: '#E8E8E8',
-                    margin: '8px auto',
-                    borderRadius: 2,
-                  }}
-                />
-              )}
+      {/* ── 내부: 스크롤 콘텐츠 레이어 (배경 위에 올라감) ── */}
+      <div className="relative h-full overflow-y-auto" style={{ zIndex: 1 }}>
+
+        {!hasEnrollment ? (
+          <div className="flex items-center justify-center min-h-full px-6">
+            <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
+              <div style={{ position: 'relative', width: 180, height: 120, margin: '0 auto 16px' }}>
+                <Image src="/mooni/face-curious.png" alt="무니" fill className="object-contain" />
+              </div>
+              <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>안녕! 나는 무니야 🌙</p>
+              <p className="text-sm mb-1 font-medium" style={{ color: '#2D2F2F' }}>달에서 왔는데 지구 공부를 배우고 싶어!</p>
+              <p className="text-sm mb-5" style={{ color: '#9EA0B4' }}>선생님께 받은 초대 코드로 반에 참여하면<br />오늘의 학습이 나타나요</p>
+              <Link href="/student/join" className="inline-flex items-center gap-2 font-extrabold text-sm"
+                style={{ background: '#E8C547', borderRadius: '9999px', padding: '12px 24px', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}>
+                <DoorOpen size={18} weight="fill" />
+                반 참여하기
+              </Link>
             </div>
-          )
-        })}
+          </div>
+        ) : activeUnits.length === 0 ? (
+          <div className="flex items-center justify-center min-h-full px-6">
+            <div className="p-8 text-center" style={{ ...clayCard, maxWidth: 360, width: '100%' }}>
+              <div style={{ width: 150, height: 100, position: 'relative', margin: '0 auto 16px' }}>
+                <Image src="/mooni/face-thinking.png" alt="무니" fill className="object-contain" />
+              </div>
+              <p className="font-extrabold text-lg mb-2" style={{ color: '#2D2F2F' }}>무니가 기다리고 있어요 😴</p>
+              <p className="text-sm" style={{ color: '#9EA0B4' }}>선생님이 오늘 배울 단원을 만들면<br />여기에 나타나요!</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* 헤더 바 */}
+            <div className="sticky top-0 z-10 flex items-center gap-3 px-6 py-3"
+              style={{ background: 'linear-gradient(90deg, #8B7EC8, #9A8DD0)' }}>
+              <span className="font-extrabold text-sm" style={{ color: 'white' }}>섹션 1</span>
+              <span style={{ color: 'rgba(255,255,255,0.50)' }}>|</span>
+              <span className="font-bold text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>오늘의 학습</span>
+            </div>
+
+            {/* Unit 노드 목록 */}
+            <div className="flex flex-col items-center py-10 gap-0 pb-96">
+              {activeUnits.map((unit, i) => {
+                const status = getStatus(unit)
+                return (
+                  <div key={unit.id} className="flex flex-col items-center">
+                    <UnitNode unit={unit} status={status} />
+                    {i < activeUnits.length - 1 && (
+                      <div style={{ width: 4, height: 48, background: 'rgba(255,255,255,0.30)', margin: '8px auto', borderRadius: 2 }} />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </>
+        )}
+
       </div>
     </div>
   )
