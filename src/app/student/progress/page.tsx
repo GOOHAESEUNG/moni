@@ -4,9 +4,9 @@ import { createClient as createAdmin } from '@supabase/supabase-js'
 import { ChartBar, Star, BookOpen, TrendUp } from '@phosphor-icons/react/dist/ssr'
 
 const clayStyle = {
-  background: '#FFFFFF',
-  borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+  background: 'rgba(255,255,255,0.94)',
+  borderRadius: '24px',
+  boxShadow: '0 8px 32px rgba(170,155,230,0.16), 0 2px 8px rgba(150,135,210,0.08)',
 } as const
 
 export default async function StudentProgressPage() {
@@ -40,10 +40,10 @@ export default async function StudentProgressPage() {
   const best = validSessions.length ? Math.max(...validSessions.map(s => s.understanding_score ?? 0)) : null
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}>
       <div className="px-5 pt-12 pb-4">
-        <h1 className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>학습 현황</h1>
-        <p className="text-sm mt-1" style={{ color: '#9EA0B4' }}>지금까지의 학습 기록이에요</p>
+        <h1 className="text-2xl font-extrabold" style={{ color: '#2D1F6E' }}>학습 현황</h1>
+        <p className="text-sm mt-1" style={{ color: 'rgba(45,31,110,0.55)' }}>지금까지의 학습 기록이에요</p>
       </div>
 
       <div className="px-5 space-y-4 max-w-lg mx-auto">
@@ -64,26 +64,26 @@ export default async function StudentProgressPage() {
 
         {/* 최근 리포트 */}
         <section>
-          <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: '#9EA0B4' }}>최근 학습 리포트</h2>
+          <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: 'rgba(45,31,110,0.50)' }}>최근 학습 리포트</h2>
           {reports && reports.length > 0 ? (
             <div style={{ ...clayStyle, padding: 0, overflow: 'hidden' }}>
               {reports.map((r: any, i: number) => (
                 <a key={r.id} href={`/student/report/${r.id}`}
-                  className="block px-5 py-4 hover:bg-[#F7F7F7] transition-colors"
-                  style={{ borderTop: i > 0 ? '1px solid #F7F7F7' : 'none' }}>
+                  className="block px-5 py-4 hover:bg-purple-50/30 transition-colors"
+                  style={{ borderTop: i > 0 ? '1px solid rgba(170,155,230,0.15)' : 'none' }}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>
+                      <p className="font-semibold text-sm" style={{ color: '#2D1F6E' }}>
                         {Array.isArray(r.units) ? r.units[0]?.title : r.units?.title ?? '단원'}
                       </p>
-                      <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>
+                      <p className="text-xs mt-0.5" style={{ color: 'rgba(45,31,110,0.45)' }}>
                         {new Date(r.created_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' })}
                       </p>
                     </div>
                     <span style={{ color: '#E8C547', fontSize: 18 }}>→</span>
                   </div>
                   {r.summary && (
-                    <p className="text-xs mt-1 line-clamp-2" style={{ color: '#9EA0B4' }}>{r.summary}</p>
+                    <p className="text-xs mt-1 line-clamp-2" style={{ color: 'rgba(45,31,110,0.45)' }}>{r.summary}</p>
                   )}
                 </a>
               ))}
@@ -100,16 +100,16 @@ export default async function StudentProgressPage() {
         {/* 전체 세션 목록 */}
         {(sessions?.length ?? 0) > 0 && (
           <section>
-            <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: '#9EA0B4' }}>전체 학습 기록</h2>
+            <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: 'rgba(45,31,110,0.50)' }}>전체 학습 기록</h2>
             <div style={{ ...clayStyle, padding: 0, overflow: 'hidden' }}>
               {sessions!.map((s: any, i: number) => (
                 <div key={s.id} className="flex items-center justify-between px-5 py-3"
-                  style={{ borderTop: i > 0 ? '1px solid #F7F7F7' : 'none' }}>
+                  style={{ borderTop: i > 0 ? '1px solid rgba(170,155,230,0.12)' : 'none' }}>
                   <div>
-                    <p className="font-semibold text-sm" style={{ color: '#2D2F2F' }}>
+                    <p className="font-semibold text-sm" style={{ color: '#2D1F6E' }}>
                       {Array.isArray(s.units) ? s.units[0]?.title : s.units?.title ?? '단원'}
                     </p>
-                    <p className="text-xs" style={{ color: '#9EA0B4' }}>
+                    <p className="text-xs" style={{ color: 'rgba(45,31,110,0.45)' }}>
                       {s.ended_at ? new Date(s.ended_at).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }) : '진행 중'}
                     </p>
                   </div>

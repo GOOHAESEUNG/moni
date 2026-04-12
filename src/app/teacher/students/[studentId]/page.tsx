@@ -2,10 +2,18 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import Link from 'next/link'
-import { ArrowLeft } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react/dist/ssr'
 
 interface Props {
   params: Promise<{ studentId: string }>
+}
+
+interface CompetencyScores {
+  자기관리역량: number
+  대인관계역량: number
+  시민역량: number
+  문제해결역량: number
+  comment?: string
 }
 
 interface ReportEntry {
@@ -13,6 +21,7 @@ interface ReportEntry {
   summary: string | null
   weak_points: string[]
   suggestions: string[]
+  competency_scores: CompetencyScores | null
 }
 
 interface SessionRow {
@@ -29,7 +38,49 @@ interface ReportRow {
   summary: string | null
   weak_points: string[]
   suggestions: string[]
+  competency_scores: CompetencyScores | null
   created_at: string
+}
+
+const COMPETENCY_LABELS: { key: keyof Omit<CompetencyScores, 'comment'>; label: string; color: string }[] = [
+  { key: '자기관리역량', label: '자기관리', color: '#7C6FBF' },
+  { key: '대인관계역량', label: '대인관계', color: '#E8C547' },
+  { key: '시민역량', label: '시민', color: '#4CAF50' },
+  { key: '문제해결역량', label: '문제해결', color: '#FF9600' },
+]
+
+function CompetencyBar({ scores }: { scores: CompetencyScores }) {
+  return (
+    <div>
+      <p className="text-xs font-bold mb-2" style={{ color: '#7C6FBF' }}>
+        📊 핵심역량 분석
+      </p>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        {COMPETENCY_LABELS.map(({ key, label, color }) => {
+          const val = scores[key]
+          return (
+            <div key={key}>
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="text-xs" style={{ color: '#9EA0B4' }}>{label}</span>
+                <span className="text-xs font-bold" style={{ color }}>{val}/5</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${(val / 5) * 100}%`, background: color }}
+                />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      {scores.comment && (
+        <p className="text-xs mt-2 leading-relaxed" style={{ color: '#6B6B8D', fontStyle: 'italic' }}>
+          &ldquo;{scores.comment}&rdquo;
+        </p>
+      )}
+    </div>
+  )
 }
 
 function ScorePill({ score }: { score: number | null }) {
@@ -68,7 +119,7 @@ export default async function StudentDetailPage({ params }: Props) {
 
   const { data: reports } = await admin
     .from('reports')
-    .select('id, session_id, summary, weak_points, suggestions, created_at')
+    .select('id, session_id, summary, weak_points, suggestions, competency_scores, created_at')
     .eq('student_id', studentId)
     .order('created_at', { ascending: false })
 
@@ -88,6 +139,7 @@ export default async function StudentDetailPage({ params }: Props) {
         summary: r.summary,
         weak_points: r.weak_points ?? [],
         suggestions: r.suggestions ?? [],
+        competency_scores: r.competency_scores ?? null,
       }
     ])
   )
@@ -106,7 +158,7 @@ export default async function StudentDetailPage({ params }: Props) {
   }
 
   const clayCard = 'rounded-[20px] p-5 bg-white'
-  const clayStyle = { boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)' }
+  const clayStyle = { border: '1px solid #ECEAF6' }
 
   const totalSessions = sessions?.length ?? 0
   const scoredList = (sessions ?? []).filter((s) => s.understanding_score !== null)
@@ -115,7 +167,7 @@ export default async function StudentDetailPage({ params }: Props) {
     : null
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen pb-12" style={{ background: '#F2F1FA' }}>
       <div className="px-5 pt-12 pb-4 flex items-center gap-3">
         <Link href="/teacher/students" className="flex items-center justify-center w-10 h-10 rounded-full bg-white" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <ArrowLeft size={20} weight="bold" style={{ color: '#2D2F2F' }} />
@@ -175,12 +227,22 @@ export default async function StudentDetailPage({ params }: Props) {
                         if (report) {
                           return (
                             <div key={s.id} className="rounded-[20px] overflow-hidden bg-white"
-                              style={{ boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)' }}>
+                              style={{ border: '1px solid #ECEAF6' }}>
 
                               <div className="flex items-center justify-between px-5 py-4"
                                 style={{ borderBottom: '1px solid #F7F7F7' }}>
                                 <p className="text-xs" style={{ color: '#9EA0B4' }}>{dateStr}</p>
-                                <ScorePill score={s.understanding_score} />
+                                <div className="flex items-center gap-2">
+                                  <ScorePill score={s.understanding_score} />
+                                  <Link
+                                    href={`/teacher/students/${studentId}/report/${report.id}`}
+                                    className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
+                                    style={{ background: '#F4F2FF', color: '#7C6FBF' }}
+                                  >
+                                    <ArrowSquareOut size={12} weight="bold" />
+                                    전체 보기
+                                  </Link>
+                                </div>
                               </div>
 
                               <div className="px-5 py-4 space-y-3">
@@ -188,6 +250,13 @@ export default async function StudentDetailPage({ params }: Props) {
                                   <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>
                                     {report.summary}
                                   </p>
+                                )}
+
+                                {report.competency_scores && (
+                                  <>
+                                    <div style={{ borderTop: '1px solid #F0EFF8' }} />
+                                    <CompetencyBar scores={report.competency_scores} />
+                                  </>
                                 )}
 
                                 {report.weak_points.length > 0 && (

@@ -9,9 +9,9 @@ import {
 } from '@phosphor-icons/react'
 
 const clayCard = {
-  background: 'rgba(255,255,255,0.92)',
-  borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(130,110,200,0.22), 0 2px 8px rgba(100,85,170,0.10)',
+  background: 'rgba(255,255,255,0.94)',
+  borderRadius: '24px',
+  boxShadow: '0 8px 32px rgba(170,155,230,0.16), 0 2px 8px rgba(150,135,210,0.08)',
 } as const
 
 export default function StudentProfilePage() {
@@ -61,7 +61,7 @@ export default function StudentProfilePage() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center"
-      style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}>
+      style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}>
       <div className="text-4xl animate-pulse">🌙</div>
     </div>
   )
@@ -69,7 +69,7 @@ export default function StudentProfilePage() {
   return (
     <div
       className="min-h-screen flex flex-row overflow-hidden relative"
-      style={{ background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)' }}
+      style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}
     >
       {/* ── 배경 별 파티클 ── */}
       {[
@@ -139,7 +139,7 @@ export default function StudentProfilePage() {
         {/* 뒤로가기 (모바일) */}
         <div className="w-full max-w-md md:hidden mb-4">
           <Link href="/student" className="flex items-center gap-1.5 text-sm font-bold"
-            style={{ color: 'rgba(255,255,255,0.75)' }}>
+            style={{ color: 'rgba(45,31,110,0.65)' }}>
             <ArrowLeft size={16} weight="bold" />
             홈으로
           </Link>
@@ -147,15 +147,15 @@ export default function StudentProfilePage() {
 
         {/* 이름 히어로 */}
         <div className="flex flex-col items-center mb-8">
-          <h1 className="text-2xl font-extrabold" style={{ color: '#FFFFFF' }}>
+          <h1 className="text-2xl font-extrabold" style={{ color: '#2D1F6E' }}>
             {profile?.name}
           </h1>
           {className && (
-            <p className="mt-1 text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.70)' }}>
+            <p className="mt-1 text-sm font-semibold" style={{ color: 'rgba(45,31,110,0.55)' }}>
               {className}
             </p>
           )}
-          <p className="mt-0.5 text-xs" style={{ color: 'rgba(255,255,255,0.50)' }}>
+          <p className="mt-0.5 text-xs" style={{ color: 'rgba(45,31,110,0.40)' }}>
             {profile?.email}
           </p>
         </div>

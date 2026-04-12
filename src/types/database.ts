@@ -56,6 +56,14 @@ export interface Message {
   created_at: string
 }
 
+export interface CompetencyScores {
+  자기관리역량: number
+  대인관계역량: number
+  시민역량: number
+  문제해결역량: number
+  comment?: string
+}
+
 export interface Report {
   id: string
   session_id: string
@@ -64,6 +72,7 @@ export interface Report {
   summary: string
   weak_points: string[]
   suggestions: string[]
+  competency_scores: CompetencyScores | null
   created_at: string
 }
 

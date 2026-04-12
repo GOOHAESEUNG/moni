@@ -7,9 +7,9 @@ import { createClient } from '@/lib/supabase/client'
 import MooniCharacter from '@/components/mooni/MooniCharacter'
 
 const clayStyle = {
-  background: '#FFFFFF',
-  borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(232,197,71,0.12), 0 2px 8px rgba(0,0,0,0.06)',
+  background: 'rgba(255,255,255,0.94)',
+  borderRadius: '24px',
+  boxShadow: '0 8px 32px rgba(170,155,230,0.16), 0 2px 8px rgba(150,135,210,0.08)',
 } as const
 
 export default function JoinClassPage() {
@@ -73,13 +73,13 @@ export default function JoinClassPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-5 pb-12" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-5 pb-12" style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}>
       <div className="w-full max-w-sm">
         {/* 뒤로가기 */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 mb-6 text-sm font-semibold"
-          style={{ color: '#9EA0B4' }}
+          style={{ color: 'rgba(45,31,110,0.65)' }}
         >
           <ArrowLeft size={16} weight="bold" />
           뒤로
@@ -92,10 +92,10 @@ export default function JoinClassPage() {
             size={140}
             className="mb-4"
           />
-          <h1 className="text-2xl font-extrabold text-center" style={{ color: '#2D2F2F' }}>
+          <h1 className="text-2xl font-extrabold text-center" style={{ color: '#2D1F6E' }}>
             {success ? '참여 완료! 🎉' : '반에 참여하기'}
           </h1>
-          <p className="text-sm mt-2 text-center" style={{ color: '#9EA0B4' }}>
+          <p className="text-sm mt-2 text-center" style={{ color: 'rgba(90,79,160,0.65)' }}>
             {success
               ? '무니가 기다리고 있어요!'
               : '선생님께 받은 초대 코드를 입력해주세요'}
@@ -112,7 +112,7 @@ export default function JoinClassPage() {
                 maxLength={8}
                 required
                 className="w-full rounded-xl px-4 py-4 text-xl font-extrabold text-center tracking-widest outline-none focus:ring-2 focus:ring-[#E8C547]/50 transition-all uppercase"
-                style={{ background: '#F7F7F7', color: '#2D2F2F', border: 'none', letterSpacing: '0.15em' }}
+                style={{ background: 'rgba(213,207,250,0.30)', color: '#2D1F6E', border: 'none', letterSpacing: '0.15em' }}
               />
 
               {error && (

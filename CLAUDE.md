@@ -9,6 +9,25 @@
 - Supabase (PostgreSQL + Auth + RLS)
 - OpenAI API (gpt-4o) · Web Speech API (STT) · OpenAI TTS
 - Framer Motion · @phosphor-icons/react (**lucide-react 절대 금지**)
+- **파인튜닝 모델** (Gemma 4B + LoRA) — `../KIT_AI/` 에서 FastAPI로 8000포트 서빙
+
+## 파인튜닝 모델 API
+
+```
+POST ${FINE_TUNE_API_URL}/analyze   (env: FINE_TUNE_API_URL, 미설정 시 역량 분석 스킵)
+{ "text": "학생 수행 텍스트" }
+
+Response: {
+  "scores": { "자기관리역량": 1~5, "대인관계역량": 1~5, "시민역량": 1~5, "문제해결역량": 1~5 },
+  "comment": "교사 관찰 코멘트 (모델 생성)",
+  "raw": "전체 completion"
+}
+```
+
+- 호출 위치: `/api/report` 에서 GPT-4o와 **병렬 호출** (`Promise.allSettled`)
+- **반드시 AbortController + 4초 타임아웃** — hang 시 GPT-4o 결과만으로 저장
+- 응답 검증: 4개 역량 키 존재 + 1~5 범위 체크 통과해야 저장
+- 실패해도 리포트 저장 자체는 정상 진행 (additive layer)
 
 ## 핵심 명령어
 ```bash
@@ -45,14 +64,23 @@ public/mooni/                 # 무니 캐릭터 에셋
 `profiles` · `classes` · `enrollments` · `units` · `sessions` · `messages` · `reports`
 스키마: `supabase/schema.sql` · RLS 활성화됨
 
+### reports 테이블 주요 컬럼
+- `summary` (text), `weak_points` (text[]), `suggestions` (text[])
+- `competency_scores` (JSONB, nullable) — 파인튜닝 모델 역량 분석 결과
+  ```json
+  { "자기관리역량": 3, "대인관계역량": 4, "시민역량": 3, "문제해결역량": 4, "comment": "..." }
+  ```
+- `session_id`에 **unique constraint** 있음 → upsert 방식으로만 저장
+
 ---
 
 ## 디자인 구현 패턴
 
 ### 배경 그라디언트 (학생 화면 공통)
 ```tsx
-background: 'linear-gradient(160deg, #7A6CC0 0%, #9485CF 25%, #B4A8DC 55%, #D4CEF0 100%)'
+background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)'
 ```
+(이전: `#7A6CC0` 짙은 보라 → 현재: 파스텔 라벤더로 변경됨)
 
 ### 학생 대시보드 3컬럼 레이아웃
 ```
@@ -71,9 +99,9 @@ RightSidebar (280px, background: #FFFFFF)
 ### clayCard 스타일
 ```tsx
 const clayCard = {
-  background: 'rgba(255,255,255,0.92)',
-  borderRadius: '20px',
-  boxShadow: '0 8px 24px rgba(130,110,200,0.22), 0 2px 8px rgba(100,85,170,0.10)',
+  background: 'rgba(255,255,255,0.94)',
+  borderRadius: '24px',
+  boxShadow: '0 8px 32px rgba(170,155,230,0.16), 0 2px 8px rgba(150,135,210,0.08)',
 } as const
 ```
 
