@@ -160,6 +160,27 @@ export default function ClassSummaryDashboard({ data }: ClassSummaryDashboardPro
         <div className="flex-1 overflow-y-auto px-6 py-6">
           <div className="max-w-5xl mx-auto space-y-5">
 
+            {/* 전체 빈 상태 */}
+            {data.totalStudents === 0 && (
+              <div className="rounded-[20px] bg-white p-8 text-center" style={{ border: '1px solid #ECEAF6' }}>
+                <p className="text-3xl mb-3">🌙</p>
+                <p className="text-base font-extrabold mb-1" style={{ color: '#2D2F2F' }}>아직 학생이 없어요</p>
+                <p className="text-sm mb-4" style={{ color: '#9EA0B4' }}>학생들이 초대 코드로 반에 참여하면 학습 현황이 여기에 표시돼요.</p>
+                <Link href="/teacher" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-extrabold"
+                  style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 3px 0 #C8A020' }}>
+                  대시보드로 돌아가기
+                </Link>
+              </div>
+            )}
+
+            {data.totalStudents > 0 && data.activeStudents === 0 && (
+              <div className="rounded-[20px] p-6 text-center" style={{ background: 'rgba(232,197,71,0.08)', border: '1.5px solid rgba(232,197,71,0.25)' }}>
+                <p className="text-2xl mb-2">📚</p>
+                <p className="text-sm font-extrabold mb-1" style={{ color: '#2D2F2F' }}>학습 데이터를 기다리는 중이에요</p>
+                <p className="text-xs" style={{ color: '#9EA0B4' }}>학생들이 무니와 대화를 시작하면 반 전체 현황이 자동으로 업데이트돼요.</p>
+              </div>
+            )}
+
             {/* 통계 카드 3개 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* 반 평균 이해도 */}
@@ -262,13 +283,13 @@ export default function ClassSummaryDashboard({ data }: ClassSummaryDashboardPro
                     <p className="text-sm text-center py-6" style={{ color: '#9EA0B4' }}>아직 등록된 학생이 없어요</p>
                   ) : (
                     <div className="space-y-3">
-                      {data.students
+                      {[...data.students]
                         .sort((a, b) => (b.avgScore ?? -1) - (a.avgScore ?? -1))
                         .map((student) => (
                           <Link
                             key={student.id}
                             href={`/teacher/students/${student.id}`}
-                            className="flex items-center gap-3 p-3 rounded-2xl transition-colors hover:bg-gray-50"
+                            className="flex items-center gap-3 p-3 rounded-2xl transition-colors hover:bg-[#F5F4FA]"
                           >
                             <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold"
                               style={{ background: scoreBg(student.avgScore), color: scoreColor(student.avgScore) }}>

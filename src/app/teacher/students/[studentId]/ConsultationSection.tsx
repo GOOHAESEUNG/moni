@@ -167,7 +167,7 @@ export default function ConsultationSection({ studentId, studentName }: Consulta
         </button>
 
         {error && (
-          <p className="mt-3 text-sm" style={{ color: '#D64545' }}>
+          <p className="mt-3 text-sm" style={{ color: '#FF9600' }}>
             {error}
           </p>
         )}
