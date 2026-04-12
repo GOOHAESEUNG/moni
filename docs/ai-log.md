@@ -99,4 +99,19 @@
 - **작업**: 학생/선생님/데모 전체 유저 플로우 코드 레벨 검증
 - **결과**: 핵심 경로 전부 정상, 개선사항 2건 수정 (지난 학습 링크, 퀘스트 뒤로가기)
 
+### [데모 API Fallback] Claude Code (Opus 4.6)
+- **작업**: OpenAI API 키 없이도 데모 체험 가능하도록 fallback 구현
+- **채팅 API**: sessionId='demo' + 키 없음 → 5단계 하드코딩 응답 (이해도 25→88 단계적 상승)
+- **수업 추천**: demoMode에서 1.5초 로딩 후 하드코딩 추천 표시
+- **의의**: 심사위원 로컬 실행 시 환경 무관하게 핵심 기능 체험 보장
+
+### [코드 품질 정비] Claude Code (Opus 4.6)
+- **작업**: lint 에러 18→8건 감소, React hooks 규칙 위반 수정
+- **핵심 수정**: useRef/useEffect가 조기 반환 뒤에 있어 런타임 에러 가능 → 순서 재배치
+- **기타**: unused vars 정리, prefer-const, unescaped entities, eslint 인프라 폴더 제외
+
+### [접근성 향상] Claude Code (Opus 4.6)
+- **작업**: 전역 focus-visible 스타일 추가, aside→nav 시맨틱 태그 수정
+- **결과**: 키보드 네비게이션 시 달 옐로우 아웃라인 표시 (WCAG AA 기본 충족)
+
 <!-- 이하 에이전트가 자동으로 추가 -->
