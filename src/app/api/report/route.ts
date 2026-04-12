@@ -28,7 +28,7 @@ async function callFineTuneModel(text: string): Promise<CompetencyScores | null>
   if (!apiUrl) return null
 
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 4000)
+  const timeout = setTimeout(() => controller.abort(), 20000)
 
   try {
     const res = await fetch(`${apiUrl}/analyze`, {
