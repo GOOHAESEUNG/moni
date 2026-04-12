@@ -379,7 +379,7 @@ export default function TeachPage() {
           <header className="flex items-center gap-3 px-4 shrink-0"
             style={{ height: 56, background: 'rgba(13,11,30,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <button onClick={() => router.back()}
-              className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
+              className="flex items-center justify-center w-11 h-11 rounded-full shrink-0"
               style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.10)' }} aria-label="뒤로가기">
               <ArrowLeft size={18} weight="bold" color="white" />
             </button>
@@ -409,7 +409,8 @@ export default function TeachPage() {
                   exit={{ opacity: 0, y: -20, scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                   className="absolute z-20 px-4 py-2 rounded-full font-extrabold text-sm"
-                  style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 16px rgba(232,197,71,0.5)', top: -8, whiteSpace: 'nowrap' }}>
+                  style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 16px rgba(232,197,71,0.5)', top: -8, whiteSpace: 'nowrap' }}
+                  role="status" aria-live="polite">
                   완벽해요! 🌙✨
                 </motion.div>
               )}
@@ -616,7 +617,8 @@ export default function TeachPage() {
       {showEndConfirm && (
         <div className="absolute inset-0 z-50 flex items-end justify-center"
           style={{ background: 'rgba(0,0,0,0.6)' }}
-          onClick={() => setShowEndConfirm(false)}>
+          onClick={() => setShowEndConfirm(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowEndConfirm(false)}>
           <motion.div initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
             className="w-full max-w-sm mb-8 rounded-3xl p-6 space-y-4"
             style={{ background: '#1E1A35', border: '1px solid rgba(255,255,255,0.12)' }}

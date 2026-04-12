@@ -93,7 +93,7 @@ export default function ClassSummaryDashboard({ data }: ClassSummaryDashboardPro
 
       {/* ── 사이드바 (220px) ── */}
       <nav
-        className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
+        className="hidden md:flex flex-col w-[220px] shrink-0 overflow-y-auto"
         style={{ background: '#13112A' }}
       >
         <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>

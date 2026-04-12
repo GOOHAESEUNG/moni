@@ -178,6 +178,7 @@ export default function ConsultationSection({ studentId, studentName }: Consulta
           className="fixed inset-0 z-50 flex items-center justify-center px-5"
           style={{ background: 'rgba(0,0,0,0.5)' }}
           onClick={handleClose}
+          onKeyDown={(e) => e.key === 'Escape' && handleClose()}
         >
           <div
             className="max-h-[85vh] w-full max-w-2xl overflow-hidden rounded-[20px] bg-white p-6"
@@ -185,21 +186,21 @@ export default function ConsultationSection({ studentId, studentName }: Consulta
             onClick={(event) => event.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="학부모 상담 자료"
+            aria-labelledby="consultation-title"
           >
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9EA0B4' }}>
                   학부모 상담 자료
                 </p>
-                <h3 className="mt-1 text-xl font-extrabold" style={{ color: '#2D2F2F' }}>
+                <h3 id="consultation-title" className="mt-1 text-xl font-extrabold" style={{ color: '#2D2F2F' }}>
                   {studentName} 상담 메모
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex h-10 w-10 items-center justify-center rounded-full"
+                className="flex h-11 w-11 items-center justify-center rounded-full"
                 style={{ background: '#F5F4FA', color: '#4A4A6A' }}
                 aria-label="닫기"
               >
@@ -207,7 +208,7 @@ export default function ConsultationSection({ studentId, studentName }: Consulta
               </button>
             </div>
 
-            <div className="mt-5 max-h-[calc(85vh-180px)] space-y-3 overflow-y-auto pr-1">
+            <div className="mt-5 max-h-[calc(85vh-180px)] space-y-3 overflow-y-auto pr-1" role="region" aria-label="상담 자료 내용">
               {sections.map((section) => (
                 <section
                   key={section.title}
