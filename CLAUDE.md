@@ -25,7 +25,7 @@ Response: {
 ```
 
 - 호출 위치: `/api/report` 에서 GPT-4o와 **병렬 호출** (`Promise.allSettled`)
-- **반드시 AbortController + 4초 타임아웃** — hang 시 GPT-4o 결과만으로 저장
+- **AbortController + 20초 타임아웃** — 모델 응답이 15~20초 걸림, hang 시 GPT-4o 결과만으로 저장
 - 응답 검증: 4개 역량 키 존재 + 1~5 범위 체크 통과해야 저장
 - 실패해도 리포트 저장 자체는 정상 진행 (additive layer)
 
@@ -46,10 +46,25 @@ src/app/student/              # 학생 플로우
   ├ teach/[unitId]/page.tsx   # 무니와 대화 화면
   └ report/[reportId]/page.tsx
 src/app/teacher/              # 선생님 플로우
+  ├ TeacherDashboard.tsx      # 선생님 대시보드 (클라이언트)
+  ├ summary/                  # 반 전체 요약 대시보드
+  │ ├ page.tsx                # 서버 컴포넌트 (데이터 집계)
+  │ └ ClassSummaryDashboard.tsx # UI (역량 바, 약점 TOP, 히트맵, AI 추천)
+  └ students/[studentId]/
+    ├ page.tsx                # 학생 상세 (사이드바 포함)
+    ├ ConsultationSection.tsx  # 학부모 상담 자료 모달
+    └ report/[reportId]/page.tsx
+src/app/api/teacher/          # 선생님 전용 API
+  ├ class-suggestion/route.ts # AI 수업 추천 (GPT-4o)
+  └ consultation/route.ts     # 학부모 상담 자료 (GPT-4o)
 src/app/demo/                 # 게스트 데모
-src/components/icons/         # 커스텀 SVG 아이콘
-  ├ MoonWithClouds.tsx        # 학생 대시보드 배경 SVG
-  └ index.tsx                 # StarBurstNode, CrescentMoonNode 등
+  ├ student/                  # 학생 데모 (홈, 채팅, 세션종료, 리포트)
+  └ teacher/                  # 선생님 데모 (대시보드, 학생목록, 상세, 리포트, 반 요약)
+src/components/
+  ├ DemoTutorialOverlay.tsx   # 데모 튜토리얼 스포트라이트 가이드
+  ├ DemoChatScript.tsx        # 채팅 대본 제공 카드
+  ├ DrawingCanvas.tsx         # 설명 그림판
+  └ icons/                    # 커스텀 SVG 아이콘
 src/lib/supabase/             # client.ts / server.ts
 src/types/database.ts         # DB 타입 정의
 public/mooni/                 # 무니 캐릭터 에셋
@@ -125,6 +140,34 @@ const clayCard = {
 | `.star-bg` | 원형 점 파티클 반짝임 |
 | `.node-pulse-outer` | 현재 노드 바깥 펄스 링 (2.2s) |
 | `.node-pulse-inner` | 현재 노드 안쪽 펄스 링 (2.2s, 0.4s delay) |
+
+### 선생님 화면 공통 레이아웃
+```
+flex h-screen overflow-hidden
+├ nav (hidden md:flex, w-[220px], #13112A)   ← 다크 사이드바
+└ div (flex-1 flex flex-col overflow-hidden)
+  ├ div (shrink-0, bg-white, borderBottom)    ← 흰 헤더
+  └ div (flex-1 overflow-y-auto px-6 py-6)   ← 스크롤 콘텐츠
+```
+- 사이드바 nav 항목 순서: 단원 관리 → 학생 목록 → 퀘스트 → 반 요약
+- active 스타일: `background: rgba(232,197,71,0.15), color: #E8C547, borderLeft: 3px solid #E8C547`
+- 카드: `bg-white, border: 1px solid #ECEAF6, rounded-[20px]`
+
+### 채팅방 레이아웃 (teach 페이지)
+```
+div (height: 100dvh, paddingTop: env(safe-area-inset-top))
+├ 별빛 파티클 (absolute)
+├ 레이아웃 (flex flex-col md:flex-row)
+│ ├ 좌측 (flex-1 flex flex-col)
+│ │ ├ header (shrink-0, 반투명 배경+blur)
+│ │ ├ 무니 캐릭터 존 (shrink-0, 컴팩트 200x134)
+│ │ ├ 채팅 영역 (flex-1 overflow-y-auto)
+│ │ └ 입력 바 (shrink-0, 텍스트+마이크)
+│ └ 우측 그림판 (hidden md:flex, 380px)
+└ 종료 확인 모달 (absolute z-50)
+```
+- **scrollIntoView 사용 금지** — scrollTo({ top: scrollHeight }) 사용
+- 초기 메시지: 주제 직접 질문 (인사 아님)
 
 ### 한국어 텍스트 처리
 - `word-break: keep-all` 전역 적용 (`globals.css body`) — **모든 텍스트에 이미 적용됨**
