@@ -71,8 +71,7 @@ ${competencyLines}`,
     }
 
     return NextResponse.json({ suggestion })
-  } catch (error) {
-    console.error('[/api/teacher/class-suggestion]', error)
+  } catch {
     return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 })
   }
 }

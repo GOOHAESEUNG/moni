@@ -137,8 +137,7 @@ ${reportDigest}`,
     }
 
     return NextResponse.json({ content })
-  } catch (error) {
-    console.error('[/api/teacher/consultation]', error)
+  } catch {
     return NextResponse.json({ error: '서버 오류가 발생했습니다.' }, { status: 500 })
   }
 }
