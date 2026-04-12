@@ -19,6 +19,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'sessionId, message, unitConcept은 필수입니다.' }, { status: 400 })
     }
 
+    // 데모 모드 + API 키 없음 → 하드코딩 응답 반환
+    if (sessionId === 'demo' && !process.env.OPENAI_API_KEY) {
+      const demoResponses = [
+        { expression: 'curious', message: '오, 그게 뭔데? 더 자세히 설명해줘! 🌙', understanding: 25 },
+        { expression: 'confused', message: '음... 잘 모르겠어. 예를 들어 설명해줄 수 있어?', understanding: 40 },
+        { expression: 'thinking', message: '아하, 그러면 이 부분은 어떻게 되는 거야?', understanding: 55 },
+        { expression: 'happy', message: '와, 이제 좀 알 것 같아! 근데 하나만 더 물어볼게!', understanding: 70 },
+        { expression: 'impressed', message: '완전 잘 설명해줬어! 이제 나도 알겠다! ✨', understanding: 88 },
+      ]
+      const history: ConversationMessage[] = Array.isArray(conversationHistory) ? conversationHistory : []
+      const idx = Math.min(Math.floor(history.length / 2), demoResponses.length - 1)
+      return NextResponse.json(demoResponses[idx])
+    }
+
     const history: ConversationMessage[] = Array.isArray(conversationHistory) ? conversationHistory : []
 
     const systemPrompt = getMooniSystemPrompt(unitConcept)
