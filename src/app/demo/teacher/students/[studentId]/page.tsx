@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar } from '@phosphor-icons/react/dist/ssr'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -95,22 +95,53 @@ export default async function DemoStudentDetailPage({ params }: Props) {
     : null
 
   return (
-    <div className="min-h-screen pb-12" style={{ background: '#F2F1FA' }}>
-      <div className="px-5 pt-12 pb-4 flex items-center gap-3">
-        <Link href="/demo/teacher/students"
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-white"
-          style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-          <ArrowLeft size={20} weight="bold" style={{ color: '#2D2F2F' }} />
-        </Link>
-        <div>
-          <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>{student.name}</h1>
-          <p className="text-xs" style={{ color: '#9EA0B4' }}>{student.email}</p>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
+      {/* 사이드바 */}
+      <nav className="hidden md:flex flex-col w-[220px] shrink-0 overflow-y-auto" style={{ background: '#13112A' }}>
+        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <p className="text-sm font-extrabold mb-5" style={{ color: '#E8C547' }}>🌙 무니에게 알려줘</p>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(232,197,71,0.18)' }}>
+              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>이</span>
+            </div>
+            <div className="min-w-0">
+              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>이선생 선생님</p>
+              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>3학년 2반</p>
+            </div>
+          </div>
         </div>
-        <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold"
-          style={{ background: 'rgba(232,197,71,0.18)', color: '#9B7E00' }}>체험 모드</span>
-      </div>
+        <div className="flex-1 px-3 py-4 space-y-1">
+          <Link href="/demo/teacher" className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
+            <BookOpen size={18} weight="regular" /><span className="font-semibold text-sm">단원 관리</span>
+          </Link>
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547', borderLeft: '3px solid #E8C547' }}>
+            <Users size={18} weight="fill" /><span className="font-bold text-sm">학생 목록</span>
+          </div>
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ color: 'rgba(255,255,255,0.50)' }}>
+            <Trophy size={18} weight="regular" /><span className="font-semibold text-sm">퀘스트</span>
+          </div>
+          <Link href="/demo/teacher/summary" className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
+            <ChartBar size={18} weight="regular" /><span className="font-semibold text-sm">반 요약</span>
+          </Link>
+        </div>
+      </nav>
 
-      <div className="px-5 space-y-4 max-w-lg mx-auto">
+      {/* 메인 */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="px-6 py-4 shrink-0 flex items-center gap-3" style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+          <Link href="/demo/teacher/students" className="flex items-center justify-center w-10 h-10 rounded-full" style={{ background: '#F5F4FA' }}>
+            <ArrowLeft size={18} weight="bold" style={{ color: '#2D2F2F' }} />
+          </Link>
+          <div>
+            <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>{student.name}</h1>
+            <p className="text-xs" style={{ color: '#9EA0B4' }}>{student.email}</p>
+          </div>
+          <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold shrink-0"
+            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="space-y-4 max-w-2xl mx-auto">
         {/* 통계 */}
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
@@ -214,6 +245,8 @@ export default async function DemoStudentDetailPage({ params }: Props) {
             </div>
           </section>
         )}
+          </div>
+        </div>
       </div>
     </div>
   )
