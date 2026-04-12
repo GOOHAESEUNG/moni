@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   Plus, Copy, Check, Users, BookOpen,
-  PencilSimple, Trash, Trophy, X,
+  PencilSimple, Trash, Trophy, X, ChartBar,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
@@ -234,6 +234,13 @@ export default function TeacherDashboard({
                 {quests.length}
               </span>
             )}
+          </Link>
+
+          <Link href="/teacher/summary"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-white/[0.07]"
+            style={{ color: 'rgba(255,255,255,0.55)' }}>
+            <ChartBar size={18} weight="regular" />
+            <span className="font-semibold text-sm">반 요약</span>
           </Link>
         </div>
 

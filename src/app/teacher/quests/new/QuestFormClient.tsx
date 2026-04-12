@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
-  BookOpen, Users, Trophy,
+  BookOpen, Users, Trophy, ChartBar,
 } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 import type { Unit } from '@/types/database'
@@ -110,6 +110,13 @@ export default function QuestFormClient({ profile, currentClass, units, students
             <Trophy size={18} weight="fill" />
             <span className="font-bold text-sm">퀘스트</span>
           </div>
+
+          <Link href="/teacher/summary"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]"
+            style={{ color: 'rgba(255,255,255,0.50)' }}>
+            <ChartBar size={18} weight="regular" />
+            <span className="font-semibold text-sm">반 요약</span>
+          </Link>
         </div>
       </nav>
 

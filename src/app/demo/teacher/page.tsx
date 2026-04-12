@@ -8,6 +8,7 @@ import {
   Trash,
   Trophy,
   Users,
+  ChartBar,
 } from '@phosphor-icons/react'
 import { MoonStarIcon } from '@/components/icons'
 
@@ -142,6 +143,13 @@ function LeftNav() {
           <Trophy size={18} />
           <span className="text-sm font-semibold">퀘스트</span>
         </div>
+
+        <Link href="/demo/teacher"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
+          style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <ChartBar size={18} />
+          <span className="text-sm font-semibold">반 요약</span>
+        </Link>
       </div>
     </aside>
   )
