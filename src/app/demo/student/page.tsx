@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { House, Trophy, User, Fire, Star, CheckCircle } from '@phosphor-icons/react'
+import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 import { MoonWithClouds } from '@/components/icons/MoonWithClouds'
 import { CarrotIcon, MoonStarIcon } from '@/components/icons'
 
@@ -30,6 +31,20 @@ const MOONI_MESSAGES = [
   '설명해 주면\n무니도 똑똑해져! 💛',
   '오늘도 최고야! 🌟',
   '무니가 기다리고 있었어! 🎉',
+]
+
+const STUDENT_TUTORIAL_STEPS = [
+  {
+    targetSelector: '[data-tutorial="mooni-character"]',
+    title: '무니를 만나보세요!',
+    description: '무니가 오늘 학습을 기다리고 있어요. 말풍선을 보고 분위기를 먼저 느껴보세요.',
+    position: 'top' as const,
+  },
+  {
+    targetSelector: '[data-tutorial="first-unit"]',
+    title: '학습을 시작해요',
+    description: '현재 열려 있는 단원을 눌러 무니에게 설명을 시작해보세요.',
+  },
 ]
 
 const clayCard = {
@@ -287,7 +302,7 @@ function CenterContent() {
                     </div>
                   )}
                   {status === 'current' && (
-                    <div className="flex flex-col items-center gap-2 relative">
+                    <div className="flex flex-col items-center gap-2 relative" data-tutorial="first-unit">
                       <div className="px-4 py-1.5 rounded-full text-xs font-extrabold"
                         style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 3px 12px rgba(232,197,71,0.55)' }}>
                         시작!
@@ -472,7 +487,7 @@ export default function DemoStudentPage() {
       </div>
 
       {/* 무니 + 말풍선 */}
-      <div className="absolute pointer-events-none mooni-float" style={{ left: 220, bottom: '26%', zIndex: 2 }}>
+      <div className="absolute pointer-events-none mooni-float" data-tutorial="mooni-character" style={{ left: 220, bottom: '26%', zIndex: 2 }}>
         <div style={{ position: 'absolute', bottom: '100%', left: 60, marginBottom: 8 }}>
           <MooniSpeechBubble />
         </div>
@@ -482,6 +497,10 @@ export default function DemoStudentPage() {
       <LeftNav />
       <CenterContent />
       <RightSidebar />
+      <DemoTutorialOverlay
+        steps={STUDENT_TUTORIAL_STEPS}
+        storageKey="demo-student-home-tutorial"
+      />
     </div>
   )
 }

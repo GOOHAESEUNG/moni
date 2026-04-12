@@ -10,6 +10,7 @@ import {
   Users,
   ChartBar,
 } from '@phosphor-icons/react'
+import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 import { MoonStarIcon } from '@/components/icons'
 
 const DEMO_TEACHER = { name: '이선생' }
@@ -39,6 +40,21 @@ const DEMO_REPORTS = [
     summary: '직사각형 넓이는 구할 수 있지만 확장이 어려워...',
     weakPoints: ['삼각형 높이 개념 불명확'],
     competency: { 자기관리: 2, 대인관계: 3, 시민: 2, 문제해결: 2 },
+  },
+]
+
+const TEACHER_TUTORIAL_STEPS = [
+  {
+    targetSelector: '[data-tutorial="student-card"]',
+    title: '학생별 학습 현황',
+    description: '학생별 최신 리포트를 빠르게 확인하고 이해도와 약점을 살펴볼 수 있어요.',
+    position: 'top' as const,
+  },
+  {
+    targetSelector: '[data-tutorial="sidebar-summary"]',
+    title: 'AI 반 요약',
+    description: '오른쪽 패널에서 학생 리포트와 학급 흐름을 함께 확인해보세요.',
+    position: 'top' as const,
   },
 ]
 
@@ -226,6 +242,7 @@ function CompetencyMini({ data }: { data: { 자기관리: number; 대인관계: 
 function RightSidebar() {
   return (
     <aside
+      data-tutorial="sidebar-summary"
       className="flex w-[300px] shrink-0 flex-col overflow-y-auto p-4"
       style={{ background: '#FFFFFF', borderLeft: '1px solid #ECEAF6' }}
     >
@@ -235,8 +252,13 @@ function RightSidebar() {
       </div>
 
       <div className="space-y-3">
-        {DEMO_REPORTS.map((report) => (
-          <div key={`${report.studentName}-${report.score}`} className="rounded-2xl p-4" style={cardStyle}>
+        {DEMO_REPORTS.map((report, index) => (
+          <div
+            key={`${report.studentName}-${report.score}`}
+            data-tutorial={index === 0 ? 'student-card' : undefined}
+            className="rounded-2xl p-4"
+            style={cardStyle}
+          >
             <div className="mb-2 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <div
@@ -322,6 +344,10 @@ export default function DemoTeacherPage() {
       </main>
 
       <RightSidebar />
+      <DemoTutorialOverlay
+        steps={TEACHER_TUTORIAL_STEPS}
+        storageKey="demo-teacher-tutorial"
+      />
     </div>
   )
 }

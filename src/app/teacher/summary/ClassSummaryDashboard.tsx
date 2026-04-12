@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import {
   BookOpen,
@@ -84,7 +84,7 @@ function StatCard({
   value,
   helper,
 }: {
-  icon: React.ReactNode
+  icon: ReactNode
   label: string
   value: string
   helper: string
@@ -106,7 +106,7 @@ function StatCard({
   )
 }
 
-function EmptyCard({ icon, title, body }: { icon: React.ReactNode; title: string; body: string }) {
+function EmptyCard({ icon, title, body }: { icon: ReactNode; title: string; body: string }) {
   return (
     <div className={`${cardClassName} flex min-h-[220px] flex-col items-center justify-center text-center`} style={cardStyle}>
       <div

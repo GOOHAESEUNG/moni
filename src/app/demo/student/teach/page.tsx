@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PaperPlaneTilt, ArrowLeft, Microphone, X, SpeakerHigh } from '@phosphor-icons/react'
 import DrawingCanvas, { type DrawingCanvasRef } from '@/components/DrawingCanvas'
+import DemoChatScript from '@/components/DemoChatScript'
+import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 import type { Expression } from '@/types/database'
 
 interface Message {
@@ -68,6 +70,26 @@ const INITIAL_MESSAGE: Message = {
   expression: 'curious',
 }
 
+const DEMO_SCRIPT_LINES = [
+  { text: '직사각형 넓이는 가로 곱하기 세로예요!', hint: '첫 번째 설명을 해봐요' },
+  { text: '더하면 테두리 길이잖아요. 곱해야 칸 수를 구할 수 있어요!', hint: '무니의 질문에 대답해봐요' },
+  { text: '삼각형은 직사각형의 절반이에요. 그래서 가로×세로÷2예요.', hint: '마지막 설명이에요!' },
+]
+
+const TEACH_TUTORIAL_STEPS = [
+  {
+    targetSelector: '[data-tutorial="chat-input"]',
+    title: '무니가 질문하면 대본을 따라 설명해보세요!',
+    description: '아래 입력창에 직접 입력하거나 대본 카드를 눌러서 설명을 시작할 수 있어요.',
+    position: 'top' as const,
+  },
+  {
+    targetSelector: '[data-tutorial="complete-button"]',
+    title: '대화가 끝나면 여기를 눌러 리포트를 확인하세요',
+    description: '설명이 끝나면 체험 완료 버튼으로 다음 화면으로 이동해보세요.',
+  },
+]
+
 export default function DemoTeachPage() {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE])
   const [mooniMessage, setMooniMessage] = useState(INITIAL_MESSAGE.content)
@@ -79,6 +101,7 @@ export default function DemoTeachPage() {
   const [micSuccess, setMicSuccess] = useState(false)
   const [showUnderstandingBurst, setShowUnderstandingBurst] = useState(false)
   const [showAwesomePopup, setShowAwesomePopup] = useState(false)
+  const [showScript, setShowScript] = useState(false)
   const prevUnderstandingRef = useRef(0)
   const hasReached85Ref = useRef(false)
   const chatScrollRef = useRef<HTMLDivElement>(null)
@@ -91,6 +114,15 @@ export default function DemoTeachPage() {
     const el = chatScrollRef.current
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: messages.length > 1 ? 'smooth' : 'auto' })
   }, [messages])
+
+  useEffect(() => {
+    try {
+      const dismissed = window.localStorage.getItem('demo-chat-script-dismissed') === 'true'
+      setShowScript(!dismissed)
+    } catch {
+      setShowScript(true)
+    }
+  }, [])
 
   async function playTTS(text: string) {
     try {
@@ -207,6 +239,22 @@ export default function DemoTeachPage() {
   }
 
   const understandingColor = understanding >= 85 ? '#4CAF50' : understanding >= 50 ? '#E8C547' : 'rgba(255,255,255,0.50)'
+  const userMessageCount = messages.filter((msg) => msg.role === 'user').length
+
+  function handleCopyScript(text: string) {
+    setInput(text)
+    window.requestAnimationFrame(() => inputRef.current?.focus())
+  }
+
+  function handleDismissScript() {
+    try {
+      window.localStorage.setItem('demo-chat-script-dismissed', 'true')
+    } catch {
+      // Ignore storage errors and just hide the floating card.
+    }
+
+    setShowScript(false)
+  }
 
   return (
     <div
@@ -254,6 +302,7 @@ export default function DemoTeachPage() {
             </p>
             <div className="flex-1" />
             <Link href="/demo/student/session-end"
+              data-tutorial="complete-button"
               className="px-4 py-2 rounded-full text-xs font-extrabold transition-all shrink-0"
               style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 2px 0 #C8A020' }}>
               체험 완료
@@ -411,44 +460,59 @@ export default function DemoTeachPage() {
 
           {/* ── 입력 바 ── */}
           <div className="shrink-0 px-4 pb-5 pt-2 relative z-10">
-            <div className="max-w-lg mx-auto flex items-end gap-2">
-              {/* 텍스트 입력 */}
-              <div className="flex-1 flex items-end gap-2 rounded-2xl px-3 py-2.5"
-                style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="설명해봐요..."
-                  rows={1}
-                  className="flex-1 bg-transparent text-white text-sm resize-none outline-none placeholder:text-white/30 max-h-20"
-                  style={{ lineHeight: '1.5' }}
-                  aria-label="무니에게 설명 입력"
-                />
-                <button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}
-                  className="shrink-0 p-2 rounded-xl disabled:opacity-30 transition-opacity"
-                  style={{ background: '#E8C547' }} aria-label="전송">
-                  <PaperPlaneTilt size={16} weight="fill" color="#1A1830" />
-                </button>
-              </div>
-
-              {/* 마이크 버튼 */}
-              <motion.button onClick={toggleRecording} disabled={loading} whileTap={{ scale: 0.92 }}
-                className="relative shrink-0 w-12 h-12 rounded-full flex items-center justify-center disabled:opacity-40"
-                style={{
-                  background: micSuccess ? 'rgba(76,175,80,0.85)' : isRecording ? 'rgba(239,68,68,0.85)' : '#E8C547',
-                  boxShadow: isRecording ? '0 0 0 5px rgba(239,68,68,0.20)' : '0 0 0 5px rgba(232,197,71,0.15)',
-                }}
-                aria-label={isRecording ? '녹음 중지' : '녹음 시작'}>
-                {isRecording ? <X size={20} weight="bold" color="#1A1830" /> : <Microphone size={20} weight="fill" color="#1A1830" />}
-                {isRecording && (
-                  <motion.div className="absolute inset-0 rounded-full"
-                    animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
-                    style={{ background: 'rgba(239,68,68,0.35)' }} />
+            <div className="max-w-lg mx-auto">
+              <AnimatePresence>
+                {showScript && (
+                  <div className="mb-3">
+                    <DemoChatScript
+                      lines={DEMO_SCRIPT_LINES}
+                      currentStep={userMessageCount}
+                      onCopy={handleCopyScript}
+                      onDismiss={handleDismissScript}
+                    />
+                  </div>
                 )}
-              </motion.button>
+              </AnimatePresence>
+
+              <div className="flex items-end gap-2" data-tutorial="chat-input">
+                {/* 텍스트 입력 */}
+                <div className="flex-1 flex items-end gap-2 rounded-2xl px-3 py-2.5"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  <textarea
+                    ref={inputRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="설명해봐요..."
+                    rows={1}
+                    className="flex-1 bg-transparent text-white text-sm resize-none outline-none placeholder:text-white/30 max-h-20"
+                    style={{ lineHeight: '1.5' }}
+                    aria-label="무니에게 설명 입력"
+                  />
+                  <button onClick={() => sendMessage(input)} disabled={!input.trim() || loading}
+                    className="shrink-0 p-2 rounded-xl disabled:opacity-30 transition-opacity"
+                    style={{ background: '#E8C547' }} aria-label="전송">
+                    <PaperPlaneTilt size={16} weight="fill" color="#1A1830" />
+                  </button>
+                </div>
+
+                {/* 마이크 버튼 */}
+                <motion.button onClick={toggleRecording} disabled={loading} whileTap={{ scale: 0.92 }}
+                  className="relative shrink-0 w-12 h-12 rounded-full flex items-center justify-center disabled:opacity-40"
+                  style={{
+                    background: micSuccess ? 'rgba(76,175,80,0.85)' : isRecording ? 'rgba(239,68,68,0.85)' : '#E8C547',
+                    boxShadow: isRecording ? '0 0 0 5px rgba(239,68,68,0.20)' : '0 0 0 5px rgba(232,197,71,0.15)',
+                  }}
+                  aria-label={isRecording ? '녹음 중지' : '녹음 시작'}>
+                  {isRecording ? <X size={20} weight="bold" color="#1A1830" /> : <Microphone size={20} weight="fill" color="#1A1830" />}
+                  {isRecording && (
+                    <motion.div className="absolute inset-0 rounded-full"
+                      animate={{ scale: [1, 1.35, 1], opacity: [0.5, 0, 0.5] }}
+                      transition={{ duration: 1.2, repeat: Infinity }}
+                      style={{ background: 'rgba(239,68,68,0.35)' }} />
+                  )}
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
@@ -467,6 +531,10 @@ export default function DemoTeachPage() {
           </div>
         </div>
       </div>
+      <DemoTutorialOverlay
+        steps={TEACH_TUTORIAL_STEPS}
+        storageKey="demo-student-teach-tutorial"
+      />
     </div>
   )
 }

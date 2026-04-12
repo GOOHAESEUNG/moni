@@ -180,7 +180,6 @@ export default async function StudentDetailPage({ params }: Props) {
       </div>
 
       <div className="px-5 space-y-4 max-w-lg mx-auto">
-        {/* 학부모 상담 자료 */}
         <ConsultationSection studentId={studentId} studentName={student?.name ?? '학생'} />
 
         {/* 학습 통계 */}
