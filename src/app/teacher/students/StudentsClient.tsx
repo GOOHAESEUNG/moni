@@ -121,6 +121,13 @@ export default function StudentsClient({ profile, currentClass, students, report
             <Trophy size={18} weight="regular" />
             <span className="font-semibold text-sm">퀘스트</span>
           </Link>
+
+          <Link href="/teacher/summary"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]"
+            style={{ color: 'rgba(255,255,255,0.50)' }}>
+            <ChartBar size={18} weight="regular" />
+            <span className="font-semibold text-sm">반 요약</span>
+          </Link>
         </div>
       </nav>
 
