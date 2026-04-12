@@ -1,8 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { createClient } from '@/lib/supabase/server'
+import type { CompetencyScores } from '@/types/database'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+const COMPETENCY_KEYS = ['자기관리역량', '대인관계역량', '시민역량', '문제해결역량'] as const
+
+function validateCompetencyScores(raw: unknown): CompetencyScores | null {
+  if (!raw || typeof raw !== 'object') return null
+  const obj = raw as Record<string, unknown>
+  for (const key of COMPETENCY_KEYS) {
+    const val = obj[key]
+    if (typeof val !== 'number' || val < 1 || val > 5) return null
+  }
+  return {
+    자기관리역량: obj['자기관리역량'] as number,
+    대인관계역량: obj['대인관계역량'] as number,
+    시민역량: obj['시민역량'] as number,
+    문제해결역량: obj['문제해결역량'] as number,
+    comment: typeof obj['comment'] === 'string' ? obj['comment'] : undefined,
+  }
+}
+
+async function callFineTuneModel(text: string): Promise<CompetencyScores | null> {
+  const apiUrl = process.env.FINE_TUNE_API_URL
+  if (!apiUrl) return null
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 20000)
+
+  try {
+    const res = await fetch(`${apiUrl}/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+      signal: controller.signal,
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    return validateCompetencyScores(data?.scores ?? data)
+  } catch {
+    return null
+  } finally {
+    clearTimeout(timeout)
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,13 +87,14 @@ export async function POST(req: NextRequest) {
     const unit = session.units as { concept: string; title: string } | null
     const concept = unit?.concept ?? '개념'
 
-    // GPT-4o로 분석 요청
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        {
-          role: 'system',
-          content: `당신은 학생의 학습 이해도를 분석하는 교육 전문가입니다.
+    // GPT-4o + 파인튜닝 모델 병렬 호출
+    const [gptResult, ftResult] = await Promise.allSettled([
+      openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: `당신은 학생의 학습 이해도를 분석하는 교육 전문가입니다.
 학생이 AI(무니)에게 개념을 설명하는 대화를 분석하여 JSON으로 응답하세요.
 
 반드시 아래 JSON 형식만 출력하세요:
@@ -60,15 +104,30 @@ export async function POST(req: NextRequest) {
   "suggestions": ["제안1", "제안2"],
   "summary": "2~3문장 요약"
 }`,
-        },
-        {
-          role: 'user',
-          content: `학습 개념: ${concept}\n\n대화 내용:\n${conversationText}`,
-        },
-      ],
-      temperature: 0.3,
-      max_tokens: 600,
-    })
+          },
+          {
+            role: 'user',
+            content: `학습 개념: ${concept}\n\n대화 내용:\n${conversationText}`,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 600,
+      }),
+      callFineTuneModel(conversationText),
+    ])
+
+    if (gptResult.status === 'rejected') {
+      console.error('[/api/report] GPT-4o 호출 실패:', gptResult.reason)
+      return NextResponse.json({ error: 'AI 분석 실패' }, { status: 500 })
+    }
+
+    const completion = gptResult.value
+    const competency_scores: CompetencyScores | null =
+      ftResult.status === 'fulfilled' ? ftResult.value : null
+
+    if (ftResult.status === 'rejected') {
+      console.warn('[/api/report] 파인튜닝 모델 호출 실패 (리포트는 정상 저장):', ftResult.reason)
+    }
 
     const rawText = completion.choices[0]?.message?.content ?? '{}'
     const jsonMatch = rawText.match(/```json\s*([\s\S]*?)```/) || rawText.match(/(\{[\s\S]*\})/)
@@ -81,17 +140,18 @@ export async function POST(req: NextRequest) {
     const suggestions: string[] = Array.isArray(reportData.suggestions) ? reportData.suggestions : []
     const summary: string = typeof reportData.summary === 'string' ? reportData.summary : ''
 
-    // reports 테이블에 저장
+    // reports 테이블에 upsert (session_id unique constraint 기반)
     const { data: report, error: reportError } = await supabase
       .from('reports')
-      .insert({
+      .upsert({
         session_id: sessionId,
         student_id: session.student_id,
         unit_id: session.unit_id,
         summary,
         weak_points,
         suggestions,
-      })
+        ...(competency_scores ? { competency_scores } : {}),
+      }, { onConflict: 'session_id' })
       .select()
       .single()
 
