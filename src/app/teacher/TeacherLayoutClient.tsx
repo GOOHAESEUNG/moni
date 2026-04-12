@@ -20,24 +20,27 @@ export default function TeacherLayoutClient({ teacherName, children }: TeacherLa
   }
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ background: '#F2F2F5' }}>
+    <div className="flex flex-col min-h-screen" style={{ background: '#F2F1FA' }}>
       <header
-        className="sticky top-0 z-40 flex items-center justify-between px-5 border-b"
-        style={{ background: '#FFFFFF', borderColor: '#E4E4EA', height: 56 }}
+        className="sticky top-0 z-40 flex items-center justify-between px-6"
+        style={{ background: '#13112A', height: 52, boxShadow: '0 1px 0 rgba(255,255,255,0.07)' }}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold" style={{ color: '#E8C547' }}>무니</span>
-          <span className="text-sm font-medium text-muted-foreground">선생님 대시보드</span>
+        <div className="flex items-center gap-2.5">
+          <span className="text-base font-extrabold" style={{ color: '#E8C547' }}>🌙</span>
+          <span className="text-sm font-extrabold" style={{ color: 'rgba(255,255,255,0.90)' }}>무니에게 알려줘</span>
+          <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.50)' }}>
+            선생님
+          </span>
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm font-semibold" style={{ color: '#1A1A2E' }}>
+          <span className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.55)' }}>
             {teacherName} 선생님
           </span>
           <button
             onClick={handleLogout}
-            className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
-            style={{ background: '#F2F2F5', color: '#9EA0B4' }}
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:bg-white/10"
+            style={{ color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.12)' }}
           >
             로그아웃
           </button>

@@ -66,37 +66,47 @@ export default function QuestFormClient({ profile, currentClass, units, students
   }
 
   return (
-    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F7F7F7' }}>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
 
-      {/* ── Left Nav (220px) ── */}
+      {/* ── Left Nav (220px) — 다크 네이비 ── */}
       <nav
         className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
-        style={{ background: '#FFFFFF', borderRight: '1px solid #F0F0F0' }}
+        style={{ background: '#13112A', borderRight: 'none' }}
       >
-        <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid #F7F7F7' }}>
-          <p className="text-sm font-extrabold mb-4" style={{ color: '#E8C547' }}>🌙 무니에게 알려줘</p>
-          <p className="font-extrabold text-sm leading-tight" style={{ color: '#2D2F2F' }}>{profile.name} 선생님</p>
-          <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{currentClass.name}</p>
+        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <p className="text-sm font-extrabold mb-5" style={{ color: '#E8C547', letterSpacing: '-0.01em' }}>🌙 무니에게 알려줘</p>
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: 'rgba(232,197,71,0.18)' }}>
+              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>
+                {profile.name.charAt(0)}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>{profile.name} 선생님</p>
+              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>{currentClass.name}</p>
+            </div>
+          </div>
         </div>
 
         <div className="flex-1 px-3 py-4 space-y-1">
           <Link href="/teacher"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
-            style={{ color: '#9EA0B4' }}>
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]"
+            style={{ color: 'rgba(255,255,255,0.50)' }}>
             <BookOpen size={18} weight="regular" />
             <span className="font-semibold text-sm">단원 관리</span>
           </Link>
 
           <Link href="/teacher/students"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-black/[0.04]"
-            style={{ color: '#9EA0B4' }}>
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.06]"
+            style={{ color: 'rgba(255,255,255,0.50)' }}>
             <Users size={18} weight="regular" />
             <span className="font-semibold text-sm">학생 목록</span>
           </Link>
 
           {/* 퀘스트 — active */}
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-            style={{ background: 'rgba(232,197,71,0.12)', color: '#1A1830', borderLeft: '3px solid #E8C547' }}>
+            style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547', borderLeft: '3px solid #E8C547' }}>
             <Trophy size={18} weight="fill" />
             <span className="font-bold text-sm">퀘스트</span>
           </div>

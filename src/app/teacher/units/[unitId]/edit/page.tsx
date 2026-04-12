@@ -69,14 +69,14 @@ export default function EditUnitPage() {
 
   if (fetching) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F2F2F5' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F2F1FA' }}>
         <div className="text-2xl animate-pulse">🌙</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen font-sans" style={{ background: '#F2F2F5' }}>
+    <div className="min-h-screen font-sans" style={{ background: '#F2F1FA' }}>
       {/* 헤더 */}
       <div className="bg-white border-b border-border px-6 pt-10 pb-5 flex items-center gap-3">
         <button
@@ -108,7 +108,7 @@ export default function EditUnitPage() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
+                  className="w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
                   required
                 />
               </div>
@@ -124,7 +124,7 @@ export default function EditUnitPage() {
                   placeholder="예: 3~4학년"
                   value={gradeHint}
                   onChange={(e) => setGradeHint(e.target.value)}
-                  className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
+                  className="w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
                 />
               </div>
 
@@ -154,7 +154,7 @@ export default function EditUnitPage() {
                   value={concept}
                   onChange={(e) => setConcept(e.target.value)}
                   rows={12}
-                  className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none"
+                  className="w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none"
                   required
                 />
               </div>

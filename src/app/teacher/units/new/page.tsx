@@ -125,10 +125,10 @@ export default function NewUnitPage() {
     ? `안녕! 나는 무니야 🌙 ${title || '이 단원'}에 대해 네가 설명해주길 기다리고 있어. "${concept.substring(0, 40)}${concept.length > 40 ? '...' : ''}" — 이게 뭔지 나한테 알려줄 수 있어?`
     : null
 
-  const selectClass = "w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all appearance-none"
+  const selectClass = "w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all appearance-none"
 
   return (
-    <div className="min-h-screen bg-[#F2F2F5] font-sans pb-24">
+    <div className="min-h-screen bg-[#F2F1FA] font-sans pb-24">
       {/* 헤더 */}
       <div className="bg-white border-b border-border px-6 pt-10 pb-5 flex items-center gap-3">
         <button
@@ -283,7 +283,7 @@ export default function NewUnitPage() {
               placeholder="예: 분수의 덧셈과 뺄셈"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
+              className="w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all"
               required
             />
           </div>
@@ -302,7 +302,7 @@ export default function NewUnitPage() {
               value={concept}
               onChange={(e) => setConcept(e.target.value)}
               rows={6}
-              className="w-full rounded-2xl border border-border bg-[#F2F2F5] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none"
+              className="w-full rounded-2xl border border-border bg-[#F2F1FA] px-4 py-3 text-sm text-[#1A1830] placeholder:text-muted-foreground outline-none focus:border-[#E8C547] focus:ring-2 focus:ring-[#E8C547]/20 transition-all resize-none"
               required
             />
           </div>

@@ -60,12 +60,12 @@ export default function NewClassPage() {
   } as const
 
   const pillUnselected = {
-    background: '#F7F7F7',
+    background: '#ECEAF6',
     color: '#9EA0B4',
   } as const
 
   return (
-    <div className="min-h-screen px-5 pt-12 pb-8" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen px-5 pt-12 pb-8" style={{ background: '#F2F1FA' }}>
       {/* 헤더 */}
       <div className="flex items-center gap-3 mb-8">
         <button
