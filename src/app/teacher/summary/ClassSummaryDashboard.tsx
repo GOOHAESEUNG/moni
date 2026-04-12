@@ -123,7 +123,8 @@ function EmptyCard({ icon, title, body }: { icon: ReactNode; title: string; body
 
 function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean }) {
   return (
-    <aside
+    <nav
+      aria-label="선생님 메뉴"
       className="hidden w-[220px] shrink-0 flex-col overflow-y-auto md:flex"
       style={{ background: '#13112A' }}
     >
@@ -200,7 +201,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
           <span className="text-sm font-bold">반 요약</span>
         </div>
       </div>
-    </aside>
+    </nav>
   )
 }
 
