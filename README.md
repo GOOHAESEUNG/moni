@@ -163,6 +163,14 @@ src/
 - **Jin et al. (CHI 2024, KAIST·Stanford)** — LLM teachable agent 효과 크기 0.71
 - **MathSpring RCT (2025, 2,003명)** — AI 튜터 사용 그룹 유의미한 수학 성취 향상
 
+## AI 활용 과정
+
+개발 전 과정에서 멀티 에이전트 파이프라인을 사용했습니다.
+
+- **개발 로그**: [`docs/ai-log.md`](docs/ai-log.md) — 날짜별 AI 도구 활용 기록
+- **개발 워크플로우**: [`docs/workflow.md`](docs/workflow.md) — planner → coder → design-reviewer → reviewer 파이프라인
+- **학술 근거**: [`docs/research.md`](docs/research.md) — 프로테제 효과 + AI 교육 논문 20편+
+
 ## 라이선스
 
 이 프로젝트는 제1회 K.I.T. 바이브코딩 공모전 출품작입니다.
