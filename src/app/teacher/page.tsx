@@ -26,7 +26,7 @@ export default async function TeacherPage() {
   )
 
   // 선생님 클래스 조회
-  let { data: classes } = await admin
+  const { data: classes } = await admin
     .from('classes')
     .select('*')
     .eq('teacher_id', user.id)

@@ -80,7 +80,7 @@ export default function TeachPage() {
   const [understanding, setUnderstanding] = useState(0)
   const [isRecording, setIsRecording] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [showTextInput, setShowTextInput] = useState(false)
+  const [, setShowTextInput] = useState(false)
   const [textInput, setTextInput] = useState('')
   const [conversationHistory, setConversationHistory] = useState<ConversationMessage[]>([])
   const [isEnding, setIsEnding] = useState(false)
@@ -321,6 +321,16 @@ export default function TeachPage() {
     await sendMessage(text)
   }, [textInput, sendMessage])
 
+  // 채팅 자동 스크롤
+  const chatScrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = chatScrollRef.current
+    if (!el) return
+    el.scrollTo({ top: el.scrollHeight, behavior: conversationHistory.length > 0 ? 'smooth' : 'auto' })
+  }, [conversationHistory])
+
+  const understandingColor = understanding >= 85 ? '#4CAF50' : understanding >= 50 ? '#E8C547' : 'rgba(255,255,255,0.50)'
+
   if (initError) {
     return (
       <div
@@ -331,16 +341,6 @@ export default function TeachPage() {
       </div>
     )
   }
-
-  // 채팅 자동 스크롤
-  const chatScrollRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const el = chatScrollRef.current
-    if (!el) return
-    el.scrollTo({ top: el.scrollHeight, behavior: conversationHistory.length > 0 ? 'smooth' : 'auto' })
-  }, [conversationHistory])
-
-  const understandingColor = understanding >= 85 ? '#4CAF50' : understanding >= 50 ? '#E8C547' : 'rgba(255,255,255,0.50)'
 
   return (
     <div

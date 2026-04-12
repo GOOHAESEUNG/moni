@@ -81,11 +81,11 @@ export default function TeacherDashboard({
   students,
   units,
   completedSessions,
-  studentScores,
+  studentScores: _studentScores,
   unitCompletions,
   reports,
   quests,
-  questCompletions,
+  questCompletions: _questCompletions,
   totalStudents,
 }: Props) {
   const router = useRouter()
@@ -119,11 +119,6 @@ export default function TeacherDashboard({
   // 완료 세션 수
   const totalCompletedSessions = completedSessions.length
 
-  // 단원별 완료율 평균
-  const avgCompletion = units.length > 0 && totalStudents > 0
-    ? Math.round(units.reduce((sum, u) => sum + (unitCompletions[u.id] ?? 0), 0) / (units.length * totalStudents) * 100)
-    : 0
-
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
 
@@ -140,7 +135,7 @@ export default function TeacherDashboard({
               </button>
             </div>
             <h3 className="font-extrabold text-base mb-1" style={{ color: '#13112A' }}>단원을 삭제할까요?</h3>
-            <p className="text-sm mb-1 font-semibold" style={{ color: '#7C6FBF' }}>"{confirmDeleteUnit.title}"</p>
+            <p className="text-sm mb-1 font-semibold" style={{ color: '#7C6FBF' }}>&ldquo;{confirmDeleteUnit.title}&rdquo;</p>
             <p className="text-xs mb-6 leading-relaxed" style={{ color: '#9EA0B4' }}>
               단원을 삭제하면 학생 화면에서 사라집니다. 기존 학습 기록은 보존됩니다.
             </p>

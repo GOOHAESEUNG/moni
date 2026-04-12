@@ -66,7 +66,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
     }
 
     // 초기화: rAF로 레이아웃 완료 후 실행 + 100ms 백업
-    let raf = requestAnimationFrame(resize)
+    const raf = requestAnimationFrame(resize)
     const timer = setTimeout(resize, 100)
 
     const observer = new ResizeObserver(resize)

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import {
   Copy, Check, Users, BookOpen, Trophy,
-  ChartBar, User,
+  ChartBar,
 } from '@phosphor-icons/react'
 import type { Class } from '@/types/database'
 
