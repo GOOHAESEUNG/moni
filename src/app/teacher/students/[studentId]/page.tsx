@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import Link from 'next/link'
 import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react/dist/ssr'
+import ConsultationSection from './ConsultationSection'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -179,6 +180,9 @@ export default async function StudentDetailPage({ params }: Props) {
       </div>
 
       <div className="px-5 space-y-4 max-w-lg mx-auto">
+        {/* 학부모 상담 자료 */}
+        <ConsultationSection studentId={studentId} studentName={student?.name ?? '학생'} />
+
         {/* 학습 통계 */}
         <div className="grid grid-cols-2 gap-3">
           <div className={clayCard} style={clayStyle}>
