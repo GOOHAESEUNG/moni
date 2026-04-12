@@ -280,7 +280,7 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, Props>(function DrawingCanvas
         <canvas
           ref={canvasRef}
           className="absolute inset-0 w-full h-full"
-          style={{ touchAction: 'none' }}
+          style={{ touchAction: 'none', background: '#F5F3EE' }}
         />
         {/* 첫 안내 텍스트 */}
         {isEmpty && (
