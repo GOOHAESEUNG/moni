@@ -237,7 +237,22 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
   }, [demoMode])
 
   async function requestSuggestion() {
-    if (demoMode) return
+    if (demoMode) {
+      setLoadingSuggestion(true)
+      setTimeout(() => {
+        setSuggestion(
+          '## 이번 주 수업 추천\n\n' +
+          '**1. 평행사변형 넓이 복습 (15분)**\n' +
+          '반 전체적으로 "평행사변형 넓이 공식의 원리"에서 약점이 발견되었습니다. 직사각형에서 평행사변형으로의 변환 과정을 시각적으로 보여주는 활동을 추천합니다.\n\n' +
+          '**2. 단위 연결 심화 (10분)**\n' +
+          'cm²의 실제 의미를 모눈종이로 체험하는 활동이 효과적입니다. "1cm²가 실제로 얼마나 큰지" 손가락으로 비교하게 해보세요.\n\n' +
+          '**3. 무니 복습 퀘스트 배정**\n' +
+          '김하은, 박서윤 학생에게 "도형의 넓이" 단원 재학습을 퀘스트로 배정하면 이해도 향상이 기대됩니다.'
+        )
+        setLoadingSuggestion(false)
+      }, 1500)
+      return
+    }
     if (!classId) {
       setSuggestionError('반 정보를 찾지 못했어요.')
       return
