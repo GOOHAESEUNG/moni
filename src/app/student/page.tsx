@@ -38,10 +38,10 @@ export default async function StudentPage() {
     activeUnits = units ?? []
   }
 
-  // 최근 세션 2개 조회
+  // 최근 세션 2개 조회 (리포트 ID 포함)
   const { data: recentSessions } = await supabase
     .from('sessions')
-    .select('id, unit_id, understanding_score, ended_at, units(title)')
+    .select('id, unit_id, understanding_score, ended_at, units(title), reports(id)')
     .eq('student_id', user.id)
     .not('ended_at', 'is', null)
     .order('ended_at', { ascending: false })

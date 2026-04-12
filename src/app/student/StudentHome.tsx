@@ -27,6 +27,7 @@ interface RecentSession {
   understanding_score: number | null
   ended_at: string | null
   units: { title: string } | { title: string }[] | null
+  reports: { id: string }[] | null
 }
 
 interface Props {
@@ -643,7 +644,7 @@ function RightSidebar({
               {recentSessions.slice(0, 2).map((session, i) => (
                 <Link
                   key={session.id}
-                  href={`/student/progress`}
+                  href={session.reports?.[0]?.id ? `/student/report/${session.reports[0].id}` : `/student/progress`}
                   className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-purple-50/30"
                   style={{ borderBottom: i < recentSessions.length - 1 ? '1px solid rgba(200,188,245,0.20)' : 'none' }}
                 >

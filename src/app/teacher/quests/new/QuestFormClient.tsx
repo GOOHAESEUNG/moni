@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
-  BookOpen, Users, Trophy, ChartBar,
+  BookOpen, Users, Trophy, ChartBar, ArrowLeft,
 } from '@phosphor-icons/react'
 import { createClient } from '@/lib/supabase/client'
 import type { Unit } from '@/types/database'
@@ -127,8 +127,15 @@ export default function QuestFormClient({ profile, currentClass, units, students
           className="px-6 py-4 shrink-0"
           style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}
         >
-          <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>새 퀘스트 만들기</h1>
-          <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학생에게 학습 목표를 퀘스트로 부여하세요</p>
+          <div className="flex items-center gap-3">
+            <button onClick={() => router.back()} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-gray-100 transition-colors" aria-label="뒤로가기">
+              <ArrowLeft size={18} weight="bold" color="#9EA0B4" />
+            </button>
+            <div>
+              <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>새 퀘스트 만들기</h1>
+              <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학생에게 학습 목표를 퀘스트로 부여하세요</p>
+            </div>
+          </div>
         </div>
 
         {/* 폼 (2컬럼) */}
