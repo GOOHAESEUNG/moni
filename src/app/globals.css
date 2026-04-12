@@ -138,6 +138,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+  :focus-visible {
+    outline: 2px solid oklch(0.80 0.14 88);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
   body {
     @apply bg-background text-foreground;
     word-break: keep-all;
