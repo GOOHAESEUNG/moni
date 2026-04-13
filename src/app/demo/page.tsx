@@ -73,7 +73,7 @@ export default function DemoPage() {
       </div>
 
       <p className="mb-2 text-sm font-black tracking-widest" style={{ color: '#E8C547' }}>
-        무니에게 알려줘
+        Moni
       </p>
       <h1 className="mb-2 text-2xl font-black text-white text-center">어떤 역할로 체험할까요?</h1>
       <p className="mb-3 text-sm text-center" style={{ color: 'rgba(255,255,255,0.55)' }}>

@@ -170,7 +170,7 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
     >
       <div className="px-5 pt-6 pb-4">
         <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>
-          🌙 무니에게 알려줘
+          🌙 Moni
         </p>
       </div>
       <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />

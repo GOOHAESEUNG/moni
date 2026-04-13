@@ -167,7 +167,7 @@ export default function TeacherDashboard({
       >
         {/* 로고 + 선생님 정보 + 초대 코드 */}
         <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-sm font-extrabold mb-5" style={{ color: '#E8C547', letterSpacing: '-0.01em' }}>🌙 무니에게 알려줘</p>
+          <p className="text-sm font-extrabold mb-5" style={{ color: '#E8C547', letterSpacing: '-0.01em' }}>🌙 Moni</p>
           <div className="flex items-center gap-2.5 mb-4">
             <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
               style={{ background: 'rgba(232,197,71,0.18)' }}>

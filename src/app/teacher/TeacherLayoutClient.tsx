@@ -27,7 +27,7 @@ export default function TeacherLayoutClient({ teacherName, children }: TeacherLa
       >
         <div className="flex items-center gap-2.5">
           <span className="text-base font-extrabold" style={{ color: '#E8C547' }}>🌙</span>
-          <span className="text-sm font-extrabold" style={{ color: 'rgba(255,255,255,0.90)' }}>무니에게 알려줘</span>
+          <span className="text-sm font-extrabold" style={{ color: 'rgba(255,255,255,0.90)' }}>Moni</span>
           <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.50)' }}>
             선생님
           </span>

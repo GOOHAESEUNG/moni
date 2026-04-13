@@ -99,7 +99,7 @@ export default function StudentProfilePage() {
         }}
       >
         <div className="px-5 pt-6 pb-4">
-          <p className="font-extrabold text-base" style={{ color: '#5A4FA0' }}>🌙 무니에게 알려줘</p>
+          <p className="font-extrabold text-base" style={{ color: '#5A4FA0' }}>🌙 Moni</p>
         </div>
         <div style={{ height: 1, background: '#F0F0F0' }} />
         <div className="flex-1 flex flex-col gap-1 px-3 py-4">
