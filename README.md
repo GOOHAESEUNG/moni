@@ -10,6 +10,8 @@
 
 🔗 **데모**: [https://moni.haeseung.site/demo](https://moni.haeseung.site/demo)
 
+🤖 **파인튜닝 모델**: [https://github.com/GOOHAESEUNG/moni_ai](https://github.com/GOOHAESEUNG/moni_ai)
+
 ---
 
 학생이 오늘 배운 개념을 AI 캐릭터 **무니**(달에서 온 아기 토끼)에게 설명합니다.
