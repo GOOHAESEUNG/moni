@@ -230,11 +230,6 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
   const hasWeakPoints = data.topWeakPoints.length > 0
   const hasCompetencyData = COMPETENCY_ITEMS.some(({ key }) => data.avgCompetency[key] > 0)
 
-  useEffect(() => {
-    if (demoMode) {
-      setSuggestion('체험 모드에서는 사용할 수 없어요')
-    }
-  }, [demoMode])
 
   async function requestSuggestion() {
     if (demoMode) {

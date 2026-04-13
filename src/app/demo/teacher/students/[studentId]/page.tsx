@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar, House } from '@phosphor-icons/react/dist/ssr'
 import DemoStudentDetailTutorial from '@/components/DemoStudentDetailTutorial'
 import DemoConsultation from '@/components/DemoConsultation'
 
@@ -119,13 +119,18 @@ export default async function DemoStudentDetailPage({ params }: Props) {
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-full" style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
             <Users size={18} weight="fill" /><span className="font-bold text-sm">학생 목록</span>
           </div>
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ color: 'rgba(255,255,255,0.50)' }}>
+          <Link href="/demo/teacher/quests/new" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
             <Trophy size={18} weight="regular" /><span className="font-semibold text-sm">퀘스트</span>
-          </div>
+          </Link>
           <Link href="/demo/teacher/summary" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
             <ChartBar size={18} weight="regular" /><span className="font-semibold text-sm">반 요약</span>
           </Link>
         </div>
+      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <House size={18} /><span className="text-sm font-semibold">체험 선택으로</span>
+        </Link>
+      </div>
       </nav>
 
       {/* 메인 */}
