@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { BookOpen, ChartBar, Trophy, Users } from '@phosphor-icons/react'
 import { MoonStarIcon } from '@/components/icons'
+import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 
 const DEMO_TEACHER = { name: '이선생' }
 const DEMO_CLASS = { name: '3학년 2반', inviteCode: 'ABC123' }
@@ -92,10 +93,12 @@ export default function DemoStudentsPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 헤더 */}
         <div className="px-6 py-4 flex items-center gap-3 shrink-0"
-          style={{ background: '#13112A', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-          <h1 className="font-extrabold text-xl text-white">학생 목록</h1>
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+          <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>학생 목록</h1>
           <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}>{DEMO_STUDENTS.length}명</span>
+            style={{ background: 'rgba(232,197,71,0.18)', color: '#9B7E00' }}>{DEMO_STUDENTS.length}명</span>
+          <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold"
+            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-5">
@@ -105,9 +108,9 @@ export default function DemoStudentsPage() {
           >
             샘플 데이터 · 실제 데이터는 회원가입 후 확인 가능
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            {DEMO_STUDENTS.map((student) => (
-              <div key={student.id} className="p-5"
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4" data-tutorial="student-cards">
+            {DEMO_STUDENTS.map((student, idx) => (
+              <div key={student.id} className="p-5" {...(idx === 0 ? { 'data-tutorial': 'first-student' } : {})}
                 style={{ background: '#FFFFFF', borderRadius: '16px', border: '1px solid #ECEAF6' }}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
@@ -155,6 +158,18 @@ export default function DemoStudentsPage() {
           </div>
         </div>
       </div>
+
+      <DemoTutorialOverlay
+        storageKey="demo-teacher-students-tutorial"
+        steps={[
+          {
+            targetSelector: '[data-tutorial="first-student"]',
+            title: '학생 카드를 확인해보세요',
+            description: '각 학생의 최근 이해도 점수와 약점을 한눈에 볼 수 있어요. "리포트" 버튼을 눌러 상세 내용을 확인해보세요.',
+            position: 'bottom',
+          },
+        ]}
+      />
     </div>
   )
 }

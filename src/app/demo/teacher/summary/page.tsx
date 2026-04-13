@@ -1,6 +1,7 @@
 'use client'
 
 import ClassSummaryDashboard, { type ClassSummaryData } from '@/app/teacher/summary/ClassSummaryDashboard'
+import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 
 const DEMO_DATA: ClassSummaryData = {
   className: '3학년2반',
@@ -29,5 +30,26 @@ const DEMO_DATA: ClassSummaryData = {
 }
 
 export default function DemoTeacherSummaryPage() {
-  return <ClassSummaryDashboard data={DEMO_DATA} classId="demo-class" demoMode />
+  return (
+    <>
+      <ClassSummaryDashboard data={DEMO_DATA} classId="demo-class" demoMode />
+      <DemoTutorialOverlay
+        storageKey="demo-teacher-summary-tutorial"
+        steps={[
+          {
+            targetSelector: '[data-tutorial="stats-cards"]',
+            title: '반 전체 현황을 확인하세요',
+            description: '평균 이해도, 참여율, 총 학습 횟수를 한눈에 볼 수 있어요.',
+            position: 'bottom',
+          },
+          {
+            targetSelector: '[data-tutorial="ai-suggestion"]',
+            title: 'AI 수업 추천을 받아보세요',
+            description: '버튼을 눌러 GPT-4o가 분석한 맞춤 수업 전략을 확인해보세요!',
+            position: 'top',
+          },
+        ]}
+      />
+    </>
+  )
 }

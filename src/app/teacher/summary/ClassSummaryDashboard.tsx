@@ -311,7 +311,7 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
         </div>
 
         <div className="space-y-6 px-5 py-5 md:px-8 md:py-6">
-          <section className="grid gap-4 md:grid-cols-3">
+          <section className="grid gap-4 md:grid-cols-3" data-tutorial="stats-cards">
             <StatCard
               icon={<TrendUp size={22} weight="bold" />}
               label="반 평균 이해도"
@@ -467,14 +467,7 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
                 <h2 className="text-lg font-extrabold" style={{ color: '#2D2F2F' }}>AI 수업 추천</h2>
               </div>
 
-              {demoMode ? (
-                <div
-                  className="rounded-[18px] border px-4 py-5 text-sm font-semibold"
-                  style={{ borderColor: '#ECEAF6', background: '#FAF9FD', color: '#9EA0B4' }}
-                >
-                  체험 모드에서는 사용할 수 없어요
-                </div>
-              ) : (
+              {(
                 <>
                   <button
                     type="button"
@@ -482,6 +475,7 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
                     disabled={loadingSuggestion || !hasWeakPoints}
                     className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-extrabold transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
                     style={{ background: '#E8C547', color: '#2D2F2F' }}
+                    data-tutorial="ai-suggestion"
                   >
                     {loadingSuggestion ? '추천 생성 중...' : '반 전체 수업 방향 추천 받기'}
                   </button>
