@@ -141,6 +141,13 @@ export default function DemoSessionEndPage() {
           >
             <House size={18} weight="fill" /> 홈으로
           </Link>
+          <Link
+            href="/demo/teacher"
+            className="flex items-center justify-center gap-2 w-full rounded-2xl py-3 text-xs font-semibold transition-opacity hover:opacity-70"
+            style={{ color: 'rgba(255,255,255,0.45)' }}
+          >
+            선생님 대시보드도 체험해보기 →
+          </Link>
         </motion.div>
       </div>
     </div>

@@ -189,6 +189,13 @@ export default function DemoReportPage() {
           >
             홈으로 돌아가기
           </Link>
+          <Link
+            href="/demo/teacher"
+            className="flex items-center justify-center w-full rounded-2xl py-3 text-xs font-semibold transition-opacity hover:opacity-70"
+            style={{ color: 'rgba(90,79,160,0.50)' }}
+          >
+            이 리포트가 선생님 대시보드에 어떻게 보이는지 확인하기 →
+          </Link>
         </div>
       </div>
       <DemoReportTutorial />

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar } from '@phosphor-icons/react/dist/ssr'
 import DemoStudentDetailTutorial from '@/components/DemoStudentDetailTutorial'
+import DemoConsultation from '@/components/DemoConsultation'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -154,6 +155,9 @@ export default async function DemoStudentDetailPage({ params }: Props) {
             <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>평균 이해도</p>
           </div>
         </div>
+
+        {/* 상담 자료 생성 */}
+        <DemoConsultation studentName={student.name} />
 
         {student.sessions.length === 0 ? (
           <div className="rounded-[20px] p-5 bg-white text-center" style={{ border: '1px solid #ECEAF6' }}>
