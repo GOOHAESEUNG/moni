@@ -76,6 +76,13 @@ const DEMO_SCRIPT_LINES = [
   { text: '삼각형은 직사각형의 절반이에요. 그래서 가로×세로÷2예요.', hint: '마지막 설명이에요!' },
 ]
 
+// 대본에 대응하는 무니 목응답 (API 호출 없이)
+const DEMO_MOONI_RESPONSES = [
+  { expression: 'confused' as Expression, message: '오~ 가로 곱하기 세로? 근데 왜 더하면 안 돼? 더해도 될 거 같은데...', understanding: 30 },
+  { expression: 'happy' as Expression, message: '아하! 더하면 테두리고, 곱하면 안에 칸 수구나! 그럼 삼각형은 어떻게 해? 🌙', understanding: 60 },
+  { expression: 'impressed' as Expression, message: '와! 직사각형의 절반이라서 ÷2를 하는 거구나! 완전 이해했어! ✨', understanding: 90 },
+]
+
 const TEACH_TUTORIAL_STEPS = [
   {
     targetSelector: '[data-tutorial="chat-input"]',
@@ -137,68 +144,58 @@ export default function DemoTeachPage() {
     } catch { /* silent */ }
   }
 
+  const userMessageCount = messages.filter((msg) => msg.role === 'user').length
+
   const sendMessage = useCallback(async (userText: string) => {
     const text = userText.trim()
     if (!text || loading) return
 
-    const imageBase64 = drawingCanvasRef.current?.getImageBase64() ?? null
     const userMsg: Message = { role: 'user', content: text }
-    const history = messages.map((m) => ({ role: m.role, content: m.content }))
-
     setMessages((prev) => [...prev, userMsg])
     setInput('')
     setLoading(true)
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'demo',
-          message: text,
-          conversationHistory: history,
-          unitConcept: DEMO_CONCEPT,
-          imageBase64,
-        }),
-      })
-      const data = await res.json()
-      const assistantMsg: Message = {
-        role: 'assistant',
-        content: data.message ?? '잘 모르겠어요... 다시 설명해줄 수 있어요?',
-        expression: data.expression ?? 'curious',
-      }
-      setMooniMessage(data.message ?? '잘 모르겠어요...')
-      setMooniExpression(data.expression ?? 'curious')
-      const newUnderstanding = data.understanding ?? 0
-      if (newUnderstanding - prevUnderstandingRef.current >= 10) {
-        setShowUnderstandingBurst(true)
-        setTimeout(() => setShowUnderstandingBurst(false), 1200)
-      }
-      if (newUnderstanding >= 85 && !hasReached85Ref.current) {
-        hasReached85Ref.current = true
-        setShowAwesomePopup(true)
-        setTimeout(() => setShowAwesomePopup(false), 2000)
-      }
-      prevUnderstandingRef.current = newUnderstanding
-      setUnderstanding(newUnderstanding)
-      setMessages((prev) => [...prev, assistantMsg])
-      if (imageBase64) {
-        drawingCanvasRef.current?.clear()
-      }
-    } catch {
-      const errMsg: Message = {
-        role: 'assistant',
-        content: '앗, 연결이 끊겼어요. 다시 시도해줘! 🌙',
-        expression: 'oops' as Expression,
-      }
-      setMooniMessage('앗, 연결이 끊겼어요. 다시 시도해줘! 🌙')
-      setMooniExpression('oops')
-      setMessages((prev) => [...prev, errMsg])
-    } finally {
-      setLoading(false)
-      inputRef.current?.focus()
+    // 목데이터 응답 (API 호출 없음)
+    const responseIdx = Math.min(userMessageCount, DEMO_MOONI_RESPONSES.length - 1)
+    const mockResponse = DEMO_MOONI_RESPONSES[responseIdx]
+
+    // 1.2초 딜레이로 자연스러운 타이핑 느낌
+    await new Promise(resolve => setTimeout(resolve, 1200))
+
+    const assistantMsg: Message = {
+      role: 'assistant',
+      content: mockResponse.message,
+      expression: mockResponse.expression,
     }
-  }, [loading, messages])
+    setMooniMessage(mockResponse.message)
+    setMooniExpression(mockResponse.expression)
+
+    const newUnderstanding = mockResponse.understanding
+    if (newUnderstanding - prevUnderstandingRef.current >= 10) {
+      setShowUnderstandingBurst(true)
+      setTimeout(() => setShowUnderstandingBurst(false), 1200)
+    }
+    if (newUnderstanding >= 85 && !hasReached85Ref.current) {
+      hasReached85Ref.current = true
+      setShowAwesomePopup(true)
+      setTimeout(() => setShowAwesomePopup(false), 2000)
+    }
+    prevUnderstandingRef.current = newUnderstanding
+    setUnderstanding(newUnderstanding)
+    setMessages((prev) => [...prev, assistantMsg])
+
+    if (drawingCanvasRef.current?.getImageBase64()) {
+      drawingCanvasRef.current?.clear()
+    }
+
+    setLoading(false)
+    inputRef.current?.focus()
+
+    // TTS (실패해도 무시)
+    try {
+      playTTS(mockResponse.message)
+    } catch { /* silent */ }
+  }, [loading, userMessageCount])
 
   function startVoice() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -239,7 +236,6 @@ export default function DemoTeachPage() {
   }
 
   const understandingColor = understanding >= 85 ? '#4CAF50' : understanding >= 50 ? '#E8C547' : 'rgba(255,255,255,0.50)'
-  const userMessageCount = messages.filter((msg) => msg.role === 'user').length
 
   function handleCopyScript(text: string) {
     setInput(text)
