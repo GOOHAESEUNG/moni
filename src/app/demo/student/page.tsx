@@ -221,10 +221,10 @@ function LeftNav() {
           <Trophy size={20} weight="regular" />
           <span className="font-semibold text-sm">리더보드</span>
         </Link>
-        <div className="flex items-center gap-3 px-4 py-3 rounded-full" data-tutorial="profile-nav" style={{ color: '#B8B5D0' }}>
+        <Link href="/demo/student/profile" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" data-tutorial="profile-nav" style={{ color: '#B8B5D0' }}>
           <User size={20} weight="regular" />
           <span className="font-semibold text-sm">프로필</span>
-        </div>
+        </Link>
       </div>
 
       <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">

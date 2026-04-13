@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, ChartBar, Trophy, Users } from '@phosphor-icons/react'
+import { BookOpen, ChartBar, Trophy, Users, House } from '@phosphor-icons/react'
 import { MoonStarIcon } from '@/components/icons'
 import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 
@@ -80,6 +80,11 @@ function LeftNav() {
         </div>
         <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <ChartBar size={18} /><span className="text-sm font-semibold">반 요약</span>
+        </Link>
+      </div>
+      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <House size={18} /><span className="text-sm font-semibold">체험 선택으로</span>
         </Link>
       </div>
     </aside>

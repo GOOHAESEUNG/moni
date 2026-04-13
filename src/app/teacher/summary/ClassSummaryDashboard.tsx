@@ -480,14 +480,26 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
                     {loadingSuggestion ? '추천 생성 중...' : 'AI 수업 추천 받기'}
                   </button>
 
-                  <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: '#ECEAF6', background: '#FAF9FD' }}>
+                  <div className="mt-4 rounded-[18px] border px-5 py-5" style={{ borderColor: '#ECEAF6', background: '#FAF9FD' }}>
                     {suggestionError ? (
                       <p className="text-sm leading-relaxed" style={{ color: '#FF9600' }}>{suggestionError}</p>
                     ) : suggestion ? (
-                      <p className="text-sm leading-7 whitespace-pre-line" style={{ color: '#2D2F2F' }}>{suggestion}</p>
+                      <div className="space-y-3">
+                        {suggestion.split('\n').map((line, i) => {
+                          const trimmed = line.trim()
+                          if (!trimmed) return null
+                          if (trimmed.startsWith('## ')) return <h3 key={i} className="text-base font-extrabold mt-2" style={{ color: '#2D2F2F' }}>{trimmed.slice(3)}</h3>
+                          if (trimmed.startsWith('**') && trimmed.endsWith('**')) return <h4 key={i} className="text-sm font-extrabold mt-3" style={{ color: '#7C6FBF' }}>{trimmed.slice(2, -2)}</h4>
+                          if (trimmed.match(/^\*\*\d+\./)) {
+                            const content = trimmed.replace(/\*\*/g, '')
+                            return <h4 key={i} className="text-sm font-bold mt-3" style={{ color: '#2D2F2F' }}>{content}</h4>
+                          }
+                          return <p key={i} className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{trimmed.replace(/\*\*/g, '')}</p>
+                        })}
+                      </div>
                     ) : hasWeakPoints ? (
                       <p className="text-sm leading-relaxed" style={{ color: '#9EA0B4' }}>
-                        약점 순위와 평균 역량을 바탕으로 다음 차시 수업 방향을 3~4문장으로 제안해드려요.
+                        버튼을 눌러 AI가 분석한 맞춤 수업 전략을 확인해보세요.
                       </p>
                     ) : (
                       <p className="text-sm leading-relaxed" style={{ color: '#9EA0B4' }}>
