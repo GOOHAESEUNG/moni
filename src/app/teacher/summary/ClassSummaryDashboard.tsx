@@ -286,10 +286,10 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
   }
 
   return (
-    <div className="min-h-screen bg-[#F2F1FA] md:flex">
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
       <Sidebar data={data} demoMode={demoMode} />
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-y-auto">
         <div className="border-b border-[#ECEAF6] bg-white px-5 py-5 md:px-8 md:py-6">
           <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
             <div>
