@@ -91,6 +91,12 @@ const TEACH_TUTORIAL_STEPS = [
     position: 'top' as const,
   },
   {
+    targetSelector: '[data-tutorial="drawing-canvas"]',
+    title: '그림으로도 설명할 수 있어요!',
+    description: '오른쪽 그림판에 도형이나 수식을 그려서 무니에게 보여줄 수 있어요. 데스크탑에서만 표시됩니다.',
+    position: 'top' as const,
+  },
+  {
     targetSelector: '[data-tutorial="complete-button"]',
     title: '대화가 끝나면 여기를 눌러 리포트를 확인하세요',
     description: '설명이 끝나면 체험 완료 버튼으로 다음 화면으로 이동해보세요.',
@@ -517,6 +523,7 @@ export default function DemoTeachPage() {
         <div className="hidden md:flex flex-col h-full shrink-0"
           style={{ width: 380, borderLeft: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)' }}>
           <div className="flex items-center justify-between px-3 py-2 shrink-0"
+            data-tutorial="drawing-canvas"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}>
             <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.50)' }}>
               ✏️ 설명 그림판
