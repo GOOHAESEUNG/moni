@@ -130,7 +130,7 @@ export default function LandingPage() {
                 <circle cx="42" cy="50" r="38" fill="#E8C547" />
                 <circle cx="62" cy="50" r="34" fill="#0D0B1E" />
               </svg>
-              <span className="text-lg font-black tracking-tight" style={{ color: '#E8C547' }}>Moni</span>
+              <span className="text-lg tracking-tight" style={{ color: '#E8C547', fontFamily: "'Berkshire Swash', cursive" }}>Moni</span>
             </div>
             <div className="flex items-center gap-3">
               <Link href="/login" className="text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: 'rgba(255,255,255,0.55)' }}>
@@ -164,7 +164,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.7, delay: 0.1 }}
                 className="mb-6"
               >
-                <span className="block font-black leading-none tracking-tight" style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', color: '#E8C547' }}>
+                <span className="block leading-none" style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', color: '#E8C547', fontFamily: "'Berkshire Swash', cursive" }}>
                   Moni
                 </span>
                 <span className="block text-2xl md:text-3xl font-extrabold mt-3 leading-snug" style={{ color: 'rgba(255,255,255,0.90)' }}>
