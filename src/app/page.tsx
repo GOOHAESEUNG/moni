@@ -192,11 +192,11 @@ export default function LandingPage() {
                 <Link href="/signup"
                   className="flex items-center justify-center text-base font-black transition-all hover:translate-y-[-1px]"
                   style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020', borderRadius: 9999, padding: '14px 36px' }}>
-                  시작하기
+                  회원가입
                 </Link>
                 <Link href="/demo"
-                  className="flex items-center justify-center text-base font-bold transition-all hover:bg-white/[0.06]"
-                  style={{ color: 'rgba(255,255,255,0.75)', borderRadius: 9999, padding: '14px 36px', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  className="flex items-center justify-center text-sm font-semibold transition-all hover:opacity-70"
+                  style={{ color: 'rgba(232,197,71,0.65)', padding: '14px 20px' }}>
                   체험해보기
                 </Link>
               </motion.div>

@@ -66,7 +66,7 @@ export default function DemoReportPage() {
       <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
         style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
         <div className="px-5 pt-6 pb-4">
-          <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>🌙 Moni</p>
+          <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 18 }}>Moni</p>
           <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
             style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
         </div>

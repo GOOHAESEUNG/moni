@@ -205,7 +205,7 @@ function LeftNav() {
     <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
       style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
       <div className="px-5 pt-6 pb-4">
-        <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>🌙 Moni</p>
+        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 18 }}>Moni</p>
         <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
           style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
       </div>
@@ -504,7 +504,7 @@ export default function DemoStudentPage() {
       {/* 모바일 헤더 */}
       <div className="md:hidden absolute top-0 left-0 right-0 z-10 px-4 pt-4 pb-2 flex items-center justify-between"
         style={{ background: 'linear-gradient(to bottom, rgba(169,157,214,0.95) 0%, transparent 100%)' }}>
-        <p className="font-extrabold text-sm" style={{ color: '#2D1F6E' }}>🌙 Moni</p>
+        <p className="font-extrabold text-sm" style={{ color: '#2D1F6E' }}>Moni</p>
         <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
           style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
       </div>

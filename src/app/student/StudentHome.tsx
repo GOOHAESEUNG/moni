@@ -169,8 +169,8 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
       }}
     >
       <div className="px-5 pt-6 pb-4">
-        <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>
-          🌙 Moni
+        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 18 }}>
+          Moni
         </p>
       </div>
       <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />

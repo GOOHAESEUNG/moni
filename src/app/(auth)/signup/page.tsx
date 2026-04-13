@@ -67,7 +67,7 @@ export default function SignupPage() {
         {/* 캐릭터 + 앱 이름 */}
         <div className="flex flex-col items-center mb-6">
           <MooniCharacter expression="happy" size={90} className="mb-3" />
-          <h1 className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>Moni</h1>
+          <h1 className="text-2xl" style={{ color: '#2D2F2F', fontFamily: "'Berkshire Swash', cursive" }}>Moni</h1>
           <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>새로운 친구가 생겼어요!</p>
         </div>
 

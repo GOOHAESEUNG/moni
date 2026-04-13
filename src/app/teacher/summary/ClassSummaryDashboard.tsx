@@ -130,8 +130,8 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
     >
       <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="flex items-center gap-2">
-          <MoonStarIcon size={24} color="#E8C547" />
-          <span className="text-lg font-extrabold text-white">Moni</span>
+          
+          <span className="text-lg text-white" style={{ fontFamily: "'Berkshire Swash', cursive" }}>Moni</span>
         </div>
         <div className="mt-5 flex items-center gap-3">
           <div
