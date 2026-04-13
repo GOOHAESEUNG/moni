@@ -1,8 +1,9 @@
-# 무니에게 알려줘
+# Moni (무니에게 알려줘)
 
 ## 프로젝트
-학생이 AI(무니)를 가르치며 배우는 교육 앱 — 프로테제 효과 기반. 소규모 학원 타겟.
+학생이 AI(무니)를 가르치며 배우는 교육 앱 — 프로테제 효과 기반. 소규모 학원 + 초등학교 타겟.
 마감: 2026-04-14 (KIT 바이브코딩 공모전). **동작하는 데모 > 완벽한 코드.**
+브랜드: "Moni" (Berkshire Swash 폰트), 로고=M레터링 파비콘
 
 ## 스택
 - Next.js 16 App Router · TypeScript · Tailwind v4 · shadcn/ui
@@ -57,12 +58,14 @@ src/app/teacher/              # 선생님 플로우
 src/app/api/teacher/          # 선생님 전용 API
   ├ class-suggestion/route.ts # AI 수업 추천 (GPT-4o)
   └ consultation/route.ts     # 학부모 상담 자료 (GPT-4o)
-src/app/demo/                 # 게스트 데모
-  ├ student/                  # 학생 데모 (홈, 채팅, 세션종료, 리포트)
-  └ teacher/                  # 선생님 데모 (대시보드, 학생목록, 상세, 리포트, 반 요약)
+src/app/demo/                 # 게스트 데모 (API 없이 완전 동작)
+  ├ student/                  # 학생 데모 (홈, 채팅(목데이터), 세션종료, 리포트, 리더보드, 프로필)
+  └ teacher/                  # 선생님 데모 (대시보드, 학생목록, 상세, 리포트, 반 요약, 단원추가, 퀘스트)
 src/components/
-  ├ DemoTutorialOverlay.tsx   # 데모 튜토리얼 스포트라이트 가이드
+  ├ DemoTutorialOverlay.tsx   # 데모 튜토리얼 스포트라이트 + 펄싱 하이라이트
   ├ DemoChatScript.tsx        # 채팅 대본 제공 카드
+  ├ DemoTeacherSidebar.tsx    # 선생님 데모 공통 사이드바 (activeTab prop)
+  ├ DemoConsultation.tsx      # 데모 학부모 상담 자료 (하드코딩)
   ├ DrawingCanvas.tsx         # 설명 그림판
   └ icons/                    # 커스텀 SVG 아이콘
 src/lib/supabase/             # client.ts / server.ts
