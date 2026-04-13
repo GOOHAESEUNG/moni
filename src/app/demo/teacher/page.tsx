@@ -54,14 +54,8 @@ const TEACHER_TUTORIAL_STEPS = [
   },
   {
     targetSelector: '[data-tutorial="student-card"]',
-    title: '학생별 학습 현황',
-    description: '학생별 최신 리포트를 빠르게 확인하고 이해도와 약점을 살펴볼 수 있어요. 사이드바에서 "학생 목록"을 눌러보세요.',
-    position: 'top' as const,
-  },
-  {
-    targetSelector: '[data-tutorial="sidebar-summary"]',
-    title: 'AI 반 요약 리포트',
-    description: '오른쪽 패널에서 학급 전체 흐름을 확인할 수 있어요. 사이드바의 "반 요약"을 눌러 더 자세히 볼 수 있어요.',
+    title: '최근 학습 리포트',
+    description: '학생별 최신 이해도를 바로 확인할 수 있어요. 클릭하면 상세 리포트로 이동해요. 사이드바의 "학생 목록"에서 전체를 볼 수 있어요.',
     position: 'top' as const,
   },
 ]
@@ -352,18 +346,45 @@ export default function DemoTeacherPage() {
             <StatCard label="완료 세션" value="4회" accent="#FF9600" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {DEMO_UNITS.map((unit) => (
               <UnitCard key={unit.id} title={unit.title} gradeHint={unit.gradeHint}
                 completed={unit.completed} total={unit.total} />
             ))}
           </div>
 
+          {/* 최근 리포트 (컴팩트) */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-extrabold" style={{ color: '#2D2F2F' }}>최근 학습 리포트</h2>
+              <Link href="/demo/teacher/students" className="text-xs font-semibold transition-opacity hover:opacity-70" style={{ color: '#7C6FBF' }}>
+                전체 보기 →
+              </Link>
+            </div>
+            <div className="space-y-2" data-tutorial="student-card">
+              {DEMO_REPORTS.slice(0, 3).map((report) => (
+                <Link key={`${report.studentName}-${report.score}`}
+                  href={`/demo/teacher/students/s1`}
+                  className="flex items-center gap-3 p-4 rounded-2xl transition-all hover:translate-y-[-1px]"
+                  style={cardStyle}>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-extrabold shrink-0"
+                    style={{ background: '#F4F2FF', color: '#7C6FBF' }}>
+                    {report.studentName[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold truncate" style={{ color: '#2D2F2F' }}>{report.studentName}</p>
+                    <p className="text-xs truncate" style={{ color: '#9EA0B4' }}>{report.summary}</p>
+                  </div>
+                  <ScoreBadge score={report.score} />
+                </Link>
+              ))}
+            </div>
+          </div>
+
         </div>
       </main>
       </div>
 
-      <RightSidebar />
       <DemoTutorialOverlay
         steps={TEACHER_TUTORIAL_STEPS}
         storageKey="demo-teacher-tutorial"
