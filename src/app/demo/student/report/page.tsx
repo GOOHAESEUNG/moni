@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle, Lightbulb } from '@phosphor-icons/react/dist/ssr'
+import DemoReportTutorial from '@/components/DemoReportTutorial'
 
 const DEMO_SCORE = 78
 const DEMO_UNIT_TITLE = '도형의 넓이'
@@ -88,6 +89,7 @@ export default function DemoReportPage() {
           {/* 이해도 점수 카드 */}
           <div
             className="rounded-3xl p-6 flex items-center gap-5"
+            data-tutorial="score-card"
             style={{ ...clayCard, background: scoreBg, boxShadow: 'none', border: `1.5px solid ${scoreColor}30` }}
           >
             <Image src={`/mooni/${mooniImg}.png`} alt="무니" width={110} height={74} className="shrink-0 drop-shadow-md" />
@@ -110,7 +112,7 @@ export default function DemoReportPage() {
           </div>
 
           {/* 역량 분석 */}
-          <div className="p-5" style={{ ...clayCard, background: 'rgba(124,111,191,0.08)', boxShadow: 'none', border: '1.5px solid rgba(124,111,191,0.20)' }}>
+          <div className="p-5" data-tutorial="competency" style={{ ...clayCard, background: 'rgba(124,111,191,0.08)', boxShadow: 'none', border: '1.5px solid rgba(124,111,191,0.20)' }}>
             <p className="text-sm font-extrabold mb-4" style={{ color: '#2D1F6E' }}>📊 핵심역량 분석</p>
             <div className="grid grid-cols-2 gap-x-5 gap-y-3">
               {COMPETENCY_LABELS.map(({ key, label, color }) => (
@@ -189,6 +191,7 @@ export default function DemoReportPage() {
           </Link>
         </div>
       </div>
+      <DemoReportTutorial />
     </div>
   )
 }

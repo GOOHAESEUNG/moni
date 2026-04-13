@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar } from '@phosphor-icons/react/dist/ssr'
+import DemoStudentDetailTutorial from '@/components/DemoStudentDetailTutorial'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -165,7 +166,7 @@ export default async function DemoStudentDetailPage({ params }: Props) {
             </h2>
             <div className="space-y-3">
               {student.sessions.map((s, i) => (
-                <div key={i} className="rounded-[20px] overflow-hidden bg-white" style={{ border: '1px solid #ECEAF6' }}>
+                <div key={i} className="rounded-[20px] overflow-hidden bg-white" style={{ border: '1px solid #ECEAF6' }} {...(i === 0 ? { 'data-tutorial': 'report-card' } : {})}>
                   <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #F7F7F7' }}>
                     <div>
                       <p className="text-sm font-extrabold" style={{ color: '#2D2F2F' }}>{s.unit}</p>
@@ -248,6 +249,7 @@ export default async function DemoStudentDetailPage({ params }: Props) {
           </div>
         </div>
       </div>
+      <DemoStudentDetailTutorial />
     </div>
   )
 }
