@@ -109,13 +109,26 @@ export default function DemoPage() {
         ))}
       </div>
 
-      <Link
-        href="/"
-        className="mt-10 text-sm transition-opacity hover:opacity-70"
-        style={{ color: 'rgba(255,255,255,0.40)' }}
-      >
-        ← 홈으로 돌아가기
-      </Link>
+      <div className="mt-10 flex flex-col items-center gap-3">
+        <button
+          onClick={() => {
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('demo-'))
+            keys.forEach(k => localStorage.removeItem(k))
+            alert('튜토리얼이 초기화되었어요! 다시 체험하면 튜토리얼이 표시됩니다.')
+          }}
+          className="text-sm font-semibold transition-opacity hover:opacity-70 px-4 py-2 rounded-full"
+          style={{ color: '#E8C547', border: '1px solid rgba(232,197,71,0.30)' }}
+        >
+          🔄 튜토리얼 다시 보기
+        </button>
+        <Link
+          href="/"
+          className="text-sm transition-opacity hover:opacity-70"
+          style={{ color: 'rgba(255,255,255,0.40)' }}
+        >
+          ← 홈으로 돌아가기
+        </Link>
+      </div>
     </div>
   )
 }
