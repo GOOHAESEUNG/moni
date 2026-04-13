@@ -201,10 +201,10 @@ export default function LandingPage() {
 
           {/* 텍스트 (모바일) */}
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
             style={{ background: 'rgba(232,197,71,0.15)', border: '1px solid rgba(232,197,71,0.30)' }}
           >
-            <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 무니에게 알려줘</span>
+            <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 Moni · 무니에게 알려줘</span>
           </div>
 
           <h1 className="text-4xl font-black leading-tight text-white mb-4 text-center">
@@ -255,10 +255,10 @@ export default function LandingPage() {
           {/* 왼쪽: 텍스트 */}
           <div className="flex flex-col justify-center px-12 lg:px-20 py-20">
             <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 self-start"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-3 self-start"
               style={{ background: 'rgba(232,197,71,0.15)', border: '1px solid rgba(232,197,71,0.30)' }}
             >
-              <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 무니에게 알려줘</span>
+              <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 Moni · 무니에게 알려줘</span>
             </div>
 
             <h1 className="text-5xl font-black leading-tight text-white mb-4 lg:text-6xl">
