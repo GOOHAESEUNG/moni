@@ -40,13 +40,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#F7F7F7' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8" style={{ background: '#F7F7F7' }}>
       <div className="w-full max-w-sm">
+        {/* 홈 링크 */}
+        <div className="mb-4">
+          <Link href="/" className="text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: '#9EA0B4' }}>
+            ← 홈으로
+          </Link>
+        </div>
+
         {/* 캐릭터 + 앱 이름 */}
-        <div className="flex flex-col items-center mb-8">
-          <MooniCharacter expression="curious" size={160} className="mb-4" />
-          <h1 className="text-3xl font-extrabold" style={{ color: '#2D2F2F' }}>무니에게 알려줘</h1>
-          <p className="text-sm mt-2" style={{ color: '#9EA0B4' }}>무니가 기다리고 있어요!</p>
+        <div className="flex flex-col items-center mb-6">
+          <MooniCharacter expression="curious" size={90} className="mb-3" />
+          <h1 className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>무니에게 알려줘</h1>
+          <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>무니가 기다리고 있어요!</p>
         </div>
 
         {/* 폼 카드 — Claymorphism */}

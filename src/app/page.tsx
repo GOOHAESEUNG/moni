@@ -349,21 +349,6 @@ export default function LandingPage() {
               />
             </motion.div>
 
-            {/* 우상단 작은 무니 */}
-            <div
-              className="absolute"
-              style={{ top: 20, right: -10, opacity: 0.40, width: 135, height: 90 }}
-            >
-              <Image src="/mooni/curious.png" alt="" fill className="object-contain" aria-hidden="true" />
-            </div>
-
-            {/* 좌하단 작은 무니 */}
-            <div
-              className="absolute"
-              style={{ bottom: 30, left: -10, opacity: 0.30, width: 120, height: 80 }}
-            >
-              <Image src="/mooni/oops.png" alt="" fill className="object-contain" aria-hidden="true" />
-            </div>
           </div>
         </div>
       </section>
