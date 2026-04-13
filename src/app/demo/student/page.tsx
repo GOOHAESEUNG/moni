@@ -43,7 +43,12 @@ const STUDENT_TUTORIAL_STEPS = [
   {
     targetSelector: '[data-tutorial="first-unit"]',
     title: '학습을 시작해요',
-    description: '현재 열려 있는 단원을 눌러 무니에게 설명을 시작해보세요.',
+    description: '현재 열려 있는 단원을 눌러 무니에게 설명을 시작해보세요. ▶ 버튼을 클릭!',
+  },
+  {
+    targetSelector: '[data-tutorial="profile-nav"]',
+    title: '프로필도 확인해보세요',
+    description: '프로필에서 초대 코드 입력, 학습 통계 확인, 로그아웃을 할 수 있어요.',
   },
 ]
 
@@ -217,7 +222,7 @@ function LeftNav() {
           <span className="font-semibold text-sm">리더보드</span>
           <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#F4F2FF', color: '#C0B8E0' }}>준비중</span>
         </div>
-        <div className="flex items-center gap-3 px-4 py-3 rounded-full" style={{ color: '#B8B5D0' }}>
+        <div className="flex items-center gap-3 px-4 py-3 rounded-full" data-tutorial="profile-nav" style={{ color: '#B8B5D0' }}>
           <User size={20} weight="regular" />
           <span className="font-semibold text-sm">프로필</span>
         </div>
@@ -232,6 +237,9 @@ function LeftNav() {
             <p className="text-xs truncate" style={{ color: '#A8A5C0' }}>{DEMO_CLASS}</p>
           </div>
         </div>
+        <Link href="/demo" className="mt-3 block text-xs transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>
+          ← 체험 선택으로
+        </Link>
       </div>
     </nav>
   )

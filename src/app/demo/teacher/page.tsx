@@ -45,15 +45,21 @@ const DEMO_REPORTS = [
 
 const TEACHER_TUTORIAL_STEPS = [
   {
+    targetSelector: '[data-tutorial="add-unit"]',
+    title: '단원을 추가할 수 있어요',
+    description: '교육과정(NCIC 2022)에서 단원을 선택해 학생에게 배정해요. 체험 모드에서는 비활성화되어 있어요.',
+    position: 'top' as const,
+  },
+  {
     targetSelector: '[data-tutorial="student-card"]',
     title: '학생별 학습 현황',
-    description: '학생별 최신 리포트를 빠르게 확인하고 이해도와 약점을 살펴볼 수 있어요.',
+    description: '학생별 최신 리포트를 빠르게 확인하고 이해도와 약점을 살펴볼 수 있어요. 사이드바에서 "학생 목록"을 눌러보세요.',
     position: 'top' as const,
   },
   {
     targetSelector: '[data-tutorial="sidebar-summary"]',
-    title: 'AI 반 요약',
-    description: '오른쪽 패널에서 학생 리포트와 학급 흐름을 함께 확인해보세요.',
+    title: 'AI 반 요약 리포트',
+    description: '오른쪽 패널에서 학급 전체 흐름을 확인할 수 있어요. 사이드바의 "반 요약"을 눌러 더 자세히 볼 수 있어요.',
     position: 'top' as const,
   },
 ]
@@ -338,6 +344,7 @@ export default function DemoTeacherPage() {
           </div>
 
           <button type="button" disabled title="체험 모드에서는 비활성화됩니다"
+            data-tutorial="add-unit"
             className="mt-6 cursor-not-allowed rounded-full px-5 py-3 text-sm font-extrabold opacity-50"
             style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}>
             단원 추가

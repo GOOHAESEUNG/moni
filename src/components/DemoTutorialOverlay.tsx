@@ -198,6 +198,25 @@ export default function DemoTutorialOverlay({
             boxShadow: '0 0 0 9999px rgba(13,11,30,0.70)',
           }}
         />
+        {/* 펄싱 하이라이트 링 */}
+        <motion.div
+          className="fixed pointer-events-none rounded-2xl"
+          animate={{
+            boxShadow: [
+              '0 0 0 0px rgba(232,197,71,0.4)',
+              '0 0 0 8px rgba(232,197,71,0)',
+            ],
+          }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
+          style={{
+            top: spotlightRect.top - 2,
+            left: spotlightRect.left - 2,
+            width: spotlightRect.width + 4,
+            height: spotlightRect.height + 4,
+            border: '2px solid transparent',
+            borderRadius: 18,
+          }}
+        />
 
         <motion.div
           key={currentStep}
