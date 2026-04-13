@@ -506,28 +506,47 @@ export default function LandingPage() {
             Stanford 연구팀이 증명한 학습법
           </p>
 
-          <div className="mb-10 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
+          <div className="mb-10 grid grid-cols-2 sm:grid-cols-4 gap-6">
             <div className="flex flex-col items-center">
-              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>
+              <span className="text-5xl font-black leading-none" style={{ color: '#E8C547' }}>
                 <CountUp target={0.71} decimals={2} />
               </span>
-              <span className="mt-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.60)' }}>
-                효과 크기 (Effect Size)
+              <span className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                학습 효과 크기
               </span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>CHI 2024</span>
             </div>
-            <div className="hidden h-20 w-px sm:block" style={{ background: 'rgba(255,255,255,0.12)' }} />
             <div className="flex flex-col items-center">
-              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>
-                <CountUp target={314} suffix="+" />
+              <span className="text-5xl font-black leading-none" style={{ color: '#E8C547' }}>
+                <CountUp target={72} suffix="%" />
               </span>
-              <span className="mt-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.60)' }}>
-                인용 횟수
+              <span className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                실패율 감소
               </span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>BEA 2025</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-5xl font-black leading-none" style={{ color: '#E8C547' }}>
+                <CountUp target={66.2} decimals={1} suffix="%" />
+              </span>
+              <span className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                AI 튜터 성공률
+              </span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>Google 2025</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-5xl font-black leading-none" style={{ color: '#E8C547' }}>
+                <CountUp target={2003} />
+              </span>
+              <span className="mt-2 text-xs font-medium" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                RCT 참여 학생
+              </span>
+              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.30)' }}>MathSpring 2025</span>
             </div>
           </div>
 
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.40)' }}>
-            Chase et al. (2009) Stanford · CHI 2024
+          <p className="text-xs leading-relaxed max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.35)' }}>
+            Stanford(2009), KAIST·Stanford(CHI 2024), CHI 2025, Google DeepMind(2025), ACL(BEA 2025) 등 20편+ 논문 기반
           </p>
         </div>
       </section>
