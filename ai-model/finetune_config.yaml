@@ -1,0 +1,40 @@
+# Gemma 4 E4B LoRA 파인튜닝 설정 (Apple M3 최적화)
+
+# 모델 경로
+model: ./models/gemma-4-e4b-it-4bit
+
+# 데이터 디렉토리 (train.jsonl, valid.jsonl 위치)
+data: ./output
+
+# 파인튜닝 방식
+fine_tune_type: lora
+
+# ── LoRA 관련 ──────────────────────────────
+# 마지막 N개 레이어에만 LoRA 적용 (메모리 절약)
+num_layers: 8
+
+# ── 학습 파라미터 ──────────────────────────
+# M3 18GB 기준 OOM 방지: batch 2 × grad_accum 8 = effective batch 16
+batch_size: 2
+grad_accumulation_steps: 8
+iters: 3000
+learning_rate: 2e-5
+optimizer: adamw
+
+# prompt 부분은 loss 계산에서 제외 (completion만 학습)
+mask_prompt: true
+
+# 시퀀스 최대 길이 (메모리 절약)
+max_seq_length: 384
+
+# ── 리포팅 ────────────────────────────────
+steps_per_report: 50
+steps_per_eval: 200
+val_batches: 20
+
+# ── 체크포인트 저장 ───────────────────────
+adapter_path: ./output/adapters
+save_every: 200
+
+# 시드 고정
+seed: 42
