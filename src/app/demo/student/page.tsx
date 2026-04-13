@@ -49,7 +49,7 @@ const STUDENT_TUTORIAL_STEPS = [
   {
     targetSelector: '[data-tutorial="profile-nav"]',
     title: '프로필도 확인해보세요',
-    description: '프로필에서 초대 코드 입력, 학습 통계 확인, 로그아웃을 할 수 있어요.',
+    description: '학습 통계, 핵심역량 점수, 배지 컬렉션을 확인하고 리더보드에서 친구들과 순위를 비교해보세요!',
   },
 ]
 
