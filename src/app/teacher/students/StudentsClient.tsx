@@ -1,11 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import {
-  Copy, Check, Users, BookOpen, Trophy,
-  ChartBar,
-} from '@phosphor-icons/react'
+import { ChartBar, Users } from '@phosphor-icons/react'
+import TeacherSidebar from '@/components/TeacherSidebar'
 import type { Class } from '@/types/database'
 
 interface Student {
@@ -42,14 +39,6 @@ function ScorePill({ score }: { score: number | null | undefined }) {
 }
 
 export default function StudentsClient({ profile, currentClass, students, reports }: Props) {
-  const [copied, setCopied] = useState(false)
-
-  function copyInviteCode() {
-    navigator.clipboard.writeText(currentClass.invite_code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   function getLatestReport(studentId: string) {
     return reports.find((r) => r.student_id === studentId)
   }
@@ -57,79 +46,7 @@ export default function StudentsClient({ profile, currentClass, students, report
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
 
-      {/* ── Left Nav (220px) — 다크 네이비 ── */}
-      <nav
-        className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
-        style={{ background: '#13112A', borderRight: 'none' }}
-      >
-        {/* 로고 + 선생님 정보 + 초대 코드 */}
-        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-lg mb-5" style={{ color: '#E8C547', fontFamily: "'Berkshire Swash', cursive", letterSpacing: '-0.01em' }}>Moni</p>
-          <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: 'rgba(232,197,71,0.18)' }}>
-              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>
-                {profile.name.charAt(0)}
-              </span>
-            </div>
-            <div className="min-w-0">
-              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>{profile.name} 선생님</p>
-              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>{currentClass.name}</p>
-            </div>
-          </div>
-
-          <p className="text-xs mb-1.5 font-semibold" style={{ color: 'rgba(255,255,255,0.40)' }}>학생 초대 코드</p>
-          <div className="flex items-center justify-between p-3 rounded-2xl" style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.10)' }}>
-            <span className="text-base font-extrabold tracking-widest" style={{ color: 'rgba(255,255,255,0.90)' }}>
-              {currentClass.invite_code}
-            </span>
-            <button
-              onClick={copyInviteCode}
-              className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition-all"
-              style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.12)' }}
-            >
-              {copied ? <Check size={13} weight="bold" style={{ color: '#4CAF50' }} /> : <Copy size={13} />}
-              {copied ? '복사됨' : '복사'}
-            </button>
-          </div>
-        </div>
-
-        {/* 네비게이션 */}
-        <div className="flex-1 px-3 py-4 space-y-1">
-          <Link href="/teacher"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]"
-            style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <BookOpen size={18} weight="regular" />
-            <span className="font-semibold text-sm">단원 관리</span>
-          </Link>
-
-          {/* 학생 목록 — active */}
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-full"
-            style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
-            <Users size={18} weight="fill" />
-            <span className="font-bold text-sm">학생 목록</span>
-            {students.length > 0 && (
-              <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(232,197,71,0.25)', color: '#E8C547' }}>
-                {students.length}
-              </span>
-            )}
-          </div>
-
-          <Link href="/teacher/quests/new"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]"
-            style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <Trophy size={18} weight="regular" />
-            <span className="font-semibold text-sm">퀘스트</span>
-          </Link>
-
-          <Link href="/teacher/summary"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]"
-            style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <ChartBar size={18} weight="regular" />
-            <span className="font-semibold text-sm">반 요약</span>
-          </Link>
-        </div>
-      </nav>
+      <TeacherSidebar activeTab="students" teacherName={profile.name} className={currentClass.name} inviteCode={currentClass.invite_code} />
 
       {/* ── Main Content ── */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -141,7 +58,7 @@ export default function StudentsClient({ profile, currentClass, students, report
           <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>학생 목록</h1>
           <span
             className="text-xs font-bold px-2.5 py-1 rounded-full"
-            style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}
+            style={{ background: 'rgba(232,197,71,0.18)', color: '#9B7E00' }}
           >
             {students.length}명
           </span>
@@ -170,8 +87,8 @@ export default function StudentsClient({ profile, currentClass, students, report
                     className="p-5"
                     style={{
                       background: '#FFFFFF',
-                      borderRadius: '20px',
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+                      borderRadius: '16px',
+                      border: '1px solid #ECEAF6',
                     }}
                   >
                     {/* 상단: 이름 + 점수 + 리포트 링크 */}
@@ -179,7 +96,7 @@ export default function StudentsClient({ profile, currentClass, students, report
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
-                          style={{ background: 'rgba(232,197,71,0.15)', color: '#C8A020' }}
+                          style={{ background: '#F4F2FF', color: '#7C6FBF' }}
                         >
                           {student.name[0]}
                         </div>
@@ -193,7 +110,7 @@ export default function StudentsClient({ profile, currentClass, students, report
                         <Link
                           href={`/teacher/students/${student.id}`}
                           className="flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full transition-colors hover:opacity-80"
-                          style={{ background: 'rgba(90,79,160,0.08)', color: '#5A4FA0' }}
+                          style={{ background: '#F4F2FF', color: '#7C6FBF' }}
                         >
                           <ChartBar size={13} weight="bold" />
                           리포트
@@ -203,7 +120,7 @@ export default function StudentsClient({ profile, currentClass, students, report
 
                     {/* 최근 리포트 요약 */}
                     {report ? (
-                      <div className="rounded-2xl p-3" style={{ background: '#F7F7F7' }}>
+                      <div className="rounded-2xl p-3" style={{ background: '#F7F7FB' }}>
                         <p className="text-xs font-semibold mb-1" style={{ color: '#9EA0B4' }}>최근 리포트</p>
                         <p className="text-xs leading-relaxed line-clamp-2" style={{ color: '#2D2F2F' }}>
                           {report.summary}
@@ -214,7 +131,7 @@ export default function StudentsClient({ profile, currentClass, students, report
                               <span
                                 key={i}
                                 className="text-xs px-2 py-0.5 rounded-full font-medium"
-                                style={{ background: 'rgba(255,150,0,0.12)', color: '#FF9600' }}
+                                style={{ background: 'rgba(255,150,0,0.12)', color: '#CC7000' }}
                               >
                                 {wp}
                               </span>
@@ -223,7 +140,7 @@ export default function StudentsClient({ profile, currentClass, students, report
                         )}
                       </div>
                     ) : (
-                      <div className="rounded-2xl p-3" style={{ background: '#F7F7F7' }}>
+                      <div className="rounded-2xl p-3" style={{ background: '#F7F7FB' }}>
                         <p className="text-xs" style={{ color: '#C0C0D0' }}>아직 세션 기록이 없어요</p>
                       </div>
                     )}

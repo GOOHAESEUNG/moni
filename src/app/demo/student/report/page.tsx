@@ -1,6 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, Lightbulb, House, Trophy, User } from '@phosphor-icons/react/dist/ssr'
+import { motion } from 'framer-motion'
+import { ArrowLeft, CheckCircle, Lightbulb, Star } from '@phosphor-icons/react'
+import DemoStudentSidebar from '@/components/DemoStudentSidebar'
 import DemoReportTutorial from '@/components/DemoReportTutorial'
 
 const DEMO_SCORE = 78
@@ -41,200 +45,246 @@ const DEMO_COMPETENCY = {
 }
 
 const COMPETENCY_LABELS = [
-  { key: '자기관리역량' as const, label: '자기관리', color: '#7C6FBF' },
-  { key: '대인관계역량' as const, label: '대인관계', color: '#E8C547' },
-  { key: '시민역량' as const, label: '시민', color: '#4CAF50' },
-  { key: '문제해결역량' as const, label: '문제해결', color: '#FF9600' },
+  { key: '자기관리역량' as const, label: '자기관리', color: '#7C6FBF', bg: 'rgba(124,111,191,0.12)' },
+  { key: '대인관계역량' as const, label: '대인관계', color: '#E8C547', bg: 'rgba(232,197,71,0.12)' },
+  { key: '시민역량' as const, label: '시민', color: '#4CAF50', bg: 'rgba(76,175,80,0.10)' },
+  { key: '문제해결역량' as const, label: '문제해결', color: '#FF9600', bg: 'rgba(255,150,0,0.10)' },
 ]
 
 const scoreColor = DEMO_SCORE >= 80 ? '#4CAF50' : DEMO_SCORE >= 60 ? '#C8A020' : '#FF9600'
-const scoreBg = DEMO_SCORE >= 80 ? 'rgba(76,175,80,0.10)' : DEMO_SCORE >= 60 ? 'rgba(232,197,71,0.12)' : 'rgba(255,150,0,0.10)'
 const mooniImg = DEMO_SCORE >= 80 ? 'impressed' : DEMO_SCORE >= 60 ? 'happy' : 'thinking'
+const scoreMessage = DEMO_SCORE >= 80 ? '완벽해요! 무니가 다 이해했어!' : DEMO_SCORE >= 60 ? '잘했어요! 조금만 더 설명하면 완벽!' : '괜찮아요, 같이 다시 해봐요!'
 
-const clayCard = {
-  background: 'rgba(255,255,255,0.94)',
-  borderRadius: '24px',
-  boxShadow: '0 8px 32px rgba(170,155,230,0.16), 0 2px 8px rgba(150,135,210,0.08)',
-} as const
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+}
 
 export default function DemoReportPage() {
   return (
     <div className="flex h-screen overflow-hidden font-sans"
       style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}>
 
-      {/* 좌측 네비 */}
-      <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
-        style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
-        <div className="px-5 pt-6 pb-4">
-          <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 24 }}>Moni</p>
-          <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
-            style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
-        </div>
-        <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />
-        <div className="flex-1 flex flex-col gap-1 px-3 py-4">
-          <Link href="/demo/student" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
-            <House size={20} weight="regular" />
-            <span className="font-semibold text-sm">학습</span>
-          </Link>
-          <Link href="/demo/student/leaderboard" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
-            <Trophy size={20} weight="regular" />
-            <span className="font-semibold text-sm">리더보드</span>
-          </Link>
-          <div className="flex items-center gap-3 px-4 py-3 rounded-full" style={{ color: '#B8B5D0' }}>
-            <User size={20} weight="regular" />
-            <span className="font-semibold text-sm">프로필</span>
-          </div>
-        </div>
-        <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">
-          <p className="font-extrabold text-sm" style={{ color: '#4A3E80' }}>김무니</p>
-          <p className="text-xs" style={{ color: '#A8A5C0' }}>3학년 2반</p>
-          <Link href="/demo" className="mt-3 flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>← 체험 선택</Link>
-        </div>
-      </nav>
+      <DemoStudentSidebar activeTab="home" />
 
-      {/* 메인 콘텐츠 */}
-      <main className="flex-1 overflow-y-auto pb-12">
-        {/* 모바일 헤더 */}
-        <div className="md:hidden px-4 pt-4 pb-2 flex items-center gap-3">
-          <Link href="/demo/student" className="flex items-center justify-center w-10 h-10 rounded-full"
-            style={{ background: 'rgba(255,255,255,0.85)' }}>
-            <ArrowLeft size={18} weight="bold" style={{ color: '#5A4FA0' }} />
+      <main className="flex-1 overflow-y-auto">
+        {/* 헤더 */}
+        <div className="flex items-center gap-3 px-5 md:px-8 pt-5 pb-2">
+          <Link href="/demo/student" className="flex items-center justify-center w-10 h-10 rounded-full transition-transform hover:scale-105"
+            style={{ background: 'rgba(255,255,255,0.75)', boxShadow: '0 2px 8px rgba(130,110,200,0.12)' }}>
+            <ArrowLeft size={18} weight="bold" style={{ color: '#5A4090' }} />
           </Link>
           <div className="flex-1">
+            <p className="text-xs font-semibold" style={{ color: 'rgba(90,79,160,0.50)' }}>{DEMO_UNIT_TITLE}</p>
             <h1 className="text-lg font-black" style={{ color: '#2D1F6E' }}>학습 리포트</h1>
-            <p className="text-xs" style={{ color: 'rgba(90,79,160,0.65)' }}>{DEMO_UNIT_TITLE}</p>
           </div>
           <span className="rounded-full px-3 py-1 text-xs font-bold"
             style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
         </div>
 
-        {/* 데스크탑 헤더 */}
-        <div className="hidden md:flex items-center gap-3 px-8 pt-8 pb-4">
-          <Link href="/demo/student" className="flex items-center justify-center w-10 h-10 rounded-full"
-            style={{ background: 'rgba(255,255,255,0.85)' }}>
-            <ArrowLeft size={18} weight="bold" style={{ color: '#5A4FA0' }} />
-          </Link>
-          <div>
-            <h1 className="text-xl font-black" style={{ color: '#2D1F6E' }}>학습 리포트</h1>
-            <p className="text-xs" style={{ color: 'rgba(90,79,160,0.65)' }}>{DEMO_UNIT_TITLE}</p>
-          </div>
-          <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold"
-            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
-        </div>
+        <div className="max-w-2xl mx-auto px-5 md:px-8 pb-16">
 
-        <div className="max-w-lg mx-auto px-5 space-y-4">
-          {/* 이해도 점수 카드 */}
-          <div
-            className="rounded-3xl p-6 flex items-center gap-5"
+          {/* ━━ 히어로: 점수 섹션 ━━ */}
+          <motion.div
+            {...fadeUp}
+            transition={{ duration: 0.6 }}
+            className="relative mt-4 mb-8 rounded-[28px] overflow-hidden"
             data-tutorial="score-card"
-            style={{ ...clayCard, background: scoreBg, boxShadow: 'none', border: `1.5px solid ${scoreColor}30` }}
+            style={{
+              background: 'rgba(255,255,255,0.92)',
+              boxShadow: '0 12px 48px rgba(130,110,200,0.18), 0 2px 8px rgba(150,135,210,0.10)',
+            }}
           >
-            <Image src={`/mooni/${mooniImg}.png`} alt="무니" width={110} height={74} className="shrink-0 drop-shadow-md" />
-            <div className="flex-1">
-              <p className="text-xs font-bold mb-1" style={{ color: 'rgba(90,79,160,0.65)' }}>무니 이해도 점수</p>
-              <div className="flex items-end gap-1">
-                <span className="text-5xl font-black" style={{ color: scoreColor }}>{DEMO_SCORE}</span>
-                <span className="text-lg font-bold mb-1" style={{ color: scoreColor }}>점</span>
-              </div>
-              <div className="mt-3 h-2.5 rounded-full" style={{ background: 'rgba(255,255,255,0.60)' }}>
-                <div className="h-full rounded-full" style={{ width: `${DEMO_SCORE}%`, background: scoreColor }} />
+            {/* 점수 배경 장식 */}
+            <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-40"
+              style={{ background: `radial-gradient(circle, ${scoreColor}25 0%, transparent 70%)`, transform: 'translate(30%, -30%)' }} />
+
+            <div className="relative flex items-center gap-5 p-6 md:p-8">
+              {/* 무니 캐릭터 */}
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.5, type: 'spring', stiffness: 200 }}
+                className="shrink-0"
+              >
+                <Image src={`/mooni/${mooniImg}.png`} alt="무니" width={120} height={80} className="drop-shadow-lg" />
+              </motion.div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold mb-1" style={{ color: 'rgba(90,79,160,0.55)' }}>무니 이해도</p>
+                <div className="flex items-end gap-1.5">
+                  <motion.span
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.4, type: 'spring', stiffness: 250 }}
+                    className="text-5xl md:text-6xl font-black leading-none"
+                    style={{ color: scoreColor }}
+                  >
+                    {DEMO_SCORE}
+                  </motion.span>
+                  <span className="text-lg font-bold mb-1" style={{ color: scoreColor }}>점</span>
+                </div>
+
+                {/* 프로그레스 바 */}
+                <div className="mt-3 h-3 rounded-full overflow-hidden" style={{ background: 'rgba(200,190,240,0.25)' }}>
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    className="h-full rounded-full"
+                    style={{ background: `linear-gradient(90deg, ${scoreColor}90, ${scoreColor})`, width: `${DEMO_SCORE}%`, transformOrigin: 'left' }}
+                  />
+                </div>
+
+                <p className="text-sm font-semibold mt-2.5" style={{ color: '#5A4090' }}>
+                  {scoreMessage}
+                </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* 전체 평가 */}
-          <div className="p-5" style={clayCard}>
+          {/* ━━ 전체 평가 ━━ */}
+          <motion.div {...fadeUp} transition={{ delay: 0.15, duration: 0.5 }}
+            className="mb-4 p-5 rounded-2xl"
+            style={{ background: 'rgba(255,255,255,0.88)', boxShadow: '0 4px 20px rgba(150,135,210,0.10)' }}>
             <p className="text-sm font-extrabold mb-2" style={{ color: '#2D1F6E' }}>전체 평가</p>
-            <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{DEMO_SUMMARY}</p>
-          </div>
+            <p className="text-sm leading-[1.75]" style={{ color: '#4A4A6A' }}>{DEMO_SUMMARY}</p>
+          </motion.div>
 
-          {/* 역량 분석 */}
-          <div className="p-5" data-tutorial="competency" style={{ ...clayCard, background: 'rgba(124,111,191,0.08)', boxShadow: 'none', border: '1.5px solid rgba(124,111,191,0.20)' }}>
-            <p className="text-sm font-extrabold mb-4" style={{ color: '#2D1F6E' }}>📊 핵심역량 분석</p>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-              {COMPETENCY_LABELS.map(({ key, label, color }) => (
-                <div key={key}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold" style={{ color: '#6B6B8D' }}>{label}</span>
-                    <span className="text-sm font-black" style={{ color }}>{DEMO_COMPETENCY[key]}<span className="text-xs font-normal">/5</span></span>
+          {/* ━━ 핵심역량 분석 ━━ */}
+          <motion.div {...fadeUp} transition={{ delay: 0.25, duration: 0.5 }}
+            className="mb-4 p-5 rounded-2xl"
+            data-tutorial="competency"
+            style={{ background: 'rgba(124,111,191,0.06)', border: '1px solid rgba(124,111,191,0.12)' }}>
+            <p className="text-sm font-extrabold mb-4" style={{ color: '#2D1F6E' }}>핵심역량 분석</p>
+
+            <div className="grid grid-cols-2 gap-3">
+              {COMPETENCY_LABELS.map(({ key, label, color, bg }, i) => (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.35 + i * 0.08, duration: 0.4 }}
+                  className="rounded-xl p-3"
+                  style={{ background: bg }}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-bold" style={{ color }}>{label}</span>
+                    <span className="text-base font-black" style={{ color }}>
+                      {DEMO_COMPETENCY[key]}<span className="text-xs font-normal opacity-60">/5</span>
+                    </span>
                   </div>
-                  <div className="h-2 rounded-full" style={{ background: 'rgba(200,190,240,0.30)' }}>
+                  <div className="h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.60)' }}>
                     <div className="h-full rounded-full" style={{ width: `${(DEMO_COMPETENCY[key] / 5) * 100}%`, background: color }} />
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-            <p className="text-xs mt-3 leading-relaxed italic" style={{ color: '#6B6B8D' }}>
-              &ldquo;{DEMO_COMPETENCY.comment}&rdquo;
-            </p>
+
+            {DEMO_COMPETENCY.comment && (
+              <p className="text-xs mt-4 leading-relaxed italic px-1" style={{ color: '#6B6B8D' }}>
+                &ldquo;{DEMO_COMPETENCY.comment}&rdquo;
+              </p>
+            )}
+          </motion.div>
+
+          {/* ━━ 제안 + 약점 (2컬럼) ━━ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <motion.div {...fadeUp} transition={{ delay: 0.35, duration: 0.5 }}
+              className="p-5 rounded-2xl"
+              style={{ background: 'rgba(76,175,80,0.06)', border: '1px solid rgba(76,175,80,0.12)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <CheckCircle size={18} weight="fill" style={{ color: '#4CAF50' }} />
+                <p className="text-sm font-extrabold" style={{ color: '#2D6B30' }}>다음 학습 제안</p>
+              </div>
+              <ul className="space-y-2.5">
+                {DEMO_SUGGESTIONS.map((s, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold"
+                      style={{ background: 'rgba(76,175,80,0.12)', color: '#4CAF50' }}>{i + 1}</span>
+                    <span className="text-xs leading-relaxed" style={{ color: '#4A4A6A' }}>{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            <motion.div {...fadeUp} transition={{ delay: 0.4, duration: 0.5 }}
+              className="p-5 rounded-2xl"
+              style={{ background: 'rgba(232,197,71,0.06)', border: '1px solid rgba(232,197,71,0.15)' }}>
+              <div className="flex items-center gap-2 mb-3">
+                <Lightbulb size={18} weight="fill" style={{ color: '#C8A020' }} />
+                <p className="text-sm font-extrabold" style={{ color: '#7A6200' }}>더 알아볼 부분</p>
+              </div>
+              <ul className="space-y-2.5">
+                {DEMO_WEAK_POINTS.map((p, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold"
+                      style={{ background: 'rgba(232,197,71,0.12)', color: '#C8A020' }}>{i + 1}</span>
+                    <span className="text-xs leading-relaxed" style={{ color: '#4A4A6A' }}>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
 
-          {/* 학습 제안 */}
-          <div className="p-5" style={{ ...clayCard, background: 'rgba(76,175,80,0.07)', boxShadow: 'none', border: '1.5px solid rgba(76,175,80,0.18)' }}>
-            <p className="text-sm font-extrabold mb-3" style={{ color: '#2D1F6E' }}>다음 학습 제안</p>
-            <ul className="space-y-2">
-              {DEMO_SUGGESTIONS.map((s, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <CheckCircle size={16} weight="fill" style={{ color: '#4CAF50', marginTop: 2, flexShrink: 0 }} />
-                  <span className="text-sm" style={{ color: '#4A4A6A' }}>{s}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* ━━ 대화 하이라이트 ━━ */}
+          <motion.div {...fadeUp} transition={{ delay: 0.45, duration: 0.5 }}
+            className="mb-4 rounded-2xl overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.88)', boxShadow: '0 4px 20px rgba(150,135,210,0.10)' }}>
+            <div className="px-5 pt-5 pb-3">
+              <p className="text-sm font-extrabold" style={{ color: '#2D1F6E' }}>대화 하이라이트</p>
+              <p className="text-xs mt-0.5" style={{ color: 'rgba(90,79,160,0.45)' }}>무니와의 핵심 대화 3개</p>
+            </div>
 
-          {/* 더 알아볼 부분 */}
-          <div className="p-5" style={{ ...clayCard, background: 'rgba(232,197,71,0.09)', boxShadow: 'none', border: '1.5px solid rgba(232,197,71,0.28)' }}>
-            <p className="text-sm font-extrabold mb-3" style={{ color: '#2D1F6E' }}>더 알아볼 부분</p>
-            <ul className="space-y-2">
-              {DEMO_WEAK_POINTS.map((p, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <Lightbulb size={16} weight="fill" style={{ color: '#C8A020', marginTop: 2, flexShrink: 0 }} />
-                  <span className="text-sm" style={{ color: '#4A4A6A' }}>{p}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 대화 하이라이트 */}
-          <div className="p-5" style={clayCard}>
-            <p className="text-sm font-extrabold mb-4" style={{ color: '#2D1F6E' }}>대화 하이라이트</p>
-            <div className="space-y-4">
+            <div className="px-5 pb-5 space-y-3">
               {DEMO_PAIRS.map((pair, i) => (
-                <div key={i} className="space-y-2">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 + i * 0.1, duration: 0.4 }}
+                  className="space-y-2"
+                >
+                  {/* 학생 메시지 */}
                   <div className="flex justify-end">
-                    <div className="rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]"
-                      style={{ background: 'rgba(124,111,191,0.12)' }}>
-                      <p className="text-sm" style={{ color: '#2D1F6E' }}>{pair.student}</p>
+                    <div className="max-w-[80%] rounded-2xl rounded-br-md px-4 py-2.5"
+                      style={{ background: '#E8C547' }}>
+                      <p className="text-sm font-semibold" style={{ color: '#1A1830' }}>{pair.student}</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <Image src={`/mooni/face-${pair.expression}.png`} alt="무니" width={28} height={28}
-                      className="rounded-full shrink-0 mt-0.5" style={{ background: 'rgba(232,197,71,0.15)' }} />
-                    <div className="rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]"
-                      style={{ background: 'rgba(232,197,71,0.10)' }}>
-                      <p className="text-sm" style={{ color: '#4A4A6A' }}>{pair.mooni}</p>
+                  {/* 무니 메시지 */}
+                  <div className="flex items-end gap-2">
+                    <Image src={`/mooni/${pair.expression}.png`} alt="무니" width={36} height={24}
+                      className="shrink-0 drop-shadow-sm" />
+                    <div className="max-w-[80%] rounded-2xl rounded-bl-md px-4 py-2.5"
+                      style={{ background: 'rgba(170,155,230,0.12)' }}>
+                      <p className="text-sm" style={{ color: '#3D3060' }}>{pair.mooni}</p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* 하단 버튼 */}
-          <Link
-            href="/demo/student"
-            className="flex items-center justify-center w-full rounded-2xl py-4 font-extrabold text-sm transition-opacity hover:opacity-90"
-            style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
-          >
-            홈으로 돌아가기
-          </Link>
-          <Link
-            href="/demo/teacher"
-            className="flex items-center justify-center w-full rounded-2xl py-3 text-xs font-semibold transition-opacity hover:opacity-70"
-            style={{ color: 'rgba(90,79,160,0.50)' }}
-          >
-            이 리포트가 선생님 대시보드에 어떻게 보이는지 확인하기 →
-          </Link>
+          {/* ━━ 하단 CTA ━━ */}
+          <motion.div {...fadeUp} transition={{ delay: 0.6, duration: 0.5 }}
+            className="space-y-3 mt-6">
+            <Link
+              href="/demo/student"
+              className="flex items-center justify-center gap-2 w-full rounded-2xl py-4 font-extrabold text-sm transition-all hover:translate-y-[-1px]"
+              style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
+            >
+              <Star size={16} weight="fill" />
+              홈으로 돌아가기
+            </Link>
+            <Link
+              href="/demo/teacher"
+              className="flex items-center justify-center w-full py-3 text-xs font-semibold transition-opacity hover:opacity-70"
+              style={{ color: 'rgba(90,79,160,0.45)' }}
+            >
+              선생님 대시보드에서 이 리포트 보기 →
+            </Link>
+          </motion.div>
         </div>
       </main>
 

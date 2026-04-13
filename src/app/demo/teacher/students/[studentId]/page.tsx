@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar, House } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react/dist/ssr'
 import DemoStudentDetailTutorial from '@/components/DemoStudentDetailTutorial'
 import DemoConsultation from '@/components/DemoConsultation'
+import DemoTeacherSidebar from '@/components/DemoTeacherSidebar'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -98,40 +99,7 @@ export default async function DemoStudentDetailPage({ params }: Props) {
 
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      {/* 사이드바 */}
-      <nav className="hidden md:flex flex-col w-[220px] shrink-0 overflow-y-auto" style={{ background: '#13112A' }}>
-        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-lg mb-5" style={{ color: '#E8C547', fontFamily: "'Berkshire Swash', cursive" }}>Moni</p>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(232,197,71,0.18)' }}>
-              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>이</span>
-            </div>
-            <div className="min-w-0">
-              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>이선생 선생님</p>
-              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>3학년 2반</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 px-3 py-4 space-y-1">
-          <Link href="/demo/teacher" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <BookOpen size={18} weight="regular" /><span className="font-semibold text-sm">단원 관리</span>
-          </Link>
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-full" style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
-            <Users size={18} weight="fill" /><span className="font-bold text-sm">학생 목록</span>
-          </div>
-          <Link href="/demo/teacher/quests/new" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <Trophy size={18} weight="regular" /><span className="font-semibold text-sm">퀘스트</span>
-          </Link>
-          <Link href="/demo/teacher/summary" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <ChartBar size={18} weight="regular" /><span className="font-semibold text-sm">반 요약</span>
-          </Link>
-        </div>
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          <House size={18} /><span className="text-sm font-semibold">체험 선택으로</span>
-        </Link>
-      </div>
-      </nav>
+      <DemoTeacherSidebar activeTab="students" />
 
       {/* 메인 */}
       <div className="flex-1 flex flex-col overflow-hidden">

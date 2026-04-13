@@ -2,21 +2,14 @@
 
 import Link from 'next/link'
 import {
-  BookOpen,
-  Copy,
   PencilSimple,
   Trash,
-  Trophy,
-  Users,
-  ChartBar,
   Plus,
-  House,
 } from '@phosphor-icons/react'
 import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
-import { MoonStarIcon } from '@/components/icons'
+import DemoTeacherSidebar from '@/components/DemoTeacherSidebar'
 
-const DEMO_TEACHER = { name: '이선생' }
-const DEMO_CLASS = { name: '3학년 2반', inviteCode: 'ABC123' }
+const DEMO_CLASS = { name: '3학년 2반' }
 const DEMO_UNITS = [
   { id: 'u1', title: '분수의 덧셈', gradeHint: '3~4학년', completed: 3, total: 5 },
   { id: 'u2', title: '도형의 넓이', gradeHint: '3~4학년', completed: 1, total: 5 },
@@ -97,91 +90,6 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
   )
 }
 
-function LeftNav() {
-  return (
-    <aside
-      className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
-      style={{ background: '#13112A' }}
-    >
-      <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-2">
-          
-          <span className="text-lg text-white" style={{ fontFamily: "'Berkshire Swash', cursive" }}>Moni</span>
-        </div>
-
-        <div className="mt-5 flex items-center gap-3">
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-extrabold shrink-0"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}
-          >
-            이
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-extrabold text-white truncate">{DEMO_TEACHER.name} 선생님</p>
-            <p className="mt-0.5 text-xs truncate" style={{ color: 'rgba(255,255,255,0.45)' }}>{DEMO_CLASS.name}</p>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <p className="mb-1.5 text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.45)' }}>학생 초대 코드</p>
-          <div
-            className="flex items-center justify-between rounded-2xl p-3"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
-          >
-            <span className="font-mono text-base font-extrabold tracking-widest text-white">
-              {DEMO_CLASS.inviteCode}
-            </span>
-            <button
-              type="button"
-              onClick={() => alert('체험 모드에서는 복사가 제한됩니다')}
-              className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold"
-              style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)' }}
-            >
-              <Copy size={13} />복사
-            </button>
-          </div>
-        </div>
-
-        <span
-          className="mt-4 inline-flex w-fit rounded-full px-3 py-1 text-xs font-bold"
-          style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}
-        >
-          체험 모드
-        </span>
-      </div>
-
-      <div className="flex-1 px-3 py-4 space-y-1">
-        <div
-          className="flex items-center gap-3 rounded-full px-3 py-2.5"
-          style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}
-        >
-          <BookOpen size={18} weight="fill" />
-          <span className="text-sm font-extrabold">단원 관리</span>
-        </div>
-        <Link href="/demo/teacher/students" className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <Users size={18} />
-          <span className="text-sm font-semibold">학생 목록</span>
-        </Link>
-        <Link href="/demo/teacher/quests/new" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <Trophy size={18} />
-          <span className="text-sm font-semibold">퀘스트</span>
-        </Link>
-        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <ChartBar size={18} />
-          <span className="text-sm font-semibold">반 요약</span>
-        </Link>
-      </div>
-
-      {/* 하단: 체험 선택 */}
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          <House size={18} />
-          <span className="text-sm font-semibold">체험 선택으로</span>
-        </Link>
-      </div>
-    </aside>
-  )
-}
 
 function UnitCard({ title, gradeHint, completed, total }: {
   title: string; gradeHint: string; completed: number; total: number
@@ -314,7 +222,7 @@ function RightSidebar() {
 export default function DemoTeacherPage() {
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      <LeftNav />
+      <DemoTeacherSidebar activeTab="units" />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 흰색 헤더 */}

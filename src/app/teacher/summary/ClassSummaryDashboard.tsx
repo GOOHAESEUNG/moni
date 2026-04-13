@@ -2,17 +2,16 @@
 
 import { useMemo, useState, type ReactNode } from 'react'
 import DemoTeacherSidebar from '@/components/DemoTeacherSidebar'
+import TeacherSidebar from '@/components/TeacherSidebar'
 import Link from 'next/link'
 import {
   BookOpen,
   ChartBar,
   Lightning,
-  Trophy,
   TrendUp,
   Users,
   Warning,
 } from '@phosphor-icons/react'
-import { MoonStarIcon } from '@/components/icons'
 
 export interface ClassSummaryData {
   className: string
@@ -122,89 +121,6 @@ function EmptyCard({ icon, title, body }: { icon: ReactNode; title: string; body
   )
 }
 
-function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean }) {
-  return (
-    <nav
-      aria-label="선생님 메뉴"
-      className="hidden w-[220px] shrink-0 flex-col overflow-y-auto md:flex"
-      style={{ background: '#13112A' }}
-    >
-      <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-2">
-          
-          <span className="text-lg text-white" style={{ fontFamily: "'Berkshire Swash', cursive" }}>Moni</span>
-        </div>
-        <div className="mt-5 flex items-center gap-3">
-          <div
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-extrabold"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}
-          >
-            {data.profileName.charAt(0)}
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-extrabold text-white">{data.profileName} 선생님</p>
-            <p className="truncate text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{data.className}</p>
-          </div>
-        </div>
-        {demoMode && (
-          <span
-            className="mt-4 inline-flex rounded-full px-3 py-1 text-xs font-bold"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}
-          >
-            체험 모드
-          </span>
-        )}
-      </div>
-
-      <div className="flex-1 space-y-1 px-3 py-4">
-        <Link
-          href={demoMode ? '/demo/teacher' : '/teacher'}
-          className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
-          style={{ color: 'rgba(255,255,255,0.55)' }}
-        >
-          <BookOpen size={18} />
-          <span className="text-sm font-semibold">단원 관리</span>
-        </Link>
-
-        <Link
-          href={demoMode ? '/demo/teacher/students' : '/teacher/students'}
-          className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
-          style={{ color: 'rgba(255,255,255,0.55)' }}
-        >
-          <Users size={18} />
-          <span className="text-sm font-semibold">학생 목록</span>
-        </Link>
-
-        {demoMode ? (
-          <div
-            className="flex cursor-not-allowed items-center gap-3 rounded-full px-3 py-2.5 opacity-45"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
-          >
-            <Trophy size={18} />
-            <span className="text-sm font-semibold">퀘스트</span>
-          </div>
-        ) : (
-          <Link
-            href="/teacher/quests/new"
-            className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
-            style={{ color: 'rgba(255,255,255,0.55)' }}
-          >
-            <Trophy size={18} />
-            <span className="text-sm font-semibold">퀘스트</span>
-          </Link>
-        )}
-
-        <div
-          className="flex items-center gap-3 rounded-full px-3 py-2.5"
-          style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}
-        >
-          <ChartBar size={18} weight="fill" />
-          <span className="text-sm font-bold">반 요약</span>
-        </div>
-      </div>
-    </nav>
-  )
-}
 
 export default function ClassSummaryDashboard({ data, classId, demoMode = false }: Props) {
   const [suggestion, setSuggestion] = useState<string | null>(null)
@@ -283,7 +199,10 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
 
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      {demoMode ? <DemoTeacherSidebar activeTab="summary" /> : <Sidebar data={data} demoMode={demoMode} />}
+      {demoMode
+        ? <DemoTeacherSidebar activeTab="summary" />
+        : <TeacherSidebar activeTab="summary" teacherName={data.profileName} className={data.className} inviteCode="" />
+      }
 
       <main className="flex-1 overflow-y-auto">
         <div className="border-b border-[#ECEAF6] bg-white px-5 py-5 md:px-8 md:py-6">

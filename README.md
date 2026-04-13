@@ -20,25 +20,40 @@
 ## 스크린샷
 
 ### 랜딩 페이지
+> Berkshire Swash 타이포그래피 히어로 + 학습자/교육자 양면 소개
 ![랜딩 페이지](docs/screenshots/01-landing.png)
 
-### 학생 홈 (데모)
+### 학생 홈 — 학습 퀘스트맵
+> 완료/진행/잠금 3종 노드로 학습 진도를 시각화. 무니가 말풍선으로 격려합니다.
 ![학생 홈](docs/screenshots/03-demo-student-home.png)
 
-### 무니와 대화 (채팅방)
+### 무니와 대화 — 프로테제 효과의 핵심
+> 학생이 개념을 설명하면 무니가 꼬리 질문으로 진짜 이해를 확인. 그림판으로 시각 설명도 가능합니다.
 ![채팅방](docs/screenshots/07-demo-chat.png)
 
-### 학습 리포트
+### 학습 리포트 — AI 자동 생성
+> GPT-4o가 이해도 점수(0-100) + 취약점 + 학습 제안을 생성. Gemma 4B LoRA로 4대 핵심역량까지 분석합니다.
 ![리포트](docs/screenshots/09-demo-report.png)
 
-### 선생님 대시보드
+### 리더보드 — 게이미피케이션
+> 반 친구들과 이해도 점수 경쟁. 연속 학습일 표시로 학습 습관을 유도합니다.
+![리더보드](docs/screenshots/11-demo-leaderboard.png)
+
+### 선생님 대시보드 — 단원 관리
+> NCIC 2022 교육과정 기반 단원 배정. 학생 완료율 진행바와 최근 리포트를 한눈에 확인합니다.
 ![대시보드](docs/screenshots/04-demo-teacher-dashboard.png)
 
-### 학생 상세 + 역량 분석
+### 학생 상세 — 개별 역량 추적
+> 학생별 세션 히스토리, 이해도 추이, 4대 핵심역량 점수. 학부모 상담 자료도 버튼 하나로 생성합니다.
 ![학생 상세](docs/screenshots/05-demo-teacher-student-detail.png)
 
-### 반 전체 요약
+### 반 전체 요약 — AI 수업 추천
+> 평균 이해도, 참여율, 약점 TOP, 학생별 히트맵을 집계. GPT-4o가 맞춤 수업 전략을 추천합니다.
 ![반 요약](docs/screenshots/06-demo-teacher-summary.png)
+
+### 퀘스트 관리
+> 학생에게 학습 목표를 퀘스트로 부여하고 관리합니다. 반 전체 또는 개별 학생 대상 설정 가능.
+![퀘스트](docs/screenshots/14-demo-quests.png)
 
 ## 왜 만들었나
 

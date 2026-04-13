@@ -4,6 +4,7 @@ import { createClient as createAdmin } from '@supabase/supabase-js'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowLeft, CheckCircle, Lightbulb } from '@phosphor-icons/react/dist/ssr'
+import TeacherSidebar from '@/components/TeacherSidebar'
 import type { CompetencyScores } from '@/types/database'
 
 interface Props {
@@ -28,19 +29,24 @@ export default async function TeacherReportViewPage({ params }: Props) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   )
 
-  // 교사 소유권 확인
+  // 교사 소유권 확인 + 반 정보
   const { data: ownership } = await admin
     .from('enrollments')
-    .select('class_id, classes!inner(teacher_id)')
+    .select('class_id, classes!inner(teacher_id, name, invite_code)')
     .eq('student_id', studentId)
     .eq('classes.teacher_id', user.id)
     .single()
 
   if (!ownership) redirect('/teacher')
 
-  const [{ data: report }, { data: student }] = await Promise.all([
+  const classData = Array.isArray(ownership.classes) ? ownership.classes[0] : ownership.classes
+  const classNameStr = (classData as { name: string })?.name ?? '반'
+  const inviteCode = (classData as { invite_code: string })?.invite_code ?? ''
+
+  const [{ data: report }, { data: student }, { data: teacher }] = await Promise.all([
     admin.from('reports').select('*').eq('id', reportId).eq('student_id', studentId).single(),
     admin.from('profiles').select('name').eq('id', studentId).single(),
+    admin.from('profiles').select('name').eq('id', user.id).single(),
   ])
 
   if (!report) redirect(`/teacher/students/${studentId}`)
@@ -76,188 +82,172 @@ export default async function TeacherReportViewPage({ params }: Props) {
   })()
 
   const competency = report.competency_scores as CompetencyScores | null
+  const teacherName = teacher?.name ?? '선생님'
 
   return (
-    <div
-      className="min-h-screen font-sans pb-12"
-      style={{ background: '#F2F1FA' }}
-    >
-      <div className="max-w-lg mx-auto px-5">
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
+      <TeacherSidebar activeTab="students" teacherName={teacherName} className={classNameStr} inviteCode={inviteCode} />
+
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* 헤더 */}
-        <div className="flex items-center gap-3 pt-12 pb-6">
-          <Link
-            href={`/teacher/students/${studentId}`}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-white"
-            style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}
-          >
-            <ArrowLeft size={20} weight="bold" style={{ color: '#2D2F2F' }} />
+        <div className="px-6 py-4 shrink-0 flex items-center gap-3" style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+          <Link href={`/teacher/students/${studentId}`} className="flex items-center justify-center w-10 h-10 rounded-full" style={{ background: '#F5F4FA' }}>
+            <ArrowLeft size={18} weight="bold" style={{ color: '#2D2F2F' }} />
           </Link>
           <div>
             <h1 className="text-lg font-black" style={{ color: '#2D2F2F' }}>학습 리포트</h1>
-            <p className="text-xs" style={{ color: '#9EA0B4' }}>
-              {student?.name} · {unitTitle}
-            </p>
+            <p className="text-xs" style={{ color: '#9EA0B4' }}>{student?.name} · {unitTitle}</p>
           </div>
-          <span
-            className="ml-auto rounded-full px-3 py-1 text-xs font-bold shrink-0"
-            style={{ background: 'rgba(124,111,191,0.12)', color: '#7C6FBF' }}
-          >
-            교사 뷰
-          </span>
         </div>
 
-        <div className="space-y-4">
-          {/* 이해도 점수 */}
-          <div
-            className="rounded-[20px] p-6 flex items-center gap-5"
-            style={{ background: scoreBg, border: `1.5px solid ${scoreColor}30` }}
-          >
-            <Image
-              src={score >= 80 ? '/mooni/impressed.png' : score >= 60 ? '/mooni/happy.png' : '/mooni/thinking.png'}
-              alt="무니" width={110} height={74} className="shrink-0 drop-shadow-md"
-            />
-            <div className="flex-1">
-              <p className="text-xs font-bold mb-1" style={{ color: '#9EA0B4' }}>무니 이해도 점수</p>
-              <div className="flex items-end gap-1">
-                <span className="text-5xl font-black" style={{ color: scoreColor }}>{score}</span>
-                <span className="text-lg font-bold mb-1" style={{ color: scoreColor }}>점</span>
-              </div>
-              <div className="mt-3 h-2.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
-                <div className="h-full rounded-full" style={{ width: `${score}%`, background: scoreColor }} />
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <div className="max-w-2xl mx-auto space-y-4">
+            {/* 이해도 점수 */}
+            <div
+              className="rounded-[20px] p-6 flex items-center gap-5"
+              style={{ background: scoreBg, border: `1.5px solid ${scoreColor}30` }}
+            >
+              <Image
+                src={score >= 80 ? '/mooni/impressed.png' : score >= 60 ? '/mooni/happy.png' : '/mooni/thinking.png'}
+                alt="무니" width={110} height={74} className="shrink-0 drop-shadow-md"
+              />
+              <div className="flex-1">
+                <p className="text-xs font-bold mb-1" style={{ color: '#9EA0B4' }}>무니 이해도 점수</p>
+                <div className="flex items-end gap-1">
+                  <span className="text-5xl font-black" style={{ color: scoreColor }}>{score}</span>
+                  <span className="text-lg font-bold mb-1" style={{ color: scoreColor }}>점</span>
+                </div>
+                <div className="mt-3 h-2.5 rounded-full" style={{ background: 'rgba(0,0,0,0.06)' }}>
+                  <div className="h-full rounded-full" style={{ width: `${score}%`, background: scoreColor }} />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 요약 */}
-          {report.summary && (
-            <div
-              className="rounded-[20px] p-5 bg-white"
-              style={{ border: '1px solid #ECEAF6' }}
-            >
-              <p className="text-sm font-extrabold mb-2" style={{ color: '#2D2F2F' }}>전체 평가</p>
-              <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{report.summary}</p>
-            </div>
-          )}
-
-          {/* 역량 분석 */}
-          {competency && (
-            <div
-              className="rounded-[20px] p-5"
-              style={{ background: 'rgba(124,111,191,0.08)', border: '1.5px solid rgba(124,111,191,0.20)' }}
-            >
-              <p className="text-sm font-extrabold mb-4" style={{ color: '#2D2F2F' }}>📊 핵심역량 분석 <span className="text-xs font-normal ml-1" style={{ color: '#9EA0B4' }}>Gemma 4B 분석</span></p>
-              <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-                {COMPETENCY_LABELS.map(({ key, label, color }) => (
-                  <div key={key}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold" style={{ color: '#6B6B8D' }}>{label}</span>
-                      <span className="text-sm font-black" style={{ color }}>{competency[key]}<span className="text-xs font-normal">/5</span></span>
-                    </div>
-                    <div className="h-2 rounded-full" style={{ background: 'rgba(200,190,240,0.30)' }}>
-                      <div className="h-full rounded-full" style={{ width: `${(competency[key] / 5) * 100}%`, background: color }} />
-                    </div>
-                  </div>
-                ))}
+            {/* 요약 */}
+            {report.summary && (
+              <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
+                <p className="text-sm font-extrabold mb-2" style={{ color: '#2D2F2F' }}>전체 평가</p>
+                <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{report.summary}</p>
               </div>
-              {competency.comment && (
-                <p className="text-xs mt-3 leading-relaxed italic" style={{ color: '#6B6B8D' }}>
-                  &ldquo;{competency.comment}&rdquo;
+            )}
+
+            {/* 역량 분석 */}
+            {competency && (
+              <div
+                className="rounded-[20px] p-5"
+                style={{ background: 'rgba(124,111,191,0.08)', border: '1.5px solid rgba(124,111,191,0.20)' }}
+              >
+                <p className="text-sm font-extrabold mb-4" style={{ color: '#2D2F2F' }}>
+                  📊 핵심역량 분석{' '}
+                  <span className="text-xs font-normal ml-1" style={{ color: '#9EA0B4' }}>Gemma 4B 분석</span>
                 </p>
-              )}
-            </div>
-          )}
-
-          {/* 학습 제안 */}
-          {(report.suggestions ?? []).length > 0 && (
-            <div
-              className="rounded-[20px] p-5"
-              style={{ background: 'rgba(76,175,80,0.07)', border: '1.5px solid rgba(76,175,80,0.18)' }}
-            >
-              <p className="text-sm font-extrabold mb-3" style={{ color: '#2D2F2F' }}>다음 학습 제안</p>
-              <ul className="space-y-2">
-                {(report.suggestions as string[]).map((s: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <CheckCircle size={16} weight="fill" style={{ color: '#4CAF50', marginTop: 2, flexShrink: 0 }} />
-                    <span className="text-sm" style={{ color: '#4A4A6A' }}>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* 더 알아볼 부분 */}
-          {(report.weak_points ?? []).length > 0 && (
-            <div
-              className="rounded-[20px] p-5"
-              style={{ background: 'rgba(232,197,71,0.09)', border: '1.5px solid rgba(232,197,71,0.28)' }}
-            >
-              <p className="text-sm font-extrabold mb-3" style={{ color: '#2D2F2F' }}>더 알아볼 부분</p>
-              <ul className="space-y-2">
-                {(report.weak_points as string[]).map((p: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Lightbulb size={16} weight="fill" style={{ color: '#C8A020', marginTop: 2, flexShrink: 0 }} />
-                    <span className="text-sm" style={{ color: '#4A4A6A' }}>{p}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* 대화 하이라이트 */}
-          {pairs.length > 0 && (
-            <div
-              className="rounded-[20px] p-5 bg-white"
-              style={{ border: '1px solid #ECEAF6' }}
-            >
-              <p className="text-sm font-extrabold mb-4" style={{ color: '#2D2F2F' }}>대화 하이라이트</p>
-              <div className="space-y-4">
-                {pairs.map((pair, i) => (
-                  <div key={i} className="space-y-2">
-                    <div className="flex justify-end">
-                      <div
-                        className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm font-semibold"
-                        style={{ background: '#E8C547', color: '#1A1830' }}
-                      >
-                        {pair.student}
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                  {COMPETENCY_LABELS.map(({ key, label, color }) => (
+                    <div key={key}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-semibold" style={{ color: '#6B6B8D' }}>{label}</span>
+                        <span className="text-sm font-black" style={{ color }}>
+                          {competency[key]}<span className="text-xs font-normal">/5</span>
+                        </span>
+                      </div>
+                      <div className="h-2 rounded-full" style={{ background: 'rgba(200,190,240,0.30)' }}>
+                        <div className="h-full rounded-full" style={{ width: `${(competency[key] / 5) * 100}%`, background: color }} />
                       </div>
                     </div>
-                    <div className="flex items-end gap-2">
-                      <Image src={`/mooni/${pair.expression ?? 'curious'}.png`} alt="무니" width={44} height={30} className="shrink-0" />
-                      <div
-                        className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm"
-                        style={{ background: 'rgba(170,155,230,0.15)', color: '#3D3060' }}
-                      >
-                        {pair.mooni}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                {competency.comment && (
+                  <p className="text-xs mt-3 leading-relaxed italic" style={{ color: '#6B6B8D' }}>
+                    &ldquo;{competency.comment}&rdquo;
+                  </p>
+                )}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* 자기성찰 */}
-          {session?.self_reflection && (
-            <div
-              className="rounded-[20px] p-5 bg-white"
-              style={{ border: '1px solid #ECEAF6' }}
+            {/* 학습 제안 */}
+            {(report.suggestions ?? []).length > 0 && (
+              <div
+                className="rounded-[20px] p-5"
+                style={{ background: 'rgba(76,175,80,0.07)', border: '1.5px solid rgba(76,175,80,0.18)' }}
+              >
+                <p className="text-sm font-extrabold mb-3" style={{ color: '#2D2F2F' }}>다음 학습 제안</p>
+                <ul className="space-y-2">
+                  {(report.suggestions as string[]).map((s: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <CheckCircle size={16} weight="fill" style={{ color: '#4CAF50', marginTop: 2, flexShrink: 0 }} />
+                      <span className="text-sm" style={{ color: '#4A4A6A' }}>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* 더 알아볼 부분 */}
+            {(report.weak_points ?? []).length > 0 && (
+              <div
+                className="rounded-[20px] p-5"
+                style={{ background: 'rgba(232,197,71,0.09)', border: '1.5px solid rgba(232,197,71,0.28)' }}
+              >
+                <p className="text-sm font-extrabold mb-3" style={{ color: '#2D2F2F' }}>더 알아볼 부분</p>
+                <ul className="space-y-2">
+                  {(report.weak_points as string[]).map((p: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Lightbulb size={16} weight="fill" style={{ color: '#C8A020', marginTop: 2, flexShrink: 0 }} />
+                      <span className="text-sm" style={{ color: '#4A4A6A' }}>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* 대화 하이라이트 */}
+            {pairs.length > 0 && (
+              <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
+                <p className="text-sm font-extrabold mb-4" style={{ color: '#2D2F2F' }}>대화 하이라이트</p>
+                <div className="space-y-4">
+                  {pairs.map((pair, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="flex justify-end">
+                        <div
+                          className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm font-semibold"
+                          style={{ background: '#E8C547', color: '#1A1830' }}
+                        >
+                          {pair.student}
+                        </div>
+                      </div>
+                      <div className="flex items-end gap-2">
+                        <Image src={`/mooni/${pair.expression ?? 'curious'}.png`} alt="무니" width={44} height={30} className="shrink-0" />
+                        <div
+                          className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm"
+                          style={{ background: 'rgba(170,155,230,0.15)', color: '#3D3060' }}
+                        >
+                          {pair.mooni}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 자기성찰 */}
+            {session?.self_reflection && (
+              <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
+                <p className="text-xs font-semibold mb-2" style={{ color: '#9EA0B4' }}>학생 자기성찰</p>
+                <p className="text-sm leading-relaxed italic" style={{ color: '#4A4A6A' }}>
+                  &ldquo;{session.self_reflection}&rdquo;
+                </p>
+              </div>
+            )}
+
+            <Link
+              href={`/teacher/students/${studentId}`}
+              className="flex items-center justify-center w-full rounded-2xl py-4 font-extrabold text-sm transition-opacity hover:opacity-90"
+              style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
             >
-              <p className="text-xs font-semibold mb-2" style={{ color: '#9EA0B4' }}>
-                학생 자기성찰
-              </p>
-              <p className="text-sm leading-relaxed italic" style={{ color: '#4A4A6A' }}>
-                &ldquo;{session.self_reflection}&rdquo;
-              </p>
-            </div>
-          )}
-
-          <Link
-            href={`/teacher/students/${studentId}`}
-            className="flex items-center justify-center w-full rounded-2xl py-4 font-extrabold text-sm transition-opacity hover:opacity-90"
-            style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
-          >
-            ← 학생 상세로 돌아가기
-          </Link>
+              ← 학생 상세로 돌아가기
+            </Link>
+          </div>
         </div>
       </div>
     </div>

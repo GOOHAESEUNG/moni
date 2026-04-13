@@ -22,7 +22,7 @@ export default async function NewQuestPage() {
   // 선생님 반 조회
   const { data: classes } = await supabase
     .from('classes')
-    .select('id, name')
+    .select('id, name, invite_code')
     .eq('teacher_id', user.id)
     .order('created_at', { ascending: true })
     .limit(1)
@@ -33,6 +33,14 @@ export default async function NewQuestPage() {
   // 활성 단원
   const { data: units } = await supabase
     .from('units')
+    .select('*')
+    .eq('class_id', classId)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+
+  // 기존 퀘스트
+  const { data: quests } = await supabase
+    .from('quests')
     .select('*')
     .eq('class_id', classId)
     .eq('is_active', true)
@@ -55,9 +63,10 @@ export default async function NewQuestPage() {
   return (
     <QuestFormClient
       profile={{ name: profile?.name ?? '' }}
-      currentClass={{ id: classId, name: classes[0].name ?? '' }}
+      currentClass={{ id: classId, name: classes[0].name ?? '', inviteCode: classes[0].invite_code ?? '' }}
       units={units ?? []}
       students={students}
+      existingQuests={quests ?? []}
     />
   )
 }

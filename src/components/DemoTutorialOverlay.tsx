@@ -137,46 +137,46 @@ export default function DemoTutorialOverlay({
     onComplete?.()
   }, [onComplete, storageKey])
 
-  if (!isReady || !isVisible || !activeStep || !spotlightRect || !viewportSize.width) {
-    return null
-  }
+  const shouldShow = isReady && isVisible && !!activeStep && !!spotlightRect && viewportSize.width > 0
 
-  const tooltipWidth = Math.min(TOOLTIP_MAX_WIDTH, viewportSize.width - VIEWPORT_MARGIN * 2)
-  const tooltipLeft = clamp(
-    spotlightRect.left + spotlightRect.width / 2 - tooltipWidth / 2,
+  const tooltipWidth = shouldShow ? Math.min(TOOLTIP_MAX_WIDTH, viewportSize.width - VIEWPORT_MARGIN * 2) : 0
+  const tooltipLeft = shouldShow ? clamp(
+    spotlightRect!.left + spotlightRect!.width / 2 - tooltipWidth / 2,
     VIEWPORT_MARGIN,
     viewportSize.width - tooltipWidth - VIEWPORT_MARGIN,
-  )
+  ) : 0
 
-  const canPlaceBelow = spotlightRect.top + spotlightRect.height + TOOLTIP_GAP + tooltipHeight <= viewportSize.height - VIEWPORT_MARGIN
-  const canPlaceAbove = spotlightRect.top - TOOLTIP_GAP - tooltipHeight >= VIEWPORT_MARGIN
+  const canPlaceBelow = shouldShow ? spotlightRect!.top + spotlightRect!.height + TOOLTIP_GAP + tooltipHeight <= viewportSize.height - VIEWPORT_MARGIN : true
+  const canPlaceAbove = shouldShow ? spotlightRect!.top - TOOLTIP_GAP - tooltipHeight >= VIEWPORT_MARGIN : false
 
   let placement: 'top' | 'bottom' = 'bottom'
-  if (activeStep.position === 'top') {
+  if (activeStep?.position === 'top') {
     placement = canPlaceAbove ? 'top' : 'bottom'
-  } else if (activeStep.position === 'bottom') {
+  } else if (activeStep?.position === 'bottom') {
     placement = canPlaceBelow ? 'bottom' : 'top'
   } else if (!canPlaceBelow && canPlaceAbove) {
     placement = 'top'
   }
 
-  const tooltipTop = placement === 'bottom'
+  const tooltipTop = shouldShow ? (placement === 'bottom'
     ? Math.min(
         viewportSize.height - tooltipHeight - VIEWPORT_MARGIN,
-        spotlightRect.top + spotlightRect.height + TOOLTIP_GAP,
+        spotlightRect!.top + spotlightRect!.height + TOOLTIP_GAP,
       )
-    : Math.max(VIEWPORT_MARGIN, spotlightRect.top - tooltipHeight - TOOLTIP_GAP)
+    : Math.max(VIEWPORT_MARGIN, spotlightRect!.top - tooltipHeight - TOOLTIP_GAP)) : 0
 
-  const arrowLeft = clamp(
-    spotlightRect.left + spotlightRect.width / 2 - tooltipLeft - 10,
+  const arrowLeft = shouldShow ? clamp(
+    spotlightRect!.left + spotlightRect!.width / 2 - tooltipLeft - 10,
     18,
     tooltipWidth - 28,
-  )
+  ) : 0
   const isLastStep = currentStep === steps.length - 1
 
   return (
     <AnimatePresence>
+      {shouldShow && (
       <motion.div
+        key="tutorial-overlay"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -290,6 +290,7 @@ export default function DemoTutorialOverlay({
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   )
 }

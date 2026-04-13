@@ -3,11 +3,11 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  Plus, Copy, Check, Users, BookOpen,
-  PencilSimple, Trash, Trophy, X, ChartBar,
+  Plus, PencilSimple, Trash, X, BookOpen,
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import TeacherSidebar from '@/components/TeacherSidebar'
 import type { Profile, Class, Unit, Quest, QuestCompletion } from '@/types/database'
 
 interface Student {
@@ -94,15 +94,8 @@ export default function TeacherDashboard({
   totalStudents,
 }: Props) {
   const router = useRouter()
-  const [copied, setCopied] = useState(false)
   const [confirmDeleteUnit, setConfirmDeleteUnit] = useState<Unit | null>(null)
   const [deleting, setDeleting] = useState(false)
-
-  function copyInviteCode() {
-    navigator.clipboard.writeText(currentClass.invite_code)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
 
   async function handleDeleteUnit() {
     if (!confirmDeleteUnit) return
@@ -165,117 +158,37 @@ export default function TeacherDashboard({
         </div>
       )}
 
-      {/* ── Left Nav (220px) — 다크 네이비 ── */}
-      <nav
-        className="flex flex-col w-[220px] shrink-0 overflow-y-auto"
-        style={{ background: '#13112A', borderRight: 'none' }}
-      >
-        {/* 로고 + 선생님 정보 + 초대 코드 */}
-        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-lg mb-5" style={{ color: '#E8C547', fontFamily: "'Berkshire Swash', cursive", letterSpacing: '-0.01em' }}>Moni</p>
-          <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: 'rgba(232,197,71,0.18)' }}>
-              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>
-                {profile.name.charAt(0)}
-              </span>
-            </div>
-            <div className="min-w-0">
-              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>{profile.name} 선생님</p>
-              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>{currentClass.name}</p>
-            </div>
-          </div>
-
-          {/* 초대 코드 */}
-          <p className="text-xs mb-1.5 font-semibold" style={{ color: 'rgba(255,255,255,0.38)' }}>학생 초대 코드</p>
-          <div className="flex items-center justify-between p-3 rounded-2xl" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}>
-            <span className="text-base font-extrabold tracking-widest" style={{ color: 'rgba(255,255,255,0.90)' }}>
-              {currentClass.invite_code}
-            </span>
-            <button
-              onClick={copyInviteCode}
-              className="flex items-center gap-1 rounded-full px-3 py-1.5 text-xs font-bold transition-all"
-              style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.70)', border: '1px solid rgba(255,255,255,0.14)' }}
-            >
-              {copied ? <Check size={13} weight="bold" style={{ color: '#4CAF50' }} /> : <Copy size={13} />}
-              {copied ? '복사됨' : '복사'}
-            </button>
-          </div>
-        </div>
-
-        {/* 네비게이션 */}
-        <div className="flex-1 px-3 py-4 space-y-1">
-          {/* 대시보드 (active) */}
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-full"
-            style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
-            <BookOpen size={18} weight="fill" />
-            <span className="font-extrabold text-sm">단원 관리</span>
-          </div>
-
-          <Link href="/teacher/students"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
-            style={{ color: 'rgba(255,255,255,0.55)' }}>
-            <Users size={18} weight="regular" />
-            <span className="font-semibold text-sm">학생 목록</span>
-            {totalStudents > 0 && (
-              <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)' }}>
-                {totalStudents}
-              </span>
-            )}
-          </Link>
-
-          <Link href="/teacher/quests/new"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
-            style={{ color: 'rgba(255,255,255,0.55)' }}>
-            <Trophy size={18} weight="regular" />
-            <span className="font-semibold text-sm">퀘스트</span>
-            {quests.length > 0 && (
-              <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.55)' }}>
-                {quests.length}
-              </span>
-            )}
-          </Link>
-
-          <Link href="/teacher/summary"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
-            style={{ color: 'rgba(255,255,255,0.55)' }}>
-            <ChartBar size={18} weight="regular" />
-            <span className="font-semibold text-sm">반 요약</span>
-          </Link>
-        </div>
-
-      </nav>
+      <TeacherSidebar activeTab="units" teacherName={profile.name} className={currentClass.name} inviteCode={currentClass.invite_code} />
 
       {/* ── Center (flex-1) ── */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 상단 헤더 */}
-        <div className="px-6 pt-6 pb-5 shrink-0" style={{ background: '#FFFFFF', borderBottom: '1px solid #ECEAF6' }}>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="font-extrabold text-xl" style={{ color: '#13112A' }}>단원 관리</h1>
-              <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>학생들에게 배정된 학습 단원을 관리해요</p>
-            </div>
-            <Link
-              href="/teacher/units/new"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90"
-              style={{ background: '#7C6FBF', color: '#FFFFFF' }}
-            >
-              <Plus size={15} weight="bold" />
-              단원 추가
-            </Link>
+        <div className="px-6 py-4 shrink-0 flex items-center gap-4"
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+          <div className="flex-1">
+            <h1 className="font-extrabold text-xl" style={{ color: '#2D2F2F' }}>단원 관리</h1>
+            <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{currentClass.name} · {totalStudents}명 수강 중</p>
           </div>
-
-          {/* 통계 */}
-          <div className="grid grid-cols-4 gap-3">
-            <StatCard label="등록 학생" value={`${totalStudents}명`} accent="#7C6FBF" />
-            <StatCard label="활성 단원" value={`${units.length}개`} accent="#E8C547" />
-            <StatCard label="평균 이해도" value={completedSessions.length > 0 ? `${Math.round(completedSessions.reduce((s, c) => s + (c.understanding_score ?? 0), 0) / completedSessions.length)}점` : '-'} accent="#4CAF50" />
-            <StatCard label="완료 세션" value={`${totalCompletedSessions}회`} accent="#FF9600" />
-          </div>
+          <Link
+            href="/teacher/units/new"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90"
+            style={{ background: '#7C6FBF', color: '#FFFFFF' }}
+          >
+            <Plus size={15} weight="bold" />
+            단원 추가
+          </Link>
         </div>
 
         {/* 단원 목록 */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
+          {/* 통계 */}
+          <div className="grid grid-cols-4 gap-3 mb-5">
+            <StatCard label="학생 수" value={`${totalStudents}명`} accent="#7C6FBF" />
+            <StatCard label="활성 단원" value={`${units.length}개`} accent="#E8C547" />
+            <StatCard label="평균 이해도" value={completedSessions.length > 0 ? `${Math.round(completedSessions.reduce((s, c) => s + (c.understanding_score ?? 0), 0) / completedSessions.length)}점` : '-'} accent="#4CAF50" />
+            <StatCard label="완료 세션" value={`${totalCompletedSessions}회`} accent="#FF9600" />
+          </div>
+
           {units.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-16 h-16 rounded-3xl flex items-center justify-center mb-4" style={{ background: 'rgba(232,197,71,0.12)' }}>
@@ -303,8 +216,7 @@ export default function TeacherDashboard({
                     className="p-5 flex flex-col gap-4"
                     style={{
                       background: '#FFFFFF',
-                      borderRadius: '20px',
-                      boxShadow: '0 1px 4px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.04)',
+                      borderRadius: '16px',
                       border: '1px solid #ECEAF6',
                     }}
                   >

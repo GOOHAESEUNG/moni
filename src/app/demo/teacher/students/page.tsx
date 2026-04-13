@@ -1,12 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, ChartBar, Trophy, Users, House } from '@phosphor-icons/react'
-import { MoonStarIcon } from '@/components/icons'
+import { ChartBar } from '@phosphor-icons/react'
 import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
+import DemoTeacherSidebar from '@/components/DemoTeacherSidebar'
 
-const DEMO_TEACHER = { name: '이선생' }
-const DEMO_CLASS = { name: '3학년 2반', inviteCode: 'ABC123' }
 const DEMO_STUDENTS = [
   {
     id: 's1', name: '김지민', email: 'jimin@demo.com',
@@ -46,55 +44,11 @@ function ScorePill({ score }: { score: number | null }) {
   )
 }
 
-function LeftNav() {
-  return (
-    <aside className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto" style={{ background: '#13112A' }}>
-      <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <div className="flex items-center gap-2">
-          
-          <span className="text-lg text-white" style={{ fontFamily: "'Berkshire Swash', cursive" }}>Moni</span>
-        </div>
-        <div className="mt-5 flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-extrabold shrink-0"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}>이</div>
-          <div className="min-w-0">
-            <p className="text-sm font-extrabold text-white truncate">{DEMO_TEACHER.name} 선생님</p>
-            <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.45)' }}>{DEMO_CLASS.name}</p>
-          </div>
-        </div>
-        <span className="mt-4 inline-flex w-fit rounded-full px-3 py-1 text-xs font-bold"
-          style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}>체험 모드</span>
-      </div>
-      <div className="flex-1 px-3 py-4 space-y-1">
-        <Link href="/demo/teacher" className="flex items-center gap-3 rounded-full px-3 py-2.5"
-          style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <BookOpen size={18} /><span className="text-sm font-semibold">단원 관리</span>
-        </Link>
-        <div className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
-          <Users size={18} weight="fill" /><span className="text-sm font-extrabold">학생 목록</span>
-          <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547' }}>{DEMO_STUDENTS.length}</span>
-        </div>
-        <Link href="/demo/teacher/quests/new" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <Trophy size={18} /><span className="text-sm font-semibold">퀘스트</span>
-        </Link>
-        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
-          <ChartBar size={18} /><span className="text-sm font-semibold">반 요약</span>
-        </Link>
-      </div>
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          <House size={18} /><span className="text-sm font-semibold">체험 선택으로</span>
-        </Link>
-      </div>
-    </aside>
-  )
-}
 
 export default function DemoStudentsPage() {
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      <LeftNav />
+      <DemoTeacherSidebar activeTab="students" />
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 헤더 */}
         <div className="px-6 py-4 flex items-center gap-3 shrink-0"

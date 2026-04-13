@@ -2,8 +2,9 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import Link from 'next/link'
-import { ArrowLeft, ArrowSquareOut, BookOpen, Users, Trophy, ChartBar } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, ArrowSquareOut } from '@phosphor-icons/react/dist/ssr'
 import ConsultationSection from './ConsultationSection'
+import TeacherSidebar from '@/components/TeacherSidebar'
 
 interface Props {
   params: Promise<{ studentId: string }>
@@ -119,7 +120,7 @@ export default async function StudentDetailPage({ params }: Props) {
   const classId = (ownership as { class_id: string }).class_id
   const [{ data: teacher }, { data: currentClass }, { data: student }] = await Promise.all([
     admin.from('profiles').select('name').eq('id', user.id).single(),
-    admin.from('classes').select('name').eq('id', classId).single(),
+    admin.from('classes').select('name, invite_code').eq('id', classId).single(),
     admin.from('profiles').select('name, email').eq('id', studentId).single(),
   ])
 
@@ -177,35 +178,7 @@ export default async function StudentDetailPage({ params }: Props) {
 
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      {/* 사이드바 */}
-      <nav className="hidden md:flex flex-col w-[220px] shrink-0 overflow-y-auto" style={{ background: '#13112A' }}>
-        <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-lg mb-5" style={{ color: '#E8C547', fontFamily: "'Berkshire Swash', cursive" }}>Moni</p>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(232,197,71,0.18)' }}>
-              <span className="text-sm font-extrabold" style={{ color: '#E8C547' }}>{teacherName.charAt(0)}</span>
-            </div>
-            <div className="min-w-0">
-              <p className="font-extrabold text-sm leading-tight truncate" style={{ color: 'rgba(255,255,255,0.92)' }}>{teacherName} 선생님</p>
-              <p className="text-xs truncate" style={{ color: 'rgba(255,255,255,0.40)' }}>{className}</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 px-3 py-4 space-y-1">
-          <Link href="/teacher" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <BookOpen size={18} weight="regular" /><span className="font-semibold text-sm">단원 관리</span>
-          </Link>
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-full" style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
-            <Users size={18} weight="fill" /><span className="font-bold text-sm">학생 목록</span>
-          </div>
-          <Link href="/teacher/quests/new" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <Trophy size={18} weight="regular" /><span className="font-semibold text-sm">퀘스트</span>
-          </Link>
-          <Link href="/teacher/summary" className="flex items-center gap-3 px-3 py-2.5 rounded-full transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.50)' }}>
-            <ChartBar size={18} weight="regular" /><span className="font-semibold text-sm">반 요약</span>
-          </Link>
-        </div>
-      </nav>
+      <TeacherSidebar activeTab="students" teacherName={teacherName} className={className} inviteCode={currentClass?.invite_code ?? ''} />
 
       {/* 메인 */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -225,17 +198,17 @@ export default async function StudentDetailPage({ params }: Props) {
           <div className="space-y-4 max-w-2xl mx-auto">
         <ConsultationSection studentId={studentId} studentName={student?.name ?? '학생'} />
 
-        {/* 학습 통계 */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className={clayCard} style={clayStyle}>
-            <p className="text-2xl font-extrabold" style={{ color: '#E8C547' }}>{totalSessions}</p>
-            <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>총 학습 횟수</p>
-          </div>
-          <div className={clayCard} style={clayStyle}>
-            <p className="text-2xl font-extrabold" style={{ color: '#E8C547' }}>
-              {avgScore ?? '-'}
+        {/* 요약 카드 */}
+        <div className="flex items-center gap-4 p-5 rounded-2xl bg-white" style={{ border: '1px solid #ECEAF6' }}>
+          <div className="flex-1">
+            <p className="text-xs font-semibold mb-1" style={{ color: '#9EA0B4' }}>평균 이해도</p>
+            <p className="text-3xl font-black" style={{ color: avgScore && avgScore >= 80 ? '#4CAF50' : avgScore && avgScore >= 60 ? '#E8C547' : '#FF9600' }}>
+              {avgScore ?? '-'}<span className="text-sm font-semibold ml-1" style={{ color: '#9EA0B4' }}>점</span>
             </p>
-            <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>평균 이해도</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>학습 횟수</p>
+            <p className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>{totalSessions}<span className="text-sm font-normal ml-0.5" style={{ color: '#9EA0B4' }}>회</span></p>
           </div>
         </div>
 
@@ -344,7 +317,7 @@ export default async function StudentDetailPage({ params }: Props) {
                         // 리포트 없는 세션 — compact row
                         return (
                           <div key={s.id} className="flex items-center justify-between px-5 py-3 bg-white rounded-[16px]"
-                            style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                            style={{ border: '1px solid #ECEAF6' }}>
                             <p className="text-xs" style={{ color: '#9EA0B4' }}>{dateStr}</p>
                             <ScorePill score={s.understanding_score} />
                           </div>

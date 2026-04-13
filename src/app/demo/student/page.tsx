@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { House, Trophy, User, Fire, Star, CheckCircle } from '@phosphor-icons/react'
+import { Fire, Star, CheckCircle } from '@phosphor-icons/react'
+import DemoStudentSidebar from '@/components/DemoStudentSidebar'
 import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 import { MoonWithClouds } from '@/components/icons/MoonWithClouds'
 import { CarrotIcon, MoonStarIcon } from '@/components/icons'
@@ -196,51 +197,6 @@ function PathConnector({ fromOffset, toOffset, completed }: { fromOffset: number
         )}
       </svg>
     </div>
-  )
-}
-
-// ── Left Nav ──
-function LeftNav() {
-  return (
-    <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
-      style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
-      <div className="px-5 pt-6 pb-4">
-        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 24 }}>Moni</p>
-        <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
-          style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
-      </div>
-      <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />
-
-      <div className="flex-1 flex flex-col gap-1 px-3 py-4">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-full"
-          style={{ background: 'rgba(232,197,71,0.15)', color: '#5A4090' }}>
-          <House size={20} weight="fill" style={{ color: '#E8C547' }} />
-          <span className="font-extrabold text-sm">학습</span>
-        </div>
-        <Link href="/demo/student/leaderboard" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
-          <Trophy size={20} weight="regular" />
-          <span className="font-semibold text-sm">리더보드</span>
-        </Link>
-        <Link href="/demo/student/profile" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" data-tutorial="profile-nav" style={{ color: '#B8B5D0' }}>
-          <User size={20} weight="regular" />
-          <span className="font-semibold text-sm">프로필</span>
-        </Link>
-      </div>
-
-      <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0"
-            style={{ background: 'rgba(232,197,71,0.18)', color: '#C8A020' }}>김</div>
-          <div className="min-w-0">
-            <p className="font-extrabold text-sm truncate" style={{ color: '#4A3E80' }}>{DEMO_PROFILE.name}</p>
-            <p className="text-xs truncate" style={{ color: '#A8A5C0' }}>{DEMO_CLASS}</p>
-          </div>
-        </div>
-        <Link href="/demo" className="mt-3 flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>
-          ← 체험 선택
-        </Link>
-      </div>
-    </nav>
   )
 }
 
@@ -506,10 +462,10 @@ export default function DemoStudentPage() {
         style={{ background: 'linear-gradient(to bottom, rgba(169,157,214,0.95) 0%, transparent 100%)' }}>
         <p className="font-extrabold text-sm" style={{ color: '#2D1F6E' }}>Moni</p>
         <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
-          style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
+          style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
       </div>
 
-      <LeftNav />
+      <DemoStudentSidebar activeTab="home" />
       <CenterContent />
       <RightSidebar />
       <DemoTutorialOverlay

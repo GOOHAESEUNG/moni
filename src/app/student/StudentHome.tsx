@@ -168,13 +168,22 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
         borderRight: '1px solid rgba(200,188,245,0.40)',
       }}
     >
-      <div className="px-5 pt-6 pb-4">
-        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 18 }}>
-          Moni
-        </p>
+      {/* 로고 + 프로필 (DemoStudentSidebar와 동일 구조) */}
+      <div className="px-5 pt-7 pb-5" style={{ borderBottom: '1px solid rgba(200,188,245,0.30)' }}>
+        <p className="text-lg text-center mb-4" style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive" }}>Moni</p>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0"
+            style={{ background: 'rgba(232,197,71,0.18)', color: '#C8A020' }}>
+            {profile.name.charAt(0)}
+          </div>
+          <div className="min-w-0">
+            <p className="font-extrabold text-sm leading-tight truncate" style={{ color: '#4A3E80' }}>{profile.name}</p>
+            {cls && <p className="text-xs truncate" style={{ color: '#A8A5C0' }}>{cls}</p>}
+          </div>
+        </div>
       </div>
-      <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />
 
+      {/* 네비게이션 */}
       <div className="flex-1 flex flex-col gap-1 px-3 py-4">
         <div className="flex items-center gap-3 px-4 py-3 rounded-full"
           style={{ background: 'rgba(232,197,71,0.15)', color: '#5A4090' }}>
@@ -203,11 +212,6 @@ function LeftNav({ profile, className: cls }: { profile: Profile; className: str
           <SignOut size={20} weight="regular" />
           <span className="font-semibold text-sm">로그아웃</span>
         </button>
-      </div>
-
-      <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">
-        <p className="font-extrabold text-sm" style={{ color: '#4A3E80' }}>{profile.name}</p>
-        {cls && <p className="text-xs mt-0.5" style={{ color: '#A8A5C0' }}>{cls}</p>}
       </div>
     </nav>
   )
