@@ -63,7 +63,17 @@ Moni 서비스의 `/api/report`에서 GPT-4o와 **병렬로 호출**됩니다. G
 └── FINETUNING_CONTEXT.md   # 파인튜닝 상세 기록
 ```
 
-> 모델 파일(`models/`), 학습 데이터(`output/`), 원본 데이터셋은 용량 문제로 Git에 포함되지 않습니다.
+### Git에 포함되지 않는 파일
+
+다음 파일들은 용량 문제로 Git에 포함되지 않으며, 직접 다운로드가 필요합니다.
+
+| 경로 | 내용 | 용량 | 다운로드 방법 |
+|------|------|------|-------------|
+| `models/gemma-4-e4b-it-4bit/` | 베이스 모델 가중치 (Gemma 4 E4B 4bit 양자화) | ~3GB | `huggingface-cli download mlx-community/gemma-4-e4b-it-4bit` |
+| `output/adapters/` | LoRA 파인튜닝 어댑터 가중치 | ~50MB | `train.sh`로 직접 학습하여 생성 |
+| `output/train.jsonl` | 학습용 전처리 데이터 (21,875건) | ~15MB | `preprocess.py` 실행으로 생성 |
+| `output/valid.jsonl` | 검증용 전처리 데이터 (2,431건) | ~2MB | `preprocess.py` 실행으로 생성 |
+| `142.학생 청소년 교육활동 역량 데이터/` | AI-Hub 142번 원본 데이터셋 (CSV) | ~1.5GB | [AI-Hub](https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=data&dataSetSn=142)에서 직접 다운로드 (회원가입 필요) |
 
 ## 실행 방법
 
