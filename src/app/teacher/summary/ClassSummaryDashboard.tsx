@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
+import DemoTeacherSidebar from '@/components/DemoTeacherSidebar'
 import Link from 'next/link'
 import {
   BookOpen,
@@ -282,7 +283,7 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
 
   return (
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
-      <Sidebar data={data} demoMode={demoMode} />
+      {demoMode ? <DemoTeacherSidebar activeTab="summary" /> : <Sidebar data={data} demoMode={demoMode} />}
 
       <main className="flex-1 overflow-y-auto">
         <div className="border-b border-[#ECEAF6] bg-white px-5 py-5 md:px-8 md:py-6">
