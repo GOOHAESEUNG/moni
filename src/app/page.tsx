@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import {
   Brain,
   ChartBar,
@@ -10,6 +11,27 @@ import {
   Moon,
 } from '@phosphor-icons/react'
 import type { CSSProperties } from 'react'
+
+function CountUp({ target, decimals = 0, suffix = '' }: { target: number; decimals?: number; suffix?: string }) {
+  const [value, setValue] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+
+  useEffect(() => {
+    if (!inView) return
+    const duration = 1500
+    const start = performance.now()
+    function tick(now: number) {
+      const progress = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setValue(eased * target)
+      if (progress < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }, [inView, target])
+
+  return <span ref={ref}>{decimals > 0 ? value.toFixed(decimals) : Math.round(value)}{suffix}</span>
+}
 
 const STARS = [
   { id: 0, top: '8%', left: '12%', size: 1.8, delay: 0.3, dur: 2.8 },
@@ -354,9 +376,13 @@ export default function LandingPage() {
           </h2>
 
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {FEATURES.map(({ icon: Icon, mooniImg, title, desc }) => (
-              <div
+            {FEATURES.map(({ icon: Icon, mooniImg, title, desc }, idx) => (
+              <motion.div
                 key={title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
                 className="flex flex-col gap-3 rounded-3xl bg-white p-6"
                 style={{ boxShadow: '0 8px 24px rgba(232,197,71,0.10), 0 2px 8px rgba(0,0,0,0.05)' }}
               >
@@ -373,7 +399,7 @@ export default function LandingPage() {
                 </div>
                 <p className="text-base font-bold" style={{ color: '#1A1830' }}>{title}</p>
                 <p className="text-sm leading-relaxed" style={{ color: '#6B6B8D' }}>{desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -413,14 +439,18 @@ export default function LandingPage() {
 
           <div className="mb-10 flex flex-col items-center gap-8 sm:flex-row sm:justify-center">
             <div className="flex flex-col items-center">
-              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>0.71</span>
+              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>
+                <CountUp target={0.71} decimals={2} />
+              </span>
               <span className="mt-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.60)' }}>
                 효과 크기 (Effect Size)
               </span>
             </div>
             <div className="hidden h-20 w-px sm:block" style={{ background: 'rgba(255,255,255,0.12)' }} />
             <div className="flex flex-col items-center">
-              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>314+</span>
+              <span className="text-6xl font-black leading-none" style={{ color: '#E8C547' }}>
+                <CountUp target={314} suffix="+" />
+              </span>
               <span className="mt-2 text-sm font-medium" style={{ color: 'rgba(255,255,255,0.60)' }}>
                 인용 횟수
               </span>
