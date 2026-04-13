@@ -105,250 +105,132 @@ export default function LandingPage() {
           minHeight: '100svh',
         }}
       >
-        {/* 우상단 달 글로우 */}
-        <div
-          className="pointer-events-none absolute"
-          style={{
-            top: -80,
-            right: -80,
-            width: 350,
-            height: 350,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(232,197,71,0.18) 0%, rgba(232,197,71,0.06) 50%, transparent 70%)',
-          }}
-        />
-
-        {/* 작은 별 파티클 */}
+        {/* 별 파티클 */}
         {STARS.map((s) => (
-          <div
-            key={s.id}
-            className="star-particle absolute rounded-full bg-white pointer-events-none"
-            style={{
-              top: s.top,
-              left: s.left,
-              width: s.size,
-              height: s.size,
-              '--dur': `${s.dur}s`,
-              '--delay': `${s.delay}s`,
-            } as CSSProperties}
-          />
+          <div key={s.id} className="star-particle absolute rounded-full bg-white pointer-events-none"
+            style={{ top: s.top, left: s.left, width: s.size, height: s.size, '--dur': `${s.dur}s`, '--delay': `${s.delay}s` } as CSSProperties} />
         ))}
-
-        {/* 큰 별 파티클 */}
         {BIG_STARS.map((s) => (
-          <div
-            key={`big-${s.id}`}
-            className="star-particle-slow absolute pointer-events-none"
-            style={{
-              top: s.top,
-              left: s.left,
-              '--dur': `${s.dur}s`,
-              '--delay': `${s.delay}s`,
-            } as CSSProperties}
-          >
+          <div key={`big-${s.id}`} className="star-particle-slow absolute pointer-events-none"
+            style={{ top: s.top, left: s.left, '--dur': `${s.dur}s`, '--delay': `${s.delay}s` } as CSSProperties}>
             <svg width={s.size} height={s.size} viewBox="0 0 24 24">
-              <path
-                d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
-                fill="rgba(232,197,71,0.9)"
-              />
+              <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z" fill="rgba(232,197,71,0.9)" />
             </svg>
           </div>
         ))}
 
-        {/* ── 모바일: 단일 컬럼 ── */}
-        <div className="flex flex-col items-center px-6 pt-16 pb-12 md:hidden">
-          {/* 달 + 무니 (모바일) */}
-          <div className="relative flex items-center justify-center mb-8" style={{ width: 280, height: 280 }}>
-            <svg
-              width={320}
-              height={320}
-              viewBox="0 0 380 380"
-              className="absolute"
-              style={{ filter: 'drop-shadow(0 0 50px rgba(232,197,71,0.40))' }}
-            >
-              <defs>
-                <radialGradient id="mobileMoonGrad" cx="35%" cy="30%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.25)" />
-                  <stop offset="100%" stopColor="rgba(180,140,20,0.40)" />
-                </radialGradient>
-              </defs>
-              <circle cx="190" cy="190" r="180" fill="#E8C547" />
-              <circle cx="190" cy="190" r="180" fill="url(#mobileMoonGrad)" />
-              <circle cx="120" cy="140" r="28" fill="rgba(180,140,20,0.35)" />
-              <circle cx="260" cy="110" r="18" fill="rgba(180,140,20,0.28)" />
-              <circle cx="240" cy="260" r="22" fill="rgba(180,140,20,0.30)" />
-              <circle cx="100" cy="260" r="14" fill="rgba(180,140,20,0.25)" />
-              <circle cx="310" cy="200" r="12" fill="rgba(180,140,20,0.22)" />
-              <circle cx="170" cy="320" r="8" fill="rgba(180,140,20,0.20)" />
-              <circle cx="300" cy="320" r="10" fill="rgba(180,140,20,0.20)" />
-              <circle cx="80" cy="190" r="10" fill="rgba(180,140,20,0.20)" />
-            </svg>
-            <motion.div
-              animate={{ y: [0, -14, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative z-10"
-              style={{ width: 330, height: 220 }}
-            >
-              <Image
-                src="/mooni/happy.png"
-                alt="무니 — 달에서 온 아기 토끼"
-                fill
-                className="object-contain drop-shadow-2xl"
-                priority
-              />
-            </motion.div>
-          </div>
+        {/* 달 글로우 — 우측 상단 */}
+        <div className="pointer-events-none absolute" style={{ top: '-15%', right: '-5%', width: '50vw', height: '50vw', maxWidth: 600, maxHeight: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,197,71,0.14) 0%, transparent 65%)' }} />
 
-          {/* 텍스트 (모바일) */}
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-            style={{ background: 'rgba(232,197,71,0.15)', border: '1px solid rgba(232,197,71,0.30)' }}
-          >
-            <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 Moni · 무니에게 알려줘</span>
-          </div>
-
-          <h1 className="text-4xl font-black leading-tight text-white mb-4 text-center">
-            학생이<br />
-            <span style={{ color: '#E8C547' }}>AI를 가르치며</span><br />
-            실력이 쌓여요
-          </h1>
-
-          <p
-            className="text-base leading-relaxed mb-8 text-center max-w-xs"
-            style={{ color: 'rgba(255,255,255,0.65)' }}
-          >
-            무니는 달에서 온 아기 토끼예요.<br />
-            학생이 설명할수록 무니가 배우고,<br />
-            선생님은 이해도 리포트를 받아요.
-          </p>
-
-          <div className="flex flex-col gap-3 w-full max-w-xs">
-            <Link
-              href="/signup"
-              className="flex items-center justify-center text-base font-black transition-opacity hover:opacity-90"
-              style={{
-                background: '#E8C547',
-                color: '#1A1830',
-                boxShadow: '0 4px 0 #C8A020',
-                borderRadius: 9999,
-                padding: '14px 32px',
-              }}
-            >
-              시작하기
-            </Link>
-            <Link
-              href="/demo"
-              className="flex items-center justify-center text-base font-bold text-white transition-colors hover:bg-white/10 backdrop-blur-sm"
-              style={{
-                border: '1px solid rgba(232,197,71,0.40)',
-                borderRadius: 9999,
-                padding: '14px 32px',
-              }}
-            >
-              체험해보기
-            </Link>
-          </div>
-        </div>
-
-        {/* ── 데스크탑: 2컬럼 ── */}
-        <div className="hidden md:grid md:grid-cols-2 md:min-h-screen">
-          {/* 왼쪽: 텍스트 */}
-          <div className="flex flex-col justify-center px-12 lg:px-20 py-20">
-            <div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-3 self-start"
-              style={{ background: 'rgba(232,197,71,0.15)', border: '1px solid rgba(232,197,71,0.30)' }}
-            >
-              <span style={{ color: '#E8C547', fontSize: 13, fontWeight: 800 }}>🌙 Moni · 무니에게 알려줘</span>
+        <div className="relative z-10 flex flex-col min-h-screen">
+          {/* 상단 내비 */}
+          <nav className="flex items-center justify-between px-6 md:px-12 lg:px-20 pt-8 pb-4">
+            <div className="flex items-center gap-2">
+              <Image src="/icon.svg" alt="Moni" width={32} height={32} className="rounded-lg" />
+              <span className="text-base font-black" style={{ color: '#E8C547' }}>Moni</span>
             </div>
-
-            <h1 className="text-5xl font-black leading-tight text-white mb-4 lg:text-6xl">
-              학생이<br />
-              <span style={{ color: '#E8C547' }}>AI를 가르치며</span><br />
-              실력이 쌓여요
-            </h1>
-
-            <p
-              className="text-base leading-relaxed mb-8 max-w-sm"
-              style={{ color: 'rgba(255,255,255,0.65)' }}
-            >
-              무니는 달에서 온 아기 토끼예요.<br />
-              학생이 설명할수록 무니가 배우고,<br />
-              선생님은 이해도 리포트를 받아요.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/signup"
-                className="flex items-center justify-center text-base font-black transition-opacity hover:opacity-90"
-                style={{
-                  background: '#E8C547',
-                  color: '#1A1830',
-                  boxShadow: '0 4px 0 #C8A020',
-                  borderRadius: 9999,
-                  padding: '14px 32px',
-                  fontWeight: 800,
-                }}
-              >
-                시작하기
+            <div className="flex items-center gap-3">
+              <Link href="/login" className="text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                로그인
               </Link>
-              <Link
-                href="/demo"
-                className="flex items-center justify-center text-base font-bold text-white transition-colors hover:bg-white/10 backdrop-blur-sm"
-                style={{
-                  border: '1px solid rgba(232,197,71,0.40)',
-                  borderRadius: 9999,
-                  padding: '14px 32px',
-                }}
-              >
-                체험해보기
+              <Link href="/demo" className="text-sm font-bold px-4 py-2 rounded-full transition-all hover:opacity-90"
+                style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547', border: '1px solid rgba(232,197,71,0.25)' }}>
+                체험하기
               </Link>
             </div>
-          </div>
+          </nav>
 
-          {/* 오른쪽: 달 + 무니 */}
-          <div className="relative flex items-center justify-center" style={{ minHeight: 580 }}>
-            {/* 대형 달 SVG */}
-            <svg
-              width={520}
-              height={520}
-              viewBox="0 0 380 380"
-              className="absolute"
-              style={{ filter: 'drop-shadow(0 0 80px rgba(232,197,71,0.40))' }}
-            >
-              <defs>
-                <radialGradient id="landingMoonGrad" cx="35%" cy="30%">
-                  <stop offset="0%" stopColor="rgba(255,255,255,0.25)" />
-                  <stop offset="100%" stopColor="rgba(180,140,20,0.40)" />
-                </radialGradient>
-              </defs>
-              <circle cx="190" cy="190" r="180" fill="#E8C547" />
-              <circle cx="190" cy="190" r="180" fill="url(#landingMoonGrad)" />
-              <circle cx="120" cy="140" r="28" fill="rgba(180,140,20,0.35)" />
-              <circle cx="260" cy="110" r="18" fill="rgba(180,140,20,0.28)" />
-              <circle cx="240" cy="260" r="22" fill="rgba(180,140,20,0.30)" />
-              <circle cx="100" cy="260" r="14" fill="rgba(180,140,20,0.25)" />
-              <circle cx="310" cy="200" r="12" fill="rgba(180,140,20,0.22)" />
-              <circle cx="170" cy="320" r="8" fill="rgba(180,140,20,0.20)" />
-              <circle cx="300" cy="320" r="10" fill="rgba(180,140,20,0.20)" />
-              <circle cx="80" cy="190" r="10" fill="rgba(180,140,20,0.20)" />
-            </svg>
+          {/* 메인 히어로 — 비대칭 레이아웃 */}
+          <div className="flex-1 flex flex-col md:flex-row items-center px-6 md:px-12 lg:px-20 pb-16">
 
-            {/* 메인 무니 (float) */}
+            {/* 왼쪽: 타이포그래피 */}
+            <div className="flex-1 flex flex-col justify-center py-12 md:py-0">
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-sm font-semibold mb-6 tracking-wide"
+                style={{ color: 'rgba(232,197,71,0.70)' }}
+              >
+                프로테제 효과 기반 AI 학습 앱
+              </motion.p>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="mb-6"
+              >
+                <span className="block font-black leading-none tracking-tight" style={{ fontSize: 'clamp(4rem, 10vw, 8rem)', color: '#E8C547' }}>
+                  Moni
+                </span>
+                <span className="block text-2xl md:text-3xl font-extrabold mt-3 leading-snug" style={{ color: 'rgba(255,255,255,0.90)' }}>
+                  학생이 AI를 가르치며<br />실력이 쌓여요
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-base leading-relaxed mb-10 max-w-md"
+                style={{ color: 'rgba(255,255,255,0.50)' }}
+              >
+                달에서 온 아기 토끼 무니에게 오늘 배운 개념을 설명해보세요.
+                무니가 질문하고, AI가 이해도를 분석하고, 선생님에게 리포트가 전달돼요.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="flex flex-col sm:flex-row gap-3"
+              >
+                <Link href="/signup"
+                  className="flex items-center justify-center text-base font-black transition-all hover:translate-y-[-1px]"
+                  style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020', borderRadius: 9999, padding: '14px 36px' }}>
+                  시작하기
+                </Link>
+                <Link href="/demo"
+                  className="flex items-center justify-center text-base font-bold transition-all hover:bg-white/[0.06]"
+                  style={{ color: 'rgba(255,255,255,0.75)', borderRadius: 9999, padding: '14px 36px', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  체험해보기
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* 오른쪽: 달 + 무니 */}
             <motion.div
-              animate={{ y: [0, -18, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative z-10"
-              style={{ width: 540, height: 360 }}
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative flex items-center justify-center mt-8 md:mt-0"
+              style={{ width: 'clamp(300px, 40vw, 560px)', aspectRatio: '1' }}
             >
-              <Image
-                src="/mooni/happy.png"
-                alt="무니 — 달에서 온 아기 토끼"
-                fill
-                className="object-contain drop-shadow-2xl"
-                priority
-              />
+              {/* 달 */}
+              <svg viewBox="0 0 380 380" className="absolute w-full h-full" style={{ filter: 'drop-shadow(0 0 60px rgba(232,197,71,0.30))' }}>
+                <defs>
+                  <radialGradient id="heroMoonGrad" cx="35%" cy="30%">
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.20)" />
+                    <stop offset="100%" stopColor="rgba(180,140,20,0.35)" />
+                  </radialGradient>
+                </defs>
+                <circle cx="190" cy="190" r="175" fill="#E8C547" />
+                <circle cx="190" cy="190" r="175" fill="url(#heroMoonGrad)" />
+                <circle cx="125" cy="145" r="24" fill="rgba(180,140,20,0.30)" />
+                <circle cx="255" cy="115" r="16" fill="rgba(180,140,20,0.25)" />
+                <circle cx="235" cy="255" r="20" fill="rgba(180,140,20,0.25)" />
+                <circle cx="105" cy="255" r="12" fill="rgba(180,140,20,0.20)" />
+              </svg>
+              {/* 무니 */}
+              <motion.div
+                animate={{ y: [0, -16, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative z-10 w-[85%] aspect-[3/2]"
+              >
+                <Image src="/mooni/happy.png" alt="무니 — 달에서 온 아기 토끼" fill className="object-contain drop-shadow-2xl" priority />
+              </motion.div>
             </motion.div>
-
           </div>
         </div>
       </section>
