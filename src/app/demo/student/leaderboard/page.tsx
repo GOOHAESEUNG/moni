@@ -24,7 +24,7 @@ function LeftNav() {
     <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
       style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
       <div className="px-5 pt-6 pb-4">
-        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 18 }}>Moni</p>
+        <p style={{ color: '#8575C4', fontFamily: "'Berkshire Swash', cursive", fontSize: 24 }}>Moni</p>
         <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
           style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
       </div>
@@ -47,7 +47,7 @@ function LeftNav() {
       <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">
         <p className="font-extrabold text-sm" style={{ color: '#4A3E80' }}>김무니</p>
         <p className="text-xs" style={{ color: '#A8A5C0' }}>3학년 2반</p>
-        <Link href="/demo" className="mt-2 block text-xs transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>← 체험 선택으로</Link>
+        <Link href="/demo" className="mt-3 flex items-center gap-2 text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>← 체험 선택</Link>
       </div>
     </nav>
   )
