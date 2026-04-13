@@ -271,9 +271,17 @@ export default function TeachPage() {
     setIsRecording(true)
   }, [isLoading, isRecording, sendMessage])
 
-  // TTS 재생
+  // TTS 재생 (중복 방지)
+  const ttsAudioRef = useRef<HTMLAudioElement | null>(null)
+  const ttsLoadingRef = useRef(false)
   const playTTS = useCallback(async () => {
-    if (!mooniMessage) return
+    if (!mooniMessage || ttsLoadingRef.current) return
+    // 이전 재생 중이면 멈추고 새로 시작
+    if (ttsAudioRef.current) {
+      ttsAudioRef.current.pause()
+      ttsAudioRef.current = null
+    }
+    ttsLoadingRef.current = true
     try {
       const res = await fetch('/api/tts', {
         method: 'POST',
@@ -283,9 +291,13 @@ export default function TeachPage() {
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const audio = new Audio(url)
+      ttsAudioRef.current = audio
+      audio.onended = () => { ttsAudioRef.current = null }
       audio.play()
     } catch {
       // TTS 실패 시 조용히 넘어감
+    } finally {
+      ttsLoadingRef.current = false
     }
   }, [mooniMessage])
 
