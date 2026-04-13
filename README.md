@@ -154,7 +154,7 @@ flowchart LR
 - Node.js 18+
 - npm
 - Supabase 프로젝트 (또는 로컬 Supabase)
-- OpenAI API 키 (없어도 데모 모드 동작)
+- OpenAI API 키
 
 ### 설치 및 실행
 
