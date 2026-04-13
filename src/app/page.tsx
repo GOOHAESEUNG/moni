@@ -125,9 +125,16 @@ export default function LandingPage() {
         <div className="relative z-10 flex flex-col min-h-screen">
           {/* 상단 내비 */}
           <nav className="flex items-center justify-between px-6 md:px-12 lg:px-20 pt-8 pb-4">
-            <div className="flex items-center gap-2">
-              <Image src="/icon.svg" alt="Moni" width={32} height={32} className="rounded-lg" />
-              <span className="text-base font-black" style={{ color: '#E8C547' }}>Moni</span>
+            <div className="flex items-center gap-2.5">
+              <svg width="28" height="28" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="navMoon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#FFF9E0"/><stop offset="100%" stopColor="#E8C547"/></linearGradient></defs>
+                <path d="M265,150 C230,10 300,10 290,140 Z" fill="url(#navMoon)" />
+                <path d="M310,180 C390,40 320,30 305,160 Z" fill="url(#navMoon)" />
+                <path d="M256,110 A146,146 0 1,1 256,402 A120,120 0 1,0 256,110 Z" fill="url(#navMoon)" />
+                <circle cx="345" cy="245" r="10" fill="#13112A" /><circle cx="348" cy="242" r="3" fill="white" />
+                <circle cx="380" cy="275" r="10" fill="#13112A" /><circle cx="383" cy="272" r="3" fill="white" />
+              </svg>
+              <span className="text-lg font-black tracking-tight" style={{ color: '#E8C547' }}>Moni</span>
             </div>
             <div className="flex items-center gap-3">
               <Link href="/login" className="text-sm font-semibold transition-opacity hover:opacity-70" style={{ color: 'rgba(255,255,255,0.55)' }}>
