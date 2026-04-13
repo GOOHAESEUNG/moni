@@ -1,65 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="moonGlow" cx="40%" cy="35%" r="55%">
-      <stop offset="0%" stop-color="#FFF3C4"/>
-      <stop offset="60%" stop-color="#E8C547"/>
-      <stop offset="100%" stop-color="#C8A020"/>
-    </radialGradient>
-    <radialGradient id="earGlow" cx="50%" cy="30%" r="60%">
-      <stop offset="0%" stop-color="#FFF5D6"/>
-      <stop offset="100%" stop-color="#E8C547"/>
-    </radialGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#C8A020" flood-opacity="0.35"/>
+    <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF9E0" />
+      <stop offset="100%" stop-color="#E8C547" />
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#E8C547" flood-opacity="0.6"/>
     </filter>
   </defs>
-
-  <!-- Background circle -->
-  <circle cx="256" cy="256" r="248" fill="#0D0B1E"/>
-  <circle cx="256" cy="256" r="240" fill="#13112A"/>
-
-  <!-- Stars -->
-  <circle cx="80" cy="100" r="2" fill="#E8C547" opacity="0.7"/>
-  <circle cx="420" cy="80" r="2.5" fill="#E8C547" opacity="0.5"/>
-  <circle cx="440" cy="200" r="1.8" fill="#E8C547" opacity="0.6"/>
-  <circle cx="100" cy="380" r="2" fill="#E8C547" opacity="0.4"/>
-  <circle cx="380" cy="400" r="1.5" fill="#E8C547" opacity="0.8"/>
-  <circle cx="160" cy="60" r="1.5" fill="#FFF" opacity="0.3"/>
-  <circle cx="350" cy="120" r="1.8" fill="#FFF" opacity="0.25"/>
-
-  <!-- Moon body -->
-  <circle cx="256" cy="270" r="155" fill="url(#moonGlow)" filter="url(#shadow)"/>
-
-  <!-- Moon craters -->
-  <circle cx="200" cy="230" r="22" fill="#D4B040" opacity="0.4"/>
-  <circle cx="320" cy="210" r="14" fill="#D4B040" opacity="0.35"/>
-  <circle cx="300" cy="330" r="18" fill="#D4B040" opacity="0.3"/>
-  <circle cx="180" cy="320" r="11" fill="#D4B040" opacity="0.25"/>
-
-  <!-- Left ear -->
-  <ellipse cx="195" cy="115" rx="28" ry="72" fill="url(#earGlow)" transform="rotate(-15, 195, 115)"/>
-  <ellipse cx="195" cy="115" rx="16" ry="50" fill="#FFE08A" opacity="0.6" transform="rotate(-15, 195, 115)"/>
-
-  <!-- Right ear -->
-  <ellipse cx="317" cy="115" rx="28" ry="72" fill="url(#earGlow)" transform="rotate(15, 317, 115)"/>
-  <ellipse cx="317" cy="115" rx="16" ry="50" fill="#FFE08A" opacity="0.6" transform="rotate(15, 317, 115)"/>
-
-  <!-- Eyes -->
-  <ellipse cx="222" cy="248" rx="14" ry="16" fill="#1A1830"/>
-  <circle cx="218" cy="243" r="5" fill="#FFF" opacity="0.8"/>
-  <ellipse cx="290" cy="248" rx="14" ry="16" fill="#1A1830"/>
-  <circle cx="286" cy="243" r="5" fill="#FFF" opacity="0.8"/>
-
-  <!-- Nose -->
-  <ellipse cx="256" cy="272" rx="8" ry="6" fill="#D4A030"/>
-
-  <!-- Mouth (smile) -->
-  <path d="M 240 282 Q 256 296 272 282" stroke="#C8903A" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-  <!-- Cheek blush -->
-  <ellipse cx="200" cy="275" rx="16" ry="10" fill="#FFB5A0" opacity="0.35"/>
-  <ellipse cx="312" cy="275" rx="16" ry="10" fill="#FFB5A0" opacity="0.35"/>
-
-  <!-- Crescent mark on forehead -->
-  <path d="M 248 215 Q 256 205 264 215 Q 258 210 248 215" fill="#FFF" opacity="0.7"/>
+  <circle cx="256" cy="256" r="256" fill="#13112A"/>
+  <circle cx="110" cy="140" r="4" fill="white" opacity="0.3" />
+  <circle cx="420" cy="110" r="3" fill="white" opacity="0.3" />
+  <circle cx="390" cy="410" r="5" fill="white" opacity="0.3" />
+  <g filter="url(#glow)">
+    <path d="M265,150 C230,10 300,10 290,140 Z" fill="url(#moonGrad)" />
+    <path d="M268,140 C245,35 285,35 282,130 Z" fill="#FFB5A0" opacity="0.4" />
+    <path d="M310,180 C390,40 320,30 305,160 Z" fill="url(#moonGrad)" />
+    <path d="M315,165 C365,65 325,55 312,150 Z" fill="#FFB5A0" opacity="0.4" />
+    <path d="M256,110 A146,146 0 1,1 256,402 A120,120 0 1,0 256,110 Z" fill="url(#moonGrad)" />
+  </g>
+  <circle cx="345" cy="245" r="10" fill="#13112A" />
+  <circle cx="348" cy="242" r="3" fill="white" />
+  <circle cx="380" cy="275" r="10" fill="#13112A" />
+  <circle cx="383" cy="272" r="3" fill="white" />
+  <path d="M340,310 Q365,330 390,310" stroke="#13112A" stroke-width="5" fill="none" stroke-linecap="round" />
 </svg>
