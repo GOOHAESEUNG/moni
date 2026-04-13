@@ -390,6 +390,90 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── SCREENS ── */}
+      <section className="px-6 py-20" style={{ background: '#FFFFFF' }}>
+        <div className="mx-auto max-w-4xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-4 text-center text-2xl font-black" style={{ color: '#1A1830' }}
+          >
+            학습자와 교육자, 각자의 화면
+          </motion.h2>
+          <p className="mb-12 text-center text-sm" style={{ color: '#9EA0B4' }}>
+            학생이 무니와 대화하면, 선생님 대시보드에 이해도 리포트가 자동으로 전달됩니다
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* 학생 화면 */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid #ECEAF6', boxShadow: '0 8px 24px rgba(170,155,230,0.12)' }}>
+                <Image src="/screenshots/07-demo-chat.png" alt="학생 채팅 화면" width={600} height={400} className="w-full" />
+              </div>
+              <h3 className="font-extrabold text-base mb-1" style={{ color: '#1A1830' }}>🐇 학생: 무니에게 설명하기</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#6B6B8D' }}>
+                오늘 배운 개념을 무니에게 설명해요. 음성, 텍스트, 그림으로 설명하면 무니가 꼬리 질문을 던져 진짜 이해했는지 확인해요.
+              </p>
+            </motion.div>
+
+            {/* 선생님 화면 */}
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid #ECEAF6', boxShadow: '0 8px 24px rgba(170,155,230,0.12)' }}>
+                <Image src="/screenshots/04-demo-teacher-dashboard.png" alt="선생님 대시보드" width={600} height={400} className="w-full" />
+              </div>
+              <h3 className="font-extrabold text-base mb-1" style={{ color: '#1A1830' }}>📊 선생님: 이해도 대시보드</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#6B6B8D' }}>
+                학생별 이해도 점수, 4대 핵심역량 분석, 약점 TOP 랭킹을 한눈에 확인하고 AI 수업 추천까지 받을 수 있어요.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* 리포트 + 반 요약 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid #ECEAF6', boxShadow: '0 8px 24px rgba(170,155,230,0.12)' }}>
+                <Image src="/screenshots/09-demo-report.png" alt="학습 리포트" width={600} height={400} className="w-full" />
+              </div>
+              <h3 className="font-extrabold text-base mb-1" style={{ color: '#1A1830' }}>📝 자동 생성 리포트</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#6B6B8D' }}>
+                GPT-4o가 이해도 점수, 취약점, 학습 제안을 자동 생성하고, 자체 파인튜닝 모델이 4대 핵심역량을 분석해요.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="rounded-2xl overflow-hidden mb-4" style={{ border: '1px solid #ECEAF6', boxShadow: '0 8px 24px rgba(170,155,230,0.12)' }}>
+                <Image src="/screenshots/06-demo-teacher-summary.png" alt="반 전체 요약" width={600} height={400} className="w-full" />
+              </div>
+              <h3 className="font-extrabold text-base mb-1" style={{ color: '#1A1830' }}>🏫 반 전체 요약</h3>
+              <p className="text-sm leading-relaxed" style={{ color: '#6B6B8D' }}>
+                반 평균 이해도, 역량 분석, 약점 TOP 랭킹, 학생 히트맵을 한 화면에서 파악하고 AI 수업 추천을 받을 수 있어요.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* ── RESEARCH ── */}
       <section
         className="px-6 py-20"
