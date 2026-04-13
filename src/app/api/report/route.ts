@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { notifyDiscord } from '@/lib/discord'
 import { createClient } from '@/lib/supabase/server'
 import type { CompetencyScores } from '@/types/database'
 
@@ -159,6 +160,8 @@ export async function POST(req: NextRequest) {
       console.error('[/api/report] report insert error:', reportError)
       return NextResponse.json({ error: '리포트 저장 실패' }, { status: 500 })
     }
+
+    await notifyDiscord(`📊 리포트 생성 완료: 이해도 ${understanding_score}점`)
 
     // sessions 테이블 업데이트
     const { error: sessionUpdateError } = await supabase

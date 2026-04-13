@@ -8,8 +8,7 @@
   <strong>"학생이 AI를 가르치며 배운다"</strong> — 프로테제 효과(Protege Effect) 기반 AI 학습 앱
 </p>
 
-<!-- 배포 후 URL 추가 -->
-<!-- 🔗 **데모**: [https://moni-app.vercel.app/demo](https://moni-app.vercel.app/demo) -->
+🔗 **데모**: [https://moni.haeseung.site/demo](https://moni.haeseung.site/demo)
 
 ---
 

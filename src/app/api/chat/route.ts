@@ -51,13 +51,21 @@ export async function POST(req: NextRequest) {
         ]
       : message
 
-    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+    const systemMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
+    ]
+
+    const userAssistantMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       ...history.map((m) => ({
         role: m.role as 'user' | 'assistant',
         content: m.content,
       })),
       { role: 'user', content: userContent },
+    ]
+
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      ...systemMessages,
+      ...userAssistantMessages.slice(-10),
     ]
 
     const completion = await openai.chat.completions.create({
