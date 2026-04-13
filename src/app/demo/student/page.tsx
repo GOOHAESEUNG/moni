@@ -217,11 +217,10 @@ function LeftNav() {
           <House size={20} weight="fill" style={{ color: '#E8C547' }} />
           <span className="font-extrabold text-sm">학습</span>
         </div>
-        <div className="flex items-center gap-3 px-4 py-3 rounded-full cursor-not-allowed" style={{ color: '#B8B5D0' }}>
+        <Link href="/demo/student/leaderboard" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
           <Trophy size={20} weight="regular" />
           <span className="font-semibold text-sm">리더보드</span>
-          <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#F4F2FF', color: '#C0B8E0' }}>준비중</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3 px-4 py-3 rounded-full" data-tutorial="profile-nav" style={{ color: '#B8B5D0' }}>
           <User size={20} weight="regular" />
           <span className="font-semibold text-sm">프로필</span>
