@@ -1,27 +1,13 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFF9E0" />
-      <stop offset="100%" stop-color="#E8C547" />
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#13112A"/>
+      <stop offset="100%" stop-color="#1A1835"/>
     </linearGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#E8C547" flood-opacity="0.6"/>
-    </filter>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&amp;display=swap');
+    </style>
   </defs>
-  <circle cx="256" cy="256" r="256" fill="#13112A"/>
-  <circle cx="110" cy="140" r="4" fill="white" opacity="0.3" />
-  <circle cx="420" cy="110" r="3" fill="white" opacity="0.3" />
-  <circle cx="390" cy="410" r="5" fill="white" opacity="0.3" />
-  <g filter="url(#glow)">
-    <path d="M265,150 C230,10 300,10 290,140 Z" fill="url(#moonGrad)" />
-    <path d="M268,140 C245,35 285,35 282,130 Z" fill="#FFB5A0" opacity="0.4" />
-    <path d="M310,180 C390,40 320,30 305,160 Z" fill="url(#moonGrad)" />
-    <path d="M315,165 C365,65 325,55 312,150 Z" fill="#FFB5A0" opacity="0.4" />
-    <path d="M256,110 A146,146 0 1,1 256,402 A120,120 0 1,0 256,110 Z" fill="url(#moonGrad)" />
-  </g>
-  <circle cx="345" cy="245" r="10" fill="#13112A" />
-  <circle cx="348" cy="242" r="3" fill="white" />
-  <circle cx="380" cy="275" r="10" fill="#13112A" />
-  <circle cx="383" cy="272" r="3" fill="white" />
-  <path d="M340,310 Q365,330 390,310" stroke="#13112A" stroke-width="5" fill="none" stroke-linecap="round" />
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <text x="256" y="380" text-anchor="middle" font-family="'Berkshire Swash', cursive" font-size="420" fill="#E8C547">M</text>
 </svg>
