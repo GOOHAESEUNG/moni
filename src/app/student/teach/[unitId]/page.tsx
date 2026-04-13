@@ -379,7 +379,7 @@ export default function TeachPage() {
           <header className="flex items-center gap-3 px-4 shrink-0"
             style={{ height: 56, background: 'rgba(13,11,30,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <button onClick={() => router.back()}
-              className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
+              className="flex items-center justify-center w-11 h-11 rounded-full shrink-0"
               style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.10)' }} aria-label="뒤로가기">
               <ArrowLeft size={18} weight="bold" color="white" />
             </button>

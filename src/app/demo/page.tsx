@@ -76,8 +76,11 @@ export default function DemoPage() {
         무니에게 알려줘
       </p>
       <h1 className="mb-2 text-2xl font-black text-white text-center">어떤 역할로 체험할까요?</h1>
-      <p className="mb-10 text-sm text-center" style={{ color: 'rgba(255,255,255,0.55)' }}>
+      <p className="mb-3 text-sm text-center" style={{ color: 'rgba(255,255,255,0.55)' }}>
         로그인 없이 샘플 데이터로 바로 체험할 수 있어요
+      </p>
+      <p className="mb-10 text-xs text-center px-4" style={{ color: 'rgba(232,197,71,0.60)' }}>
+        추천: 학생 체험 → 무니와 대화 → 리포트 확인 → 선생님 대시보드 순서로 체험해보세요
       </p>
 
       <div className="flex w-full max-w-xl flex-col gap-4 sm:flex-row">
