@@ -301,14 +301,20 @@ export default function DemoTeacherPage() {
     <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#F2F1FA' }}>
       <LeftNav />
 
-      <main className="flex-1 overflow-y-auto p-6">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-5 flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>단원 관리</h1>
-              <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_CLASS.name} · 5명 수강 중</p>
-            </div>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* 흰색 헤더 */}
+        <div className="px-6 py-4 shrink-0 flex items-center justify-between"
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
+          <div>
+            <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>단원 관리</h1>
+            <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_CLASS.name} · 5명 수강 중</p>
           </div>
+          <span className="rounded-full px-3 py-1 text-xs font-bold"
+            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
+        </div>
+
+        <main className="flex-1 overflow-y-auto p-6">
+        <div className="mx-auto max-w-4xl">
 
           <div
             className="mb-5 w-full rounded-2xl px-4 py-3 text-sm font-medium"
@@ -342,6 +348,7 @@ export default function DemoTeacherPage() {
           </div>
         </div>
       </main>
+      </div>
 
       <RightSidebar />
       <DemoTutorialOverlay
