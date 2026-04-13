@@ -93,7 +93,7 @@ function StatCard({ label, value, accent }: { label: string; value: string; acce
 function LeftNav() {
   return (
     <aside
-      className="flex w-[220px] shrink-0 flex-col overflow-y-auto"
+      className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
       style={{ background: '#13112A' }}
     >
       <div className="px-5 pt-8 pb-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -243,7 +243,7 @@ function RightSidebar() {
   return (
     <aside
       data-tutorial="sidebar-summary"
-      className="flex w-[300px] shrink-0 flex-col overflow-y-auto p-4"
+      className="hidden lg:flex w-[300px] shrink-0 flex-col overflow-y-auto p-4"
       style={{ background: '#FFFFFF', borderLeft: '1px solid #ECEAF6' }}
     >
       <div className="mb-4">

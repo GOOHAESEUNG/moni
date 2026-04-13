@@ -197,7 +197,7 @@ function PathConnector({ fromOffset, toOffset, completed }: { fromOffset: number
 // ── Left Nav ──
 function LeftNav() {
   return (
-    <nav className="flex w-[220px] shrink-0 flex-col overflow-y-auto"
+    <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
       style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
       <div className="px-5 pt-6 pb-4">
         <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>🌙 무니에게 알려줘</p>
@@ -351,7 +351,7 @@ function RightSidebar() {
   const lastSession = DEMO_SESSIONS[0]
 
   return (
-    <aside className="flex w-[280px] shrink-0 flex-col overflow-y-auto"
+    <aside className="hidden md:flex w-[280px] shrink-0 flex-col overflow-y-auto"
       style={{ background: '#FFFFFF', borderLeft: '1px solid rgba(200,188,245,0.40)' }}>
       <div className="px-5 pt-6 pb-4 space-y-4">
 
@@ -481,17 +481,25 @@ export default function DemoStudentPage() {
       ))}
 
       {/* 달+구름 배경 */}
-      <div className="absolute pointer-events-none"
+      <div className="hidden md:block absolute pointer-events-none"
         style={{ left: 220, right: 280, bottom: 0, height: '95%', overflow: 'hidden', zIndex: 0 }}>
         <MoonWithClouds className="w-full h-full" />
       </div>
 
       {/* 무니 + 말풍선 */}
-      <div className="absolute pointer-events-none mooni-float" data-tutorial="mooni-character" style={{ left: 220, bottom: '26%', zIndex: 2 }}>
+      <div className="hidden md:block absolute pointer-events-none mooni-float" data-tutorial="mooni-character" style={{ left: 220, bottom: '26%', zIndex: 2 }}>
         <div style={{ position: 'absolute', bottom: '100%', left: 60, marginBottom: 8 }}>
           <MooniSpeechBubble />
         </div>
         <Image src="/mooni/happy.png" width={480} height={480} alt="무니" />
+      </div>
+
+      {/* 모바일 헤더 */}
+      <div className="md:hidden absolute top-0 left-0 right-0 z-10 px-4 pt-4 pb-2 flex items-center justify-between"
+        style={{ background: 'linear-gradient(to bottom, rgba(169,157,214,0.95) 0%, transparent 100%)' }}>
+        <p className="font-extrabold text-sm" style={{ color: '#2D1F6E' }}>🌙 무니에게 알려줘</p>
+        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full"
+          style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
       </div>
 
       <LeftNav />
