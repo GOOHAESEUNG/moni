@@ -1,13 +1,44 @@
-# 무니에게 알려줘
+# 무니에게 알려줘 (Moni)
 
-> **"학생이 AI를 가르치며 배운다"** — 프로테제 효과(Protege Effect) 기반 AI 학습 앱
+<p align="center">
+  <img src="public/icon.svg" width="120" alt="무니 아이콘" />
+</p>
+
+<p align="center">
+  <strong>"학생이 AI를 가르치며 배운다"</strong> — 프로테제 효과(Protege Effect) 기반 AI 학습 앱
+</p>
 
 <!-- 배포 후 URL 추가 -->
 <!-- 🔗 **데모**: [https://moni-app.vercel.app/demo](https://moni-app.vercel.app/demo) -->
 
+---
+
 학생이 오늘 배운 개념을 AI 캐릭터 **무니**(달에서 온 아기 토끼)에게 설명합니다.
 무니는 의도적으로 모르는 척하고 꼬리 질문을 던져, 학생이 **진짜 모르는 지점**을 스스로 발견하게 합니다.
 선생님은 자동 생성된 이해도 리포트로 학생을 관리합니다.
+
+## 스크린샷
+
+### 랜딩 페이지
+![랜딩 페이지](docs/screenshots/01-landing.png)
+
+### 학생 홈 (데모)
+![학생 홈](docs/screenshots/03-demo-student-home.png)
+
+### 무니와 대화 (채팅방)
+![채팅방](docs/screenshots/07-demo-chat.png)
+
+### 학습 리포트
+![리포트](docs/screenshots/09-demo-report.png)
+
+### 선생님 대시보드
+![대시보드](docs/screenshots/04-demo-teacher-dashboard.png)
+
+### 학생 상세 + 역량 분석
+![학생 상세](docs/screenshots/05-demo-teacher-student-detail.png)
+
+### 반 전체 요약
+![반 요약](docs/screenshots/06-demo-teacher-summary.png)
 
 ## 왜 만들었나
 
@@ -38,6 +69,7 @@
 ### 데모 체험
 - 회원가입 없이 학생/선생님 체험 가능
 - 튜토리얼 오버레이 + 대본 카드로 가이드
+- OpenAI API 키 없이도 동작 (하드코딩 fallback)
 
 ## AI 아키텍처
 
@@ -90,13 +122,13 @@
 - Node.js 18+
 - npm
 - Supabase 프로젝트 (또는 로컬 Supabase)
-- OpenAI API 키
+- OpenAI API 키 (없어도 데모 모드 동작)
 
 ### 설치 및 실행
 
 ```bash
 # 1. 클론
-git clone <repo-url>
+git clone https://github.com/GOOHAESEUNG/Moni.git
 cd Moni
 
 # 2. 의존성 설치
@@ -114,6 +146,8 @@ npm run dev
 ```
 
 http://localhost:3000 에서 확인할 수 있습니다.
+
+> **데모 체험**: http://localhost:3000/demo 에서 로그인 없이 바로 체험 가능합니다.
 
 ### 파인튜닝 모델 (선택)
 
@@ -164,7 +198,12 @@ src/
 
 - **Chase et al. (2009, Stanford)** — AI를 가르친 학생이 직접 공부한 학생보다 높은 학습 성취
 - **Jin et al. (CHI 2024, KAIST·Stanford)** — LLM teachable agent 효과 크기 0.71
+- **Grossman et al. (CHI 2025)** — "Playing Dumb to Get Smart" LLM teachable agent
+- **BEA 2025** — LLM 가르치기로 중간고사 실패율 72% 감소
+- **Google LearnLM RCT (2025)** — AI 튜터 66.2% > 인간 튜터 60.7%
 - **MathSpring RCT (2025, 2,003명)** — AI 튜터 사용 그룹 유의미한 수학 성취 향상
+
+> 전체 논문 목록: [`docs/research.md`](docs/research.md) (20편+)
 
 ## AI 활용 과정
 
@@ -173,6 +212,7 @@ src/
 - **개발 로그**: [`docs/ai-log.md`](docs/ai-log.md) — 날짜별 AI 도구 활용 기록
 - **개발 워크플로우**: [`docs/workflow.md`](docs/workflow.md) — planner → coder → design-reviewer → reviewer 파이프라인
 - **학술 근거**: [`docs/research.md`](docs/research.md) — 프로테제 효과 + AI 교육 논문 20편+
+- **자율 개선 루프**: 마감 전날 밤 AI가 스스로 11라운드 품질 개선 (37/45점 달성)
 
 ## 라이선스
 
