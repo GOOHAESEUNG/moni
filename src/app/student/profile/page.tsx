@@ -115,7 +115,7 @@ export default function StudentProfilePage() {
           </div>
           {/* 프로필 — active */}
           <div className="flex items-center gap-3 px-3 py-3 rounded-xl"
-            style={{ background: 'rgba(232,197,71,0.12)', color: '#1A1830', borderLeft: '3px solid #E8C547' }}>
+            style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
             <User size={20} weight="fill" />
             <span className="font-bold text-sm">프로필</span>
           </div>

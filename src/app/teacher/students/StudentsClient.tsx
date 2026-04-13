@@ -105,7 +105,7 @@ export default function StudentsClient({ profile, currentClass, students, report
 
           {/* 학생 목록 — active */}
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl"
-            style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547', borderLeft: '3px solid #E8C547' }}>
+            style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
             <Users size={18} weight="fill" />
             <span className="font-bold text-sm">학생 목록</span>
             {students.length > 0 && (
