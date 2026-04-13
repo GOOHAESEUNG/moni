@@ -151,21 +151,21 @@ function LeftNav() {
 
       <div className="flex-1 px-3 py-4 space-y-1">
         <div
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5"
-          style={{ background: '#E8C547', color: '#13112A' }}
+          className="flex items-center gap-3 rounded-full px-3 py-2.5"
+          style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}
         >
           <BookOpen size={18} weight="fill" />
-          <span className="text-sm font-bold">단원 관리</span>
+          <span className="text-sm font-extrabold">단원 관리</span>
         </div>
-        <Link href="/demo/teacher/students" className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <Link href="/demo/teacher/students" className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <Users size={18} />
           <span className="text-sm font-semibold">학생 목록</span>
         </Link>
-        <div className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <div className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <Trophy size={18} />
           <span className="text-sm font-semibold">퀘스트</span>
         </div>
-        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <ChartBar size={18} />
           <span className="text-sm font-semibold">반 요약</span>
         </Link>

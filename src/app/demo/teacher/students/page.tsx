@@ -66,19 +66,19 @@ function LeftNav() {
           style={{ background: 'rgba(232,197,71,0.18)', color: '#E8C547' }}>체험 모드</span>
       </div>
       <div className="flex-1 px-3 py-4 space-y-1">
-        <Link href="/demo/teacher" className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+        <Link href="/demo/teacher" className="flex items-center gap-3 rounded-full px-3 py-2.5"
           style={{ color: 'rgba(255,255,255,0.55)' }}>
           <BookOpen size={18} /><span className="text-sm font-semibold">단원 관리</span>
         </Link>
-        <div className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ background: '#E8C547', color: '#13112A' }}>
-          <Users size={18} weight="fill" /><span className="text-sm font-bold">학생 목록</span>
+        <div className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
+          <Users size={18} weight="fill" /><span className="text-sm font-extrabold">학생 목록</span>
           <span className="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
-            style={{ background: 'rgba(19,17,42,0.15)', color: '#13112A' }}>{DEMO_STUDENTS.length}</span>
+            style={{ background: 'rgba(232,197,71,0.15)', color: '#E8C547' }}>{DEMO_STUDENTS.length}</span>
         </div>
-        <div className="flex items-center gap-3 rounded-xl px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <div className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <Trophy size={18} /><span className="text-sm font-semibold">퀘스트</span>
         </div>
-        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <ChartBar size={18} /><span className="text-sm font-semibold">반 요약</span>
         </Link>
       </div>

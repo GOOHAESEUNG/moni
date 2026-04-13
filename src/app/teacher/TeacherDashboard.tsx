@@ -201,14 +201,14 @@ export default function TeacherDashboard({
         {/* 네비게이션 */}
         <div className="flex-1 px-3 py-4 space-y-1">
           {/* 대시보드 (active) */}
-          <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl"
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-full"
             style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}>
             <BookOpen size={18} weight="fill" />
             <span className="font-extrabold text-sm">단원 관리</span>
           </div>
 
           <Link href="/teacher/students"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-white/[0.07]"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
             style={{ color: 'rgba(255,255,255,0.55)' }}>
             <Users size={18} weight="regular" />
             <span className="font-semibold text-sm">학생 목록</span>
@@ -220,7 +220,7 @@ export default function TeacherDashboard({
           </Link>
 
           <Link href="/teacher/quests/new"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-white/[0.07]"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
             style={{ color: 'rgba(255,255,255,0.55)' }}>
             <Trophy size={18} weight="regular" />
             <span className="font-semibold text-sm">퀘스트</span>
@@ -232,7 +232,7 @@ export default function TeacherDashboard({
           </Link>
 
           <Link href="/teacher/summary"
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:bg-white/[0.07]"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all hover:bg-white/[0.07]"
             style={{ color: 'rgba(255,255,255,0.55)' }}>
             <ChartBar size={18} weight="regular" />
             <span className="font-semibold text-sm">반 요약</span>

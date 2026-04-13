@@ -158,7 +158,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
       <div className="flex-1 space-y-1 px-3 py-4">
         <Link
           href={demoMode ? '/demo/teacher' : '/teacher'}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
+          className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
           style={{ color: 'rgba(255,255,255,0.55)' }}
         >
           <BookOpen size={18} />
@@ -167,7 +167,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
 
         <Link
           href={demoMode ? '/demo/teacher/students' : '/teacher/students'}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
+          className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
           style={{ color: 'rgba(255,255,255,0.55)' }}
         >
           <Users size={18} />
@@ -176,7 +176,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
 
         {demoMode ? (
           <div
-            className="flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 opacity-45"
+            className="flex cursor-not-allowed items-center gap-3 rounded-full px-3 py-2.5 opacity-45"
             style={{ color: 'rgba(255,255,255,0.55)' }}
           >
             <Trophy size={18} />
@@ -185,7 +185,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
         ) : (
           <Link
             href="/teacher/quests/new"
-            className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
+            className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
             style={{ color: 'rgba(255,255,255,0.55)' }}
           >
             <Trophy size={18} />
@@ -194,7 +194,7 @@ function Sidebar({ data, demoMode }: { data: ClassSummaryData; demoMode: boolean
         )}
 
         <div
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+          className="flex items-center gap-3 rounded-full px-3 py-2.5"
           style={{ background: 'rgba(232,197,71,0.14)', color: '#E8C547' }}
         >
           <ChartBar size={18} weight="fill" />
