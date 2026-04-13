@@ -49,7 +49,7 @@ const TEACHER_TUTORIAL_STEPS = [
   {
     targetSelector: '[data-tutorial="add-unit"]',
     title: '단원을 추가할 수 있어요',
-    description: '교육과정(NCIC 2022)에서 단원을 선택해 학생에게 배정해요. 체험 모드에서는 비활성화되어 있어요.',
+    description: '교육과정(NCIC 2022)에서 단원을 선택해 학생에게 배정해요. 체험 모드에서도 입력 단계까지 체험 가능해요!',
     position: 'top' as const,
   },
   {
@@ -85,9 +85,14 @@ function ScoreBadge({ score }: { score: number }) {
 
 function StatCard({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
-    <div className="px-5 py-4" style={{ ...cardStyle, borderTop: `3px solid ${accent}` }}>
-      <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>{label}</p>
-      <p className="mt-1 text-2xl font-extrabold leading-tight" style={{ color: '#2D2F2F' }}>{value}</p>
+    <div className="flex items-center gap-4 px-5 py-4 rounded-2xl" style={{ background: '#FFFFFF', border: '1px solid #ECEAF6' }}>
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accent}18` }}>
+        <div className="w-2.5 h-2.5 rounded-full" style={{ background: accent }} />
+      </div>
+      <div>
+        <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>{label}</p>
+        <p className="text-xl font-extrabold leading-tight" style={{ color: '#2D2F2F' }}>{value}</p>
+      </div>
     </div>
   )
 }
@@ -157,10 +162,10 @@ function LeftNav() {
           <Users size={18} />
           <span className="text-sm font-semibold">학생 목록</span>
         </Link>
-        <div className="flex items-center gap-3 rounded-full px-3 py-2.5" style={{ color: 'rgba(255,255,255,0.55)' }}>
+        <Link href="/demo/teacher/quests/new" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <Trophy size={18} />
           <span className="text-sm font-semibold">퀘스트</span>
-        </div>
+        </Link>
         <Link href="/demo/teacher/summary" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.55)' }}>
           <ChartBar size={18} />
           <span className="text-sm font-semibold">반 요약</span>

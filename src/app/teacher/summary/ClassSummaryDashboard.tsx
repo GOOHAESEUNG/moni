@@ -473,11 +473,11 @@ export default function ClassSummaryDashboard({ data, classId, demoMode = false 
                     type="button"
                     onClick={requestSuggestion}
                     disabled={loadingSuggestion || !hasWeakPoints}
-                    className="inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-extrabold transition-opacity disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{ background: '#E8C547', color: '#2D2F2F' }}
+                    className="inline-flex items-center gap-2 justify-center rounded-full px-5 py-2.5 text-sm font-bold transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ background: '#7C6FBF', color: '#FFFFFF' }}
                     data-tutorial="ai-suggestion"
                   >
-                    {loadingSuggestion ? '추천 생성 중...' : '반 전체 수업 방향 추천 받기'}
+                    {loadingSuggestion ? '추천 생성 중...' : 'AI 수업 추천 받기'}
                   </button>
 
                   <div className="mt-4 rounded-[18px] border px-4 py-4" style={{ borderColor: '#ECEAF6', background: '#FAF9FD' }}>

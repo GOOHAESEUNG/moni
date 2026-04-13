@@ -67,10 +67,15 @@ function ScorePill({ score }: { score: number | null }) {
 
 function StatCard({ label, value, sub, accent }: { label: string; value: string | number; sub?: string; accent?: string }) {
   return (
-    <div className="flex flex-col gap-0.5 px-5 py-4 rounded-2xl" style={{ background: '#FFFFFF', boxShadow: '0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)', borderTop: `3px solid ${accent ?? '#E8C547'}` }}>
-      <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#9EA0B4' }}>{label}</p>
-      <p className="text-2xl font-extrabold leading-tight mt-0.5" style={{ color: '#1A1830' }}>{value}</p>
-      {sub && <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{sub}</p>}
+    <div className="flex items-center gap-4 px-5 py-4 rounded-2xl" style={{ background: '#FFFFFF', border: '1px solid #ECEAF6' }}>
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accent ?? '#E8C547'}18` }}>
+        <div className="w-2.5 h-2.5 rounded-full" style={{ background: accent ?? '#E8C547' }} />
+      </div>
+      <div>
+        <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>{label}</p>
+        <p className="text-xl font-extrabold leading-tight" style={{ color: '#1A1830' }}>{value}</p>
+        {sub && <p className="text-xs" style={{ color: '#9EA0B4' }}>{sub}</p>}
+      </div>
     </div>
   )
 }
@@ -252,14 +257,11 @@ export default function TeacherDashboard({
             </div>
             <Link
               href="/teacher/units/new"
-              className="flex items-center gap-2 font-extrabold text-sm transition-all duration-150 px-5 py-2.5 rounded-full"
-              style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}
-              onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.cssText += 'transform:translateY(2px);box-shadow:0 2px 0 #C8A020;' }}
-              onMouseUp={(e) => { (e.currentTarget as HTMLAnchorElement).style.cssText += 'transform:translateY(0);box-shadow:0 4px 0 #C8A020;' }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.cssText += 'transform:translateY(0);box-shadow:0 4px 0 #C8A020;' }}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90"
+              style={{ background: '#7C6FBF', color: '#FFFFFF' }}
             >
-              <Plus size={16} weight="bold" />
-              새 단원
+              <Plus size={15} weight="bold" />
+              단원 추가
             </Link>
           </div>
 
