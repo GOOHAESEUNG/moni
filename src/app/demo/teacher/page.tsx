@@ -9,6 +9,8 @@ import {
   Trophy,
   Users,
   ChartBar,
+  Plus,
+  House,
 } from '@phosphor-icons/react'
 import DemoTutorialOverlay from '@/components/DemoTutorialOverlay'
 import { MoonStarIcon } from '@/components/icons'
@@ -170,6 +172,14 @@ function LeftNav() {
           <span className="text-sm font-semibold">반 요약</span>
         </Link>
       </div>
+
+      {/* 하단: 체험 선택 */}
+      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <House size={18} />
+          <span className="text-sm font-semibold">체험 선택으로</span>
+        </Link>
+      </div>
     </aside>
   )
 }
@@ -309,13 +319,19 @@ export default function DemoTeacherPage() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 흰색 헤더 */}
-        <div className="px-6 py-4 shrink-0 flex items-center justify-between"
+        <div className="px-6 py-4 shrink-0 flex items-center gap-4"
           style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>단원 관리</h1>
             <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{DEMO_CLASS.name} · 5명 수강 중</p>
           </div>
-          <span className="rounded-full px-3 py-1 text-xs font-bold"
+          <Link href="/demo/teacher/units/new"
+            data-tutorial="add-unit"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90"
+            style={{ background: '#7C6FBF', color: '#FFFFFF' }}>
+            <Plus size={15} weight="bold" /> 단원 추가
+          </Link>
+          <span className="rounded-full px-3 py-1 text-xs font-bold shrink-0"
             style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
         </div>
 
@@ -343,16 +359,6 @@ export default function DemoTeacherPage() {
             ))}
           </div>
 
-          <Link href="/demo/teacher/units/new"
-            data-tutorial="add-unit"
-            className="mt-6 inline-flex items-center rounded-full px-5 py-3 text-sm font-extrabold transition-opacity hover:opacity-90"
-            style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}>
-            단원 추가
-          </Link>
-
-          <div className="mt-8">
-            <Link href="/demo" className="text-sm" style={{ color: '#9EA0B4' }}>← 체험 선택으로</Link>
-          </div>
         </div>
       </main>
       </div>
