@@ -343,12 +343,12 @@ export default function DemoTeacherPage() {
             ))}
           </div>
 
-          <button type="button" disabled title="체험 모드에서는 비활성화됩니다"
+          <Link href="/demo/teacher/units/new"
             data-tutorial="add-unit"
-            className="mt-6 cursor-not-allowed rounded-full px-5 py-3 text-sm font-extrabold opacity-50"
+            className="mt-6 inline-flex items-center rounded-full px-5 py-3 text-sm font-extrabold transition-opacity hover:opacity-90"
             style={{ background: '#E8C547', color: '#1A1830', boxShadow: '0 4px 0 #C8A020' }}>
             단원 추가
-          </button>
+          </Link>
 
           <div className="mt-8">
             <Link href="/demo" className="text-sm" style={{ color: '#9EA0B4' }}>← 체험 선택으로</Link>
