@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, Lightbulb } from '@phosphor-icons/react/dist/ssr'
+import { ArrowLeft, CheckCircle, Lightbulb, House, Trophy, User } from '@phosphor-icons/react/dist/ssr'
 import DemoReportTutorial from '@/components/DemoReportTutorial'
 
 const DEMO_SCORE = 78
@@ -59,33 +59,70 @@ const clayCard = {
 
 export default function DemoReportPage() {
   return (
-    <div
-      className="min-h-screen font-sans pb-12"
-      style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}
-    >
-      <div className="max-w-lg mx-auto px-5">
-        {/* 헤더 */}
-        <div className="flex items-center gap-3 pt-12 pb-6">
-          <Link
-            href="/demo/student"
-            className="flex items-center justify-center w-10 h-10 rounded-full"
-            style={{ background: 'rgba(255,255,255,0.85)', boxShadow: '0 2px 8px rgba(150,135,210,0.18)' }}
-          >
-            <ArrowLeft size={20} weight="bold" style={{ color: '#5A4FA0' }} />
+    <div className="flex h-screen overflow-hidden font-sans"
+      style={{ background: 'linear-gradient(160deg, #A99DD6 0%, #BCB5E8 30%, #D5CFFA 65%, #EAE7FF 100%)' }}>
+
+      {/* 좌측 네비 */}
+      <nav className="hidden md:flex w-[220px] shrink-0 flex-col overflow-y-auto"
+        style={{ background: '#FFFFFF', borderRight: '1px solid rgba(200,188,245,0.40)' }}>
+        <div className="px-5 pt-6 pb-4">
+          <p className="font-extrabold text-base" style={{ color: '#8575C4' }}>🌙 무니에게 알려줘</p>
+          <span className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
+            style={{ background: 'rgba(232,197,71,0.22)', color: '#9B7E00' }}>체험 모드</span>
+        </div>
+        <div style={{ height: 1, background: 'rgba(200,188,245,0.30)' }} />
+        <div className="flex-1 flex flex-col gap-1 px-3 py-4">
+          <Link href="/demo/student" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
+            <House size={20} weight="regular" />
+            <span className="font-semibold text-sm">학습</span>
           </Link>
-          <div>
+          <Link href="/demo/student/leaderboard" className="flex items-center gap-3 px-4 py-3 rounded-full transition-colors hover:bg-purple-50/60" style={{ color: '#B8B5D0' }}>
+            <Trophy size={20} weight="regular" />
+            <span className="font-semibold text-sm">리더보드</span>
+          </Link>
+          <div className="flex items-center gap-3 px-4 py-3 rounded-full" style={{ color: '#B8B5D0' }}>
+            <User size={20} weight="regular" />
+            <span className="font-semibold text-sm">프로필</span>
+          </div>
+        </div>
+        <div style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }} className="px-5 py-4">
+          <p className="font-extrabold text-sm" style={{ color: '#4A3E80' }}>김무니</p>
+          <p className="text-xs" style={{ color: '#A8A5C0' }}>3학년 2반</p>
+          <Link href="/demo" className="mt-2 block text-xs transition-opacity hover:opacity-70" style={{ color: '#B8B5D0' }}>← 체험 선택으로</Link>
+        </div>
+      </nav>
+
+      {/* 메인 콘텐츠 */}
+      <main className="flex-1 overflow-y-auto pb-12">
+        {/* 모바일 헤더 */}
+        <div className="md:hidden px-4 pt-4 pb-2 flex items-center gap-3">
+          <Link href="/demo/student" className="flex items-center justify-center w-10 h-10 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.85)' }}>
+            <ArrowLeft size={18} weight="bold" style={{ color: '#5A4FA0' }} />
+          </Link>
+          <div className="flex-1">
             <h1 className="text-lg font-black" style={{ color: '#2D1F6E' }}>학습 리포트</h1>
             <p className="text-xs" style={{ color: 'rgba(90,79,160,0.65)' }}>{DEMO_UNIT_TITLE}</p>
           </div>
-          <span
-            className="ml-auto rounded-full px-3 py-1 text-xs font-bold shrink-0"
-            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}
-          >
-            체험 모드
-          </span>
+          <span className="rounded-full px-3 py-1 text-xs font-bold"
+            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
         </div>
 
-        <div className="space-y-4">
+        {/* 데스크탑 헤더 */}
+        <div className="hidden md:flex items-center gap-3 px-8 pt-8 pb-4">
+          <Link href="/demo/student" className="flex items-center justify-center w-10 h-10 rounded-full"
+            style={{ background: 'rgba(255,255,255,0.85)' }}>
+            <ArrowLeft size={18} weight="bold" style={{ color: '#5A4FA0' }} />
+          </Link>
+          <div>
+            <h1 className="text-xl font-black" style={{ color: '#2D1F6E' }}>학습 리포트</h1>
+            <p className="text-xs" style={{ color: 'rgba(90,79,160,0.65)' }}>{DEMO_UNIT_TITLE}</p>
+          </div>
+          <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold"
+            style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
+        </div>
+
+        <div className="max-w-lg mx-auto px-5 space-y-4">
           {/* 이해도 점수 카드 */}
           <div
             className="rounded-3xl p-6 flex items-center gap-5"
@@ -100,12 +137,12 @@ export default function DemoReportPage() {
                 <span className="text-lg font-bold mb-1" style={{ color: scoreColor }}>점</span>
               </div>
               <div className="mt-3 h-2.5 rounded-full" style={{ background: 'rgba(255,255,255,0.60)' }}>
-                <div className="h-full rounded-full transition-all" style={{ width: `${DEMO_SCORE}%`, background: scoreColor }} />
+                <div className="h-full rounded-full" style={{ width: `${DEMO_SCORE}%`, background: scoreColor }} />
               </div>
             </div>
           </div>
 
-          {/* 요약 */}
+          {/* 전체 평가 */}
           <div className="p-5" style={clayCard}>
             <p className="text-sm font-extrabold mb-2" style={{ color: '#2D1F6E' }}>전체 평가</p>
             <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{DEMO_SUMMARY}</p>
@@ -165,16 +202,17 @@ export default function DemoReportPage() {
               {DEMO_PAIRS.map((pair, i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex justify-end">
-                    <div className="max-w-[80%] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm font-semibold"
-                      style={{ background: '#E8C547', color: '#1A1830' }}>
-                      {pair.student}
+                    <div className="rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]"
+                      style={{ background: 'rgba(124,111,191,0.12)' }}>
+                      <p className="text-sm" style={{ color: '#2D1F6E' }}>{pair.student}</p>
                     </div>
                   </div>
-                  <div className="flex items-end gap-2">
-                    <Image src={`/mooni/${pair.expression}.png`} alt="무니" width={44} height={30} className="shrink-0" />
-                    <div className="max-w-[80%] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm"
-                      style={{ background: 'rgba(170,155,230,0.15)', color: '#3D3060' }}>
-                      {pair.mooni}
+                  <div className="flex items-start gap-2">
+                    <Image src={`/mooni/face-${pair.expression}.png`} alt="무니" width={28} height={28}
+                      className="rounded-full shrink-0 mt-0.5" style={{ background: 'rgba(232,197,71,0.15)' }} />
+                    <div className="rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-[80%]"
+                      style={{ background: 'rgba(232,197,71,0.10)' }}>
+                      <p className="text-sm" style={{ color: '#4A4A6A' }}>{pair.mooni}</p>
                     </div>
                   </div>
                 </div>
@@ -182,6 +220,7 @@ export default function DemoReportPage() {
             </div>
           </div>
 
+          {/* 하단 버튼 */}
           <Link
             href="/demo/student"
             className="flex items-center justify-center w-full rounded-2xl py-4 font-extrabold text-sm transition-opacity hover:opacity-90"
@@ -197,7 +236,8 @@ export default function DemoReportPage() {
             이 리포트가 선생님 대시보드에 어떻게 보이는지 확인하기 →
           </Link>
         </div>
-      </div>
+      </main>
+
       <DemoReportTutorial />
     </div>
   )
