@@ -42,7 +42,7 @@ export default function DemoConsultation({ studentName }: { studentName: string 
     <>
       <button
         onClick={handleGenerate}
-        className="w-full flex items-center justify-center gap-2 rounded-[20px] py-4 font-bold text-sm transition-opacity hover:opacity-90"
+        className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-bold transition-all hover:opacity-90 shrink-0"
         style={{ background: '#7C6FBF', color: '#FFFFFF' }}
       >
         <FileText size={18} weight="bold" />

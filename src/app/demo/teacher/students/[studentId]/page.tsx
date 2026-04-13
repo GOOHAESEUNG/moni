@@ -130,125 +130,76 @@ export default async function DemoStudentDetailPage({ params }: Props) {
 
       {/* 메인 */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* 헤더 */}
         <div className="px-6 py-4 shrink-0 flex items-center gap-3" style={{ background: '#FFFFFF', borderBottom: '1px solid #F0F0F0' }}>
           <Link href="/demo/teacher/students" className="flex items-center justify-center w-10 h-10 rounded-full" style={{ background: '#F5F4FA' }}>
             <ArrowLeft size={18} weight="bold" style={{ color: '#2D2F2F' }} />
           </Link>
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-extrabold" style={{ color: '#2D2F2F' }}>{student.name}</h1>
             <p className="text-xs" style={{ color: '#9EA0B4' }}>{student.email}</p>
           </div>
-          <span className="ml-auto rounded-full px-3 py-1 text-xs font-bold shrink-0"
+          <DemoConsultation studentName={student.name} />
+          <span className="rounded-full px-3 py-1 text-xs font-bold shrink-0"
             style={{ background: 'rgba(232,197,71,0.25)', color: '#9B7E00' }}>체험 모드</span>
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="space-y-4 max-w-2xl mx-auto">
-        {/* 통계 */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
-            <p className="text-2xl font-extrabold" style={{ color: '#E8C547' }}>{student.sessions.length}</p>
-            <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>총 학습 횟수</p>
+          <div className="space-y-5 max-w-2xl mx-auto">
+
+        {/* 요약 카드 */}
+        <div className="flex items-center gap-4 p-5 rounded-2xl bg-white" style={{ border: '1px solid #ECEAF6' }}>
+          <div className="flex-1">
+            <p className="text-xs font-semibold mb-1" style={{ color: '#9EA0B4' }}>평균 이해도</p>
+            <p className="text-3xl font-black" style={{ color: avgScore && avgScore >= 80 ? '#4CAF50' : avgScore && avgScore >= 60 ? '#E8C547' : '#FF9600' }}>
+              {avgScore ?? '-'}<span className="text-sm font-semibold ml-1" style={{ color: '#9EA0B4' }}>점</span>
+            </p>
           </div>
-          <div className="rounded-[20px] p-5 bg-white" style={{ border: '1px solid #ECEAF6' }}>
-            <p className="text-2xl font-extrabold" style={{ color: '#E8C547' }}>{avgScore ?? '-'}</p>
-            <p className="text-xs mt-1" style={{ color: '#9EA0B4' }}>평균 이해도</p>
+          <div className="text-right">
+            <p className="text-xs font-semibold" style={{ color: '#9EA0B4' }}>학습 횟수</p>
+            <p className="text-2xl font-extrabold" style={{ color: '#2D2F2F' }}>{student.sessions.length}<span className="text-sm font-normal ml-0.5" style={{ color: '#9EA0B4' }}>회</span></p>
           </div>
         </div>
 
-        {/* 상담 자료 생성 */}
-        <DemoConsultation studentName={student.name} />
-
+        {/* 리포트 리스트 (컴팩트) */}
         {student.sessions.length === 0 ? (
-          <div className="rounded-[20px] p-5 bg-white text-center" style={{ border: '1px solid #ECEAF6' }}>
+          <div className="rounded-2xl p-5 bg-white text-center" style={{ border: '1px solid #ECEAF6' }}>
             <p style={{ color: '#9EA0B4', fontSize: 14 }}>아직 학습 기록이 없어요</p>
           </div>
         ) : (
-          <section>
-            <h2 className="text-xs font-bold uppercase tracking-wider mb-3 px-1" style={{ color: '#9EA0B4' }}>
-              단원별 학습 리포트
-            </h2>
-            <div className="space-y-3">
+          <div>
+            <h2 className="text-sm font-extrabold mb-3" style={{ color: '#2D2F2F' }}>학습 기록</h2>
+            <div className="rounded-2xl overflow-hidden bg-white" style={{ border: '1px solid #ECEAF6' }} data-tutorial="report-card">
               {student.sessions.map((s, i) => (
-                <div key={i} className="rounded-[20px] overflow-hidden bg-white" style={{ border: '1px solid #ECEAF6' }} {...(i === 0 ? { 'data-tutorial': 'report-card' } : {})}>
-                  <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #F7F7F7' }}>
-                    <div>
-                      <p className="text-sm font-extrabold" style={{ color: '#2D2F2F' }}>{s.unit}</p>
-                      <p className="text-xs" style={{ color: '#9EA0B4' }}>{s.date}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ScorePill score={s.score} />
-                      <Link
-                        href={`/demo/teacher/students/${studentId}/report/${i}`}
-                        className="flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition-opacity hover:opacity-80"
-                        style={{ background: '#F4F2FF', color: '#7C6FBF' }}
-                      >
-                        <ArrowSquareOut size={12} weight="bold" />
-                        전체 보기
-                      </Link>
-                    </div>
+                <Link key={i}
+                  href={`/demo/teacher/students/${studentId}/report/${i}`}
+                  className="flex items-center gap-4 px-5 py-4 transition-all hover:bg-purple-50/20"
+                  style={{ borderBottom: i < student.sessions.length - 1 ? '1px solid #F5F4FA' : 'none' }}>
+                  {/* 점수 */}
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm shrink-0"
+                    style={{
+                      background: s.score >= 80 ? 'rgba(76,175,80,0.10)' : s.score >= 60 ? 'rgba(232,197,71,0.12)' : 'rgba(255,150,0,0.10)',
+                      color: s.score >= 80 ? '#4CAF50' : s.score >= 60 ? '#C8A020' : '#FF9600',
+                    }}>
+                    {s.score}
                   </div>
-
-                  <div className="px-5 py-4 space-y-3">
-                    <p className="text-sm leading-relaxed" style={{ color: '#4A4A6A' }}>{s.summary}</p>
-
-                    {s.competency && (
-                      <>
-                        <div style={{ borderTop: '1px solid #F0EFF8' }} />
-                        <div>
-                          <p className="text-xs font-bold mb-2" style={{ color: '#7C6FBF' }}>📊 핵심역량 분석</p>
-                          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                            {COMPETENCY_LABELS.map(({ key, label, color }) => (
-                              <div key={key}>
-                                <div className="flex items-center justify-between mb-0.5">
-                                  <span className="text-xs" style={{ color: '#9EA0B4' }}>{label}</span>
-                                  <span className="text-xs font-bold" style={{ color }}>{s.competency![key]}/5</span>
-                                </div>
-                                <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                                  <div className="h-full rounded-full" style={{ width: `${(s.competency![key] / 5) * 100}%`, background: color }} />
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          {s.competency.comment && (
-                            <p className="text-xs mt-2 leading-relaxed" style={{ color: '#6B6B8D', fontStyle: 'italic' }}>
-                              &ldquo;{s.competency.comment}&rdquo;
-                            </p>
-                          )}
-                        </div>
-                      </>
-                    )}
-
-                    {s.weakPoints.length > 0 && (
-                      <div>
-                        <p className="text-xs font-bold mb-2" style={{ color: '#FF9600' }}>💡 더 알아볼 부분</p>
-                        <ul className="space-y-1">
-                          {s.weakPoints.map((point, j) => (
-                            <li key={j} className="text-xs flex items-start gap-1.5" style={{ color: '#6B6B8D' }}>
-                              <span style={{ color: '#FF9600', flexShrink: 0 }}>•</span>{point}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {s.suggestions.length > 0 && (
-                      <div>
-                        <p className="text-xs font-bold mb-2" style={{ color: '#4CAF50' }}>✓ 다음 학습 제안</p>
-                        <ul className="space-y-1">
-                          {s.suggestions.map((sug, j) => (
-                            <li key={j} className="text-xs flex items-start gap-1.5" style={{ color: '#6B6B8D' }}>
-                              <span style={{ color: '#4CAF50', flexShrink: 0 }}>•</span>{sug}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                  {/* 단원 + 날짜 */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold truncate" style={{ color: '#2D2F2F' }}>{s.unit}</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#9EA0B4' }}>{s.date}</p>
                   </div>
-                </div>
+                  {/* 약점 태그 */}
+                  {s.weakPoints.length > 0 && (
+                    <span className="hidden sm:inline-flex text-xs px-2 py-0.5 rounded-full shrink-0"
+                      style={{ background: 'rgba(255,150,0,0.10)', color: '#CC7000' }}>
+                      {s.weakPoints[0]}
+                    </span>
+                  )}
+                  <ArrowSquareOut size={16} weight="bold" style={{ color: '#C0C0D0', flexShrink: 0 }} />
+                </Link>
               ))}
             </div>
-          </section>
+          </div>
         )}
           </div>
         </div>
