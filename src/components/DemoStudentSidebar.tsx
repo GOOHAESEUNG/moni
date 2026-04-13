@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { House, Trophy, User } from '@phosphor-icons/react'
+import { House, Trophy, User, ArrowCounterClockwise } from '@phosphor-icons/react'
 
 type ActiveTab = 'home' | 'leaderboard' | 'profile'
 
@@ -78,8 +78,24 @@ export default function DemoStudentSidebar({ activeTab }: Props) {
         })}
       </div>
 
-      {/* 하단: 체험 선택 */}
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }}>
+      {/* 하단 */}
+      <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid rgba(200,188,245,0.30)' }}>
+        <button
+          onClick={() => {
+            const keys = [
+              'demo-student-home-tutorial',
+              'demo-student-teach-tutorial',
+              'demo-student-report-tutorial',
+            ]
+            keys.forEach(k => localStorage.removeItem(k))
+            window.location.reload()
+          }}
+          className="flex items-center gap-3 rounded-full px-4 py-3 transition-colors hover:bg-purple-50/60 w-full text-left"
+          style={{ color: '#B8B5D0' }}
+        >
+          <ArrowCounterClockwise size={18} />
+          <span className="text-sm font-semibold">튜토리얼 초기화</span>
+        </button>
         <Link
           href="/demo"
           className="flex items-center gap-3 rounded-full px-4 py-3 transition-colors hover:bg-purple-50/60"

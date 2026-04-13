@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Users, Trophy, ChartBar, House } from '@phosphor-icons/react'
+import { BookOpen, Users, Trophy, ChartBar, House, ArrowCounterClockwise } from '@phosphor-icons/react'
 
 type ActiveTab = 'units' | 'students' | 'quests' | 'summary'
 
@@ -73,8 +73,25 @@ export default function DemoTeacherSidebar({ activeTab, teacherName = '이선생
         })}
       </div>
 
-      {/* 하단: 체험 선택 */}
-      <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+      {/* 하단 */}
+      <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <button
+          onClick={() => {
+            const keys = [
+              'demo-teacher-tutorial',
+              'demo-teacher-students-tutorial',
+              'demo-teacher-summary-tutorial',
+              'demo-teacher-quest-tutorial',
+              'demo-teacher-student-detail-tutorial',
+            ]
+            keys.forEach(k => localStorage.removeItem(k))
+            window.location.reload()
+          }}
+          className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06] w-full text-left"
+          style={{ color: 'rgba(255,255,255,0.35)' }}>
+          <ArrowCounterClockwise size={18} />
+          <span className="text-sm font-semibold">튜토리얼 초기화</span>
+        </button>
         <Link href="/demo" className="flex items-center gap-3 rounded-full px-3 py-2.5 transition-colors hover:bg-white/[0.06]"
           style={{ color: 'rgba(255,255,255,0.35)' }}>
           <House size={18} />
