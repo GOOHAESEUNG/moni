@@ -121,7 +121,7 @@ flowchart LR
 ### 개발 에이전트 파이프라인 (GAN 영감)
 
 ```mermaid
-flowchart TD
+flowchart LR
     User[개발자\n자연어 요청] --> Planner
 
     subgraph 기능개발 [기능 개발 파이프라인]
@@ -148,7 +148,7 @@ flowchart TD
 마감 전날 밤, 개발자가 수면 중에도 Claude Code가 스스로 프로젝트 품질을 반복 개선하는 시스템. 7시간 동안 11라운드, 17개 커밋 자동 생성.
 
 ```mermaid
-flowchart TD
+flowchart LR
     Start[자율 루프 시작] --> Evaluate[심사 기준표로\n현재 프로젝트 평가]
     Evaluate --> Identify[가장 낮은 점수 영역\n식별]
     Identify --> Pipeline{기능 개발\n파이프라인 실행}
