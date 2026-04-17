@@ -121,19 +121,59 @@ flowchart LR
 ### 개발 에이전트 파이프라인 (GAN 영감)
 
 ```mermaid
-flowchart LR
-    A[Claude Code\nOpus 4.6\n오케스트레이터] --> |스펙 설계| B[Codex\n코드 구현]
-    B --> |diff| C[Codex\n코드 리뷰]
-    C --> |CHANGES_REQUESTED| B
-    C --> |APPROVED| D[impeccable\nUI/UX 검수]
-    D --> |/critique /audit| E[PR 머지]
-    A --> |자율 루프| F[11라운드\n자동 개선]
+flowchart TD
+    User[개발자\n자연어 요청] --> Planner
 
-    style A fill:#E8C547,color:#1A1830
-    style B fill:#7C6FBF,color:#fff
-    style C fill:#7C6FBF,color:#fff
-    style D fill:#4CAF50,color:#fff
-    style F fill:#FF9600,color:#fff
+    subgraph 기능개발 [기능 개발 파이프라인]
+        Planner[Claude Code\nOpus 4.6\n플래너·오케스트레이터] --> |Issue + 구현 스펙| Coder[Codex\n코드 구현\nworktree 격리]
+        Coder --> |diff| DesignRev[impeccable\n디자인 리뷰어\n/critique /audit]
+        DesignRev --> CodeRev[Codex\n코드 리뷰어\n독립 세션]
+        CodeRev --> |CHANGES_REQUESTED| Coder
+        CodeRev --> |APPROVED| Build[빌드 검증\nnpm run build]
+        Build --> |성공| Commit[커밋 + 푸시]
+        Build --> |실패| Coder
+        Commit --> Discord[Discord 웹훅\n실시간 알림]
+    end
+
+    style Planner fill:#E8C547,color:#1A1830
+    style Coder fill:#7C6FBF,color:#fff
+    style CodeRev fill:#7C6FBF,color:#fff
+    style DesignRev fill:#4CAF50,color:#fff
+    style Build fill:#FF9600,color:#fff
+    style Discord fill:#5865F2,color:#fff
+```
+
+### 자율 개선 루프 (Autonomous Improvement Loop)
+
+마감 전날 밤, 개발자가 수면 중에도 Claude Code가 스스로 프로젝트 품질을 반복 개선하는 시스템. 7시간 동안 11라운드, 17개 커밋 자동 생성.
+
+```mermaid
+flowchart TD
+    Start[자율 루프 시작] --> Evaluate[심사 기준표로\n현재 프로젝트 평가]
+    Evaluate --> Identify[가장 낮은 점수 영역\n식별]
+    Identify --> Pipeline{기능 개발\n파이프라인 실행}
+    Pipeline --> |Planner → Coder → Reviewer| BuildCheck[빌드 검증\nnpm run build]
+    BuildCheck --> |성공| AutoCommit[자동 커밋]
+    BuildCheck --> |실패| Retry{재시도 횟수}
+    Retry --> |1회차| Pipeline
+    Retry --> |2회차 실패| Skip[해당 작업 중단\n다음 우선순위로]
+    AutoCommit --> Pacing{동적 페이싱\nScheduleWakeup}
+    Skip --> Pacing
+    Pacing --> |활발한 수정| Short[2-3분 대기]
+    Pacing --> |안정 상태| Long[20-30분 대기]
+    Short --> Compact{컨텍스트 사용량}
+    Long --> Compact
+    Compact --> |60% 초과| Save[CLAUDE.md + 메모리 저장\n자동 컴팩트]
+    Compact --> |60% 이하| Evaluate
+    Save --> Evaluate
+
+    style Start fill:#E8C547,color:#1A1830
+    style Evaluate fill:#7C6FBF,color:#fff
+    style Pipeline fill:#FF9600,color:#fff
+    style BuildCheck fill:#4CAF50,color:#fff
+    style AutoCommit fill:#4CAF50,color:#fff
+    style Skip fill:#F44336,color:#fff
+    style Save fill:#5865F2,color:#fff
 ```
 
 **왜 멀티 AI인가?** — GAN의 생성기-판별기 구조에서 영감. 코더가 생성하고, 리뷰어가 판별하여 품질이 수렴합니다. 단일 에이전트의 자기평가 편향을 구조로 해결합니다. 마감 전날 밤에는 자율 개선 루프가 11라운드 동안 스스로 프로젝트를 개선했습니다.
